@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Send } from "lucide-react";
+import { Send, Instagram, Linkedin } from "lucide-react";
 import logo from "@/assets/logo-guara-footer.png";
 import tornPaperDivider from "@/assets/torn-paper-divider.png.asset.json";
 
@@ -18,6 +18,26 @@ const Footer = () => (
           <p className="text-sm opacity-70 leading-relaxed">
             Agência de marketing digital focada em resultados e crescimento sustentável.
           </p>
+          <div className="flex gap-3 mt-5">
+            <a
+              href="https://www.instagram.com/guara_media/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+              className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:text-[#f97316] hover:bg-white/20 transition-colors"
+            >
+              <Instagram size={16} />
+            </a>
+            <a
+              href="https://www.linkedin.com/company/guara-media/posts/?feedView=all"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:text-[#f97316] hover:bg-white/20 transition-colors"
+            >
+              <Linkedin size={16} />
+            </a>
+          </div>
         </div>
 
         <div>
@@ -30,6 +50,7 @@ const Footer = () => (
               { href: "/ferramentas", label: "Ferramentas" },
               { href: "/talentos", label: "Talentos" },
               { href: "/artigos", label: "Artigos" },
+              { href: "/contato", label: "Contato" },
             ].map((l) => (
               <Link key={l.href} to={l.href} className="text-sm text-white/60 hover:text-[#f97316] transition-colors">
                 {l.label}

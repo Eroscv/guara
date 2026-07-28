@@ -484,7 +484,7 @@ const Index = () => {
       {/* ------------------------------------------------------------------ */}
       {/* Depoimentos + Case destaque */}
       {/* ------------------------------------------------------------------ */}
-      <section className="relative pt-20 sm:pt-28 md:pt-36 pb-14 sm:pb-20 md:pb-28 bg-[#0a0a0a] text-white">
+      <section className="relative pt-20 sm:pt-28 md:pt-36 bg-[#0a0a0a] text-white">
         <img
           src={tornPaperDivider.url}
           alt=""
