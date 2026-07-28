@@ -1,0 +1,287 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@900&family=Noto+Serif+Display:ital,wdth,wght@0,62.5,300..900;1,62.5,300..900&display=swap');
+
+@layer base {
+  :root {
+    --background: 40 100% 95%;
+    --foreground: 20 20% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 20 20% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 20% 12%;
+
+    --primary: 24 95% 53%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 30 15% 94%;
+    --secondary-foreground: 20 20% 12%;
+
+    --muted: 30 10% 95%;
+    --muted-foreground: 20 10% 46%;
+
+    --accent: 24 95% 96%;
+    --accent-foreground: 24 95% 40%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 30 15% 90%;
+    --input: 30 15% 90%;
+    --ring: 24 95% 53%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 24 95% 53%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 30 15% 94%;
+    --sidebar-accent-foreground: 20 20% 12%;
+    --sidebar-border: 30 15% 90%;
+    --sidebar-ring: 24 95% 53%;
+
+    --font-heading: 'Inter', sans-serif;
+    --font-body: 'Noto Serif Display', serif;
+
+    --gradient-primary: linear-gradient(135deg, hsl(24 95% 53%), hsl(30 95% 60%));
+    --gradient-warm: linear-gradient(135deg, hsl(24 95% 53%), hsl(15 90% 48%));
+    --shadow-soft: 0 2px 20px -4px hsl(24 95% 53% / 0.15);
+    --shadow-card: 0 1px 3px hsl(20 20% 12% / 0.06), 0 4px 12px hsl(20 20% 12% / 0.04);
+    --shadow-card-hover: 0 4px 24px hsl(20 20% 12% / 0.1);
+  }
+
+  .dark {
+    --background: 20 15% 8%;
+    --foreground: 30 10% 92%;
+    --card: 20 15% 12%;
+    --card-foreground: 30 10% 92%;
+    --popover: 20 15% 12%;
+    --popover-foreground: 30 10% 92%;
+    --primary: 24 95% 53%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 20 15% 18%;
+    --secondary-foreground: 30 10% 92%;
+    --muted: 20 15% 18%;
+    --muted-foreground: 30 10% 60%;
+    --accent: 24 95% 15%;
+    --accent-foreground: 24 95% 70%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 20 15% 20%;
+    --input: 20 15% 20%;
+    --ring: 24 95% 53%;
+    --sidebar-background: 20 15% 10%;
+    --sidebar-foreground: 30 10% 92%;
+    --sidebar-primary: 24 95% 53%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 20 15% 18%;
+    --sidebar-accent-foreground: 30 10% 92%;
+    --sidebar-border: 20 15% 20%;
+    --sidebar-ring: 24 95% 53%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+    font-stretch: 62.5%;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 900;
+  }
+}
+
+@layer utilities {
+  .text-gradient-primary {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .bg-gradient-primary {
+    background: var(--gradient-primary);
+  }
+  .bg-gradient-warm {
+    background: var(--gradient-warm);
+  }
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+  .shadow-card-hover {
+    box-shadow: var(--shadow-card-hover);
+  }
+}
+
+@keyframes logo-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-logo-marquee {
+  animation: logo-marquee 40s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+.logo-marquee-wrapper:hover .animate-logo-marquee {
+  animation-play-state: paused;
+}
+.logo-marquee-wrapper img {
+  filter: grayscale(100%);
+  opacity: 0.55;
+  transition: filter 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
+}
+.logo-marquee-wrapper img:hover {
+  filter: grayscale(0%);
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+/* Card hover lift */
+.card-lift {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+}
+.card-lift:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* Lime marker underline utility (reusable) */
+.lime-marker {
+  position: relative;
+  display: inline-block;
+}
+.lime-marker::after {
+  content: "";
+  position: absolute;
+  left: -2%;
+  right: -2%;
+  bottom: 4%;
+  height: 30%;
+  background: #C8E64A;
+  border-radius: 999px;
+  opacity: 0.85;
+  transform: rotate(-1deg) scaleY(0.75);
+  z-index: -1;
+}
+
+/* Orange marker underline utility */
+.orange-underline-title {
+  position: relative;
+  display: inline-block;
+}
+.orange-underline-title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 3px;
+  background: #F26522;
+  border-radius: 999px;
+  transform: rotate(-0.8deg);
+}
+
+/* Hero decorative dotted pattern */
+.hero-dots {
+  background-image: radial-gradient(circle, rgba(242, 101, 34, 0.35) 1.5px, transparent 1.5px);
+  background-size: 18px 18px;
+}
+
+/* Torn paper divider variations */
+.torn-paper-mirror { transform: translate(-50%, -55%) scaleX(-1); }
+.torn-paper-flip { transform: translate(-50%, -45%) scaleY(-1); }
+.torn-paper-tilt { transform: translate(-50%, -55%) rotate(-1.5deg); }
+
+/* Hero underline — hand-drawn lime highlight under "Publicidade" */
+.hero-underline {
+  display: block;
+  pointer-events: none;
+}
+.hero-underline::before,
+.hero-underline::after {
+  content: "";
+  position: absolute;
+  left: -2%;
+  right: -2%;
+  height: 35%;
+  background: #C8E64A;
+  border-radius: 999px;
+  opacity: 0.9;
+}
+.hero-underline::before {
+  bottom: 12%;
+  transform: rotate(-1.2deg) scaleY(0.9);
+}
+.hero-underline::after {
+  bottom: 2%;
+  transform: rotate(0.8deg) scaleY(0.7);
+  opacity: 0.75;
+}
+
+/* FAQ underline — hand-drawn orange highlight under title */
+.faq-underline {
+  display: block;
+  pointer-events: none;
+}
+.faq-underline::before,
+.faq-underline::after {
+  content: "";
+  position: absolute;
+  left: -2%;
+  right: -2%;
+  height: 40%;
+  background: #F26522;
+  border-radius: 999px;
+  opacity: 0.9;
+}
+.faq-underline::before {
+  bottom: 14%;
+  transform: rotate(-1deg) scaleY(0.9);
+}
+.faq-underline::after {
+  bottom: 4%;
+  transform: rotate(1deg) scaleY(0.7);
+  opacity: 0.8;
+}
+
+/* Orange marker — hand-drawn underline for text */
+.orange-marker {
+  position: relative;
+  display: inline;
+}
+.orange-marker::before {
+  content: "";
+  position: absolute;
+  left: -2%;
+  right: -2%;
+  bottom: 2%;
+  height: 18%;
+  background: #F26522;
+  border-radius: 999px;
+  opacity: 0.85;
+  transform: rotate(-0.5deg) scaleY(1);
+  z-index: -1;
+}
+
+/* LinkedIn embed in articles/posts */
+.linkedin-embed {
+  margin: 1.5rem 0;
+  max-width: 100%;
+}
+.linkedin-embed iframe {
+  max-width: 100%;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.75rem;
+  background: hsl(var(--card));
+  display: block;
+}

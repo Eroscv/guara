@@ -1,0 +1,18 @@
+# Guará Media
+
+> Agência de marketing, publicidade e tecnologia para PMEs. Estratégia, mídia paga, dados e tecnologia para destravar o crescimento de empresas no Brasil.
+
+## Páginas
+
+- [Home](/): Quem somos e como ajudamos PMEs a crescer.
+- [Contato](/contato): Fale com a equipe da Guará Media.
+
+## Conteúdo
+
+- [Blog](/blog): Artigos sobre marketing, mídia paga, dados e crescimento.
+- [Artigos](/artigos): Análises e materiais aprofundados sobre marketing e tecnologia.
+
+## Recursos
+
+- [Ferramentas](/ferramentas): E-books, templates e checklists gratuitos para PMEs.
+- [Talentos](/talentos): Vagas abertas na Guará Media.
