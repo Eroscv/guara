@@ -614,7 +614,8 @@ const Index = () => {
                 </ul>
                 <div className="mt-auto pt-8 grid grid-cols-2 gap-6">
                   <div>
-                    <p className="font-heading font-extrabold text-3xl md:text-4xl">+843%</p>
+                    <span className="text-2xl" aria-hidden>📈</span>
+                    <p className="font-heading font-extrabold text-3xl md:text-4xl mt-1">+843%</p>
                     <p className="text-sm text-[#1a1715]/70 mt-1 leading-tight">
                       De Aumento
                       <br />
@@ -622,7 +623,8 @@ const Index = () => {
                     </p>
                   </div>
                   <div>
-                    <p className="font-heading font-extrabold text-3xl md:text-4xl">+10x</p>
+                    <span className="text-2xl" aria-hidden>🚀</span>
+                    <p className="font-heading font-extrabold text-3xl md:text-4xl mt-1">+10x</p>
                     <p className="text-sm text-[#1a1715]/70 mt-1 leading-tight">
                       De Aumento
                       <br />
