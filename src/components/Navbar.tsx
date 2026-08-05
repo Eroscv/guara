@@ -18,7 +18,7 @@ const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-[#0d0d0d] border-b border-[#1a1a1a]">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a]/85 backdrop-blur-md border-b border-white/5">
       <div className="container mx-auto flex items-center justify-between h-16 px-4">
         <Link to="/" className="flex items-center gap-2">
           <img src={logo} alt="Guará Media" className="h-9" />
@@ -48,7 +48,7 @@ const Navbar = () => {
             to="/contato"
             className="bg-gradient-primary text-primary-foreground px-5 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
           >
-            Fale conosco
+            Agendar Diagnóstico
           </Link>
         </nav>
 
@@ -82,7 +82,7 @@ const Navbar = () => {
             onClick={() => setOpen(false)}
             className="block mt-3 text-center bg-gradient-primary text-primary-foreground px-5 py-2.5 rounded-lg text-sm font-semibold"
           >
-            Fale conosco
+            Agendar Diagnóstico
           </Link>
           <button
             onClick={toggleTheme}

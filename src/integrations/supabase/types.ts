@@ -193,34 +193,46 @@ export type Database = {
       leads: {
         Row: {
           created_at: string
+          desafio: string | null
           email: string
           empresa: string | null
+          faturamento: string | null
           id: string
+          investimento_midia: string | null
           mensagem: string | null
           nome: string
           segmento: string | null
+          site: string | null
           source: string | null
           telefone: string | null
         }
         Insert: {
           created_at?: string
+          desafio?: string | null
           email: string
           empresa?: string | null
+          faturamento?: string | null
           id?: string
+          investimento_midia?: string | null
           mensagem?: string | null
           nome: string
           segmento?: string | null
+          site?: string | null
           source?: string | null
           telefone?: string | null
         }
         Update: {
           created_at?: string
+          desafio?: string | null
           email?: string
           empresa?: string | null
+          faturamento?: string | null
           id?: string
+          investimento_midia?: string | null
           mensagem?: string | null
           nome?: string
           segmento?: string | null
+          site?: string | null
           source?: string | null
           telefone?: string | null
         }

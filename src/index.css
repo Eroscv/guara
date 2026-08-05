@@ -129,6 +129,14 @@
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
 }
+
+@keyframes vertical-marquee {
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
+}
+.animate-vertical-marquee {
+  animation: vertical-marquee linear infinite;
+}
 .animate-logo-marquee {
   animation: logo-marquee 40s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
