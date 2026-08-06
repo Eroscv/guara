@@ -36,18 +36,8 @@ const LeadForm = () => {
   } = useForm<LeadFormValues>({ resolver: zodResolver(leadSchema) });
 
   const onSubmit = async (data: LeadFormValues) => {
-    // TODO(CRM): push para webhook/CRM (RD Station / HubSpot / etc.) entra aqui
-    // quando a integração for definida — por enquanto só persiste no Supabase `leads`.
-    const { error } = await supabase.from("leads").insert({
-      nome: data.nome,
-      email: data.email,
-      telefone: data.whatsapp,
-      empresa: data.empresa,
-      site: data.site || null,
-      faturamento: data.faturamento,
-      investimento_midia: data.investimentoMidia,
-      desafio: data.desafio,
-      source: "home_redesign",
+    const { error } = await supabase.functions.invoke("create-lead-card", {
+      body: data,
     });
 
     if (error) {
