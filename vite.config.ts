@@ -5,6 +5,9 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
+  // GitHub Pages serve o app em /guara/ (subpath); a Vercel serve na raiz do
+  // próprio domínio. GITHUB_PAGES só é setado pelo workflow de deploy do Pages.
+  base: process.env.GITHUB_PAGES ? "/guara/" : "/",
   server: {
     host: "::",
     port: 8080,
