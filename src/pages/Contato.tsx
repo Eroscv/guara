@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Send, Megaphone, BarChart3, Palette, Target, Users, TrendingUp } from "lucide-react";
+import { Send, Megaphone, BarChart3, Palette, Target, Users, TrendingUp, Compass, Flame, Search, PenLine, Filter } from "lucide-react";
 import Layout from "@/components/Layout";
 import SEO from "@/components/SEO";
 import guaraIcon from "@/assets/guara-icon.png";
@@ -19,12 +19,12 @@ const segmentos = [
 ];
 
 const beneficios = [
-  { emoji: "🧭", title: "Estratégia: Plano para 2026", desc: "Sessão 1 a 1 de definição: desenhe o seu roadmap de performance." },
-  { emoji: "🎯", title: "Ajuste a mira dos seus anúncios", desc: "Descubra onde seu dinheiro está sendo perdido e como melhorar seu ROAS." },
-  { emoji: "🔥", title: "Hot Seats Pós Auditoria", desc: "Encontros para alinhamento e networking com outras marcas." },
-  { emoji: "🔍", title: "Diagnóstico 360°", desc: "Roteiro de otimização do site e melhorias de conversão." },
-  { emoji: "✍️", title: "Conteúdo e Autoridade", desc: "Temas e formatos para crescer sua audiência qualificada." },
-  { emoji: "📊", title: "Funil de Vendas", desc: "Descubra onde clientes desistem e como melhorar seu funil." },
+  { icon: Compass, title: "Estratégia: Plano para 2026", desc: "Sessão 1 a 1 de definição: desenhe o seu roadmap de performance." },
+  { icon: Target, title: "Ajuste a mira dos seus anúncios", desc: "Descubra onde seu dinheiro está sendo perdido e como melhorar seu ROAS." },
+  { icon: Flame, title: "Hot Seats Pós Auditoria", desc: "Encontros para alinhamento e networking com outras marcas." },
+  { icon: Search, title: "Diagnóstico 360°", desc: "Roteiro de otimização do site e melhorias de conversão." },
+  { icon: PenLine, title: "Conteúdo e Autoridade", desc: "Temas e formatos para crescer sua audiência qualificada." },
+  { icon: Filter, title: "Funil de Vendas", desc: "Descubra onde clientes desistem e como melhorar seu funil." },
 ];
 
 const Contato = () => {
@@ -268,7 +268,9 @@ const Contato = () => {
                 transition={{ delay: i * 0.08, duration: 0.5 }}
                 className="bg-white dark:bg-card rounded-2xl p-6 shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1 text-center"
               >
-                <span className="text-4xl">{card.emoji}</span>
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mx-auto">
+                  <card.icon size={24} />
+                </div>
                 <h3 className="font-heading font-bold text-lg text-[#1a1715] dark:text-[#f5f0e6] leading-tight mt-3">
                   {card.title}
                 </h3>

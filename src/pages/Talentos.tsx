@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { MapPin, Briefcase, Monitor, Search } from "lucide-react";
+import { MapPin, Briefcase, Monitor, Search, Target, Handshake, Rocket, Lightbulb } from "lucide-react";
 import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
 import SEO from "@/components/SEO";
@@ -9,10 +9,10 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 
 const values = [
-  { emoji: "🎯", title: "Foco em resultados", desc: "Orientados por dados e impacto real." },
-  { emoji: "🤝", title: "Colaboração", desc: "Trabalhamos juntos para ir mais longe." },
-  { emoji: "🚀", title: "Inovação", desc: "Experimentamos e evoluímos constantemente." },
-  { emoji: "💡", title: "Aprendizado", desc: "Crescemos como pessoas e profissionais." },
+  { icon: Target, title: "Foco em resultados", desc: "Orientados por dados e impacto real." },
+  { icon: Handshake, title: "Colaboração", desc: "Trabalhamos juntos para ir mais longe." },
+  { icon: Rocket, title: "Inovação", desc: "Experimentamos e evoluímos constantemente." },
+  { icon: Lightbulb, title: "Aprendizado", desc: "Crescemos como pessoas e profissionais." },
 ];
 
 const workModelColors: Record<string, string> = {
@@ -90,7 +90,9 @@ const Talentos = () => {
                 transition={{ delay: i * 0.1 }}
                 className="bg-card rounded-2xl p-6 shadow-card text-center"
               >
-                <span className="text-4xl">{v.emoji}</span>
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mx-auto">
+                  <v.icon size={24} />
+                </div>
                 <h3 className="font-heading font-semibold mt-3">{v.title}</h3>
                 <p className="text-sm text-muted-foreground mt-1">{v.desc}</p>
               </motion.div>

@@ -87,6 +87,9 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
   * {
     @apply border-border;
   }
@@ -140,8 +143,19 @@
 .animate-logo-marquee {
   animation: logo-marquee 40s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
-.logo-marquee-wrapper:hover .animate-logo-marquee {
+.logo-marquee-wrapper:hover .animate-logo-marquee,
+.logo-marquee-wrapper:focus-within .animate-logo-marquee {
   animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-logo-marquee,
+  .animate-vertical-marquee {
+    animation-play-state: paused;
+  }
 }
 .logo-marquee-wrapper img {
   filter: grayscale(100%);

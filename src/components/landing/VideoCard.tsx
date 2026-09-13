@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useRef, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { motion } from "framer-motion";
+import { Play, Pause } from "lucide-react";
 
 interface Props {
   src: string;
@@ -33,13 +34,16 @@ const VideoCard = ({
   aspect = "9/16",
   overlay,
   autoPlayOnView = false,
-  handle = "@guara.mkt",
+  handle,
   index = 0,
   className = "",
   isPlaceholder = false,
   placeholderImage,
 }: Props) => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [playing, setPlaying] = useState(false);
+  const prefersReducedMotion =
+    typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
   useEffect(() => {
     if (!src || type !== "video") return;
@@ -52,7 +56,9 @@ const VideoCard = ({
           if (entry.isIntersecting && !el.src) {
             el.src = src;
             el.preload = "metadata";
-            if (autoPlayOnView) el.play().catch(() => {});
+            if (autoPlayOnView && !prefersReducedMotion) {
+              el.play().then(() => setPlaying(true)).catch(() => {});
+            }
             io.disconnect();
           }
         });
@@ -62,7 +68,7 @@ const VideoCard = ({
 
     io.observe(el);
     return () => io.disconnect();
-  }, [src, type, autoPlayOnView]);
+  }, [src, type, autoPlayOnView, prefersReducedMotion]);
 
   const handleMouseEnter = useCallback(() => {
     if (!src || type !== "video") return;
@@ -87,10 +93,28 @@ const VideoCard = ({
     if (el.paused) {
       el.muted = false;
       el.play();
+      setPlaying(true);
     } else {
       el.pause();
+      setPlaying(false);
     }
   }, [src, type]);
+
+  const handleTogglePlay = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      const el = videoRef.current;
+      if (!el) return;
+      if (el.paused) {
+        el.play();
+        setPlaying(true);
+      } else {
+        el.pause();
+        setPlaying(false);
+      }
+    },
+    [],
+  );
 
   if (!src || isPlaceholder) {
     return (
@@ -168,6 +192,17 @@ const VideoCard = ({
             <path d="M8 5v14l11-7z" />
           </svg>
         </div>
+      )}
+
+      {type === "video" && autoPlayOnView && (
+        <button
+          type="button"
+          onClick={handleTogglePlay}
+          aria-label={playing ? "Pausar vídeo" : "Reproduzir vídeo"}
+          className="absolute bottom-2 right-2 z-20 w-8 h-8 rounded-full bg-black/60 hover:bg-black/80 flex items-center justify-center text-white transition-colors"
+        >
+          {playing ? <Pause size={14} /> : <Play size={14} />}
+        </button>
       )}
     </motion.div>
   );

@@ -20,7 +20,7 @@ const VideoPlayerHero = ({ src, cover, eyebrow, title }: Props) => {
     <div className="container mx-auto px-4">
       <div className="max-w-3xl mx-auto text-center mb-10">
         {eyebrow && <p className="text-sm md:text-base font-semibold uppercase tracking-widest text-primary">{eyebrow}</p>}
-        <h2 className="mt-3 font-heading font-extrabold uppercase text-2xl md:text-4xl leading-tight tracking-tight">{title}</h2>
+        <h2 className="mt-3 font-heading font-extrabold text-2xl md:text-4xl leading-tight tracking-tight">{title}</h2>
       </div>
 
       <motion.div ref={ref} style={{ scale }} className="max-w-4xl mx-auto">
@@ -36,7 +36,7 @@ const VideoPlayerHero = ({ src, cover, eyebrow, title }: Props) => {
           ) : (
             <>
               {cover ? (
-                <img src={cover} alt="" className="absolute inset-0 w-full h-full object-cover opacity-70" />
+                <img src={cover} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover opacity-70" />
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center">
                   <p className="text-white/30 text-sm">{src ? "Capa em produção" : "Vídeo em produção"}</p>

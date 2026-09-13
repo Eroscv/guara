@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import { CheckCircle2 } from "lucide-react";
 import Layout from "@/components/Layout";
 import SEO from "@/components/SEO";
@@ -16,6 +17,8 @@ import DraggableTestimonialCarousel from "@/components/landing/DraggableTestimon
 import LeadForm from "@/components/landing/LeadForm";
 import PlaceholderBanner from "@/components/landing/PlaceholderBanner";
 import VerticalMarqueeColumn from "@/components/landing/VerticalMarqueeColumn";
+import StickyCta from "@/components/landing/StickyCta";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import heroDashboard from "@/assets/hero-dashboard.png";
 import {
   CLIENT_LOGOS,
@@ -28,6 +31,7 @@ import {
   BIG_NUMBER,
   NUMEROS_FINAIS,
   VALUES_CAROUSEL_ITEMS,
+  FAQ_ITEMS,
 } from "@/data/landingContent";
 
 const ROTATING_WORDS = ["Publicidade", "Criativos", "Performance", "Escala"];
@@ -39,7 +43,27 @@ const heroColumn = (offset: number, count: number) =>
     ? heroStaticImages.slice(offset, offset + count)
     : heroStaticImages.slice(0, count);
 
+/** Fade + leve subida ao entrar no viewport — respeita prefers-reduced-motion. */
+const useRevealProps = () => {
+  const prefersReducedMotion = useReducedMotion();
+  return {
+    initial: { opacity: 0, y: prefersReducedMotion ? 0 : 14 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, margin: "-80px" },
+    transition: { duration: 0.35, ease: "easeOut" as const },
+  };
+};
+
 const Index = () => {
+  const reveal = useRevealProps();
+  const numeroGiganteRef = useRef<HTMLElement>(null);
+  const prefersReducedMotion = useReducedMotion();
+  const { scrollYProgress: numeroScrollProgress } = useScroll({
+    target: numeroGiganteRef,
+    offset: ["start end", "end start"],
+  });
+  const bgParallaxY = useTransform(numeroScrollProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["-6%", "6%"]);
+
   return (
     <Layout>
       <SEO
@@ -48,6 +72,8 @@ const Index = () => {
         path="/"
       />
 
+      <StickyCta />
+
       {/* ================================================================ */}
       {/* 02 — Hero */}
       {/* ================================================================ */}
@@ -55,10 +81,8 @@ const Index = () => {
         <div className="container mx-auto px-4 relative">
           <div className="grid lg:grid-cols-[0.9fr,1.3fr] gap-10 lg:gap-16 items-center">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-              <h1 className="font-heading font-black uppercase leading-[0.95] text-4xl sm:text-5xl md:text-6xl lg:text-7xl tracking-tight">
-                Marketing Visual
-                <br />
-                de <RotatingWord words={ROTATING_WORDS} />
+              <h1 className="font-heading font-black uppercase leading-[0.95] text-4xl sm:text-5xl md:text-6xl lg:text-7xl tracking-tight text-balance max-w-xl">
+                Marketing Visual de <RotatingWord words={ROTATING_WORDS} />
               </h1>
               <p className="mt-6 text-white/70 text-lg max-w-md">
                 Produzimos criativos em volume, operamos mídia e criatividade como um único sistema. Performance vem de
@@ -72,15 +96,15 @@ const Index = () => {
               </a>
             </motion.div>
 
-            <div className="grid grid-cols-4 gap-3 md:gap-4 h-[560px] md:h-[680px] lg:h-[760px]">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 h-[420px] sm:h-[500px] md:h-[680px] lg:h-[760px]">
               <VerticalMarqueeColumn images={heroColumn(0, 5)} direction="up" duration={26} />
               <div className="flex flex-col gap-3 md:gap-4">
                 {heroVideos.map((v, i) => (
                   <VideoCard key={v.id} src={v.src} type={v.type} aspect="9/16" index={i} autoPlayOnView className="flex-1" />
                 ))}
               </div>
-              <VerticalMarqueeColumn images={heroColumn(5, 5)} direction="down" duration={30} />
-              <VerticalMarqueeColumn images={heroColumn(10, 5)} direction="up" duration={22} />
+              <VerticalMarqueeColumn images={heroColumn(5, 5)} direction="down" duration={30} className="hidden md:block" />
+              <VerticalMarqueeColumn images={heroColumn(10, 5)} direction="up" duration={22} className="hidden md:block" />
             </div>
           </div>
         </div>
@@ -90,9 +114,9 @@ const Index = () => {
       {/* 03 — O que é a Guará (pausa em bege, sem criativos) */}
       {/* ================================================================ */}
       <section className="py-16 md:py-24 bg-[#FFF6E4] dark:bg-[#1a1715] text-[#1a1715] dark:text-[#f5f0e6]">
-        <div className="container mx-auto px-4 max-w-3xl text-center">
+        <motion.div {...reveal} className="container mx-auto px-4 max-w-2xl text-center">
           <p className="text-sm font-semibold uppercase tracking-widest text-primary">O que é a Guará</p>
-          <h2 className="mt-3 font-heading font-extrabold uppercase text-2xl md:text-4xl leading-tight tracking-tight">
+          <h2 className="mt-3 font-heading font-extrabold text-2xl md:text-4xl leading-tight tracking-tight">
             Criatividade não é inspiração. É processo.
           </h2>
           <p className="mt-6 text-lg leading-relaxed opacity-80">
@@ -101,24 +125,32 @@ const Index = () => {
             democratizar o acesso ao crescimento exponencial — produzindo criativos em escala, guiados por método, não
             por achismo.
           </p>
-        </div>
+        </motion.div>
       </section>
 
       {/* ================================================================ */}
       {/* 04 — Carrossel de Resultados */}
       {/* ================================================================ */}
       <section className="py-16 md:py-24 bg-[#0a0a0a] text-white overflow-hidden">
-        <div className="container mx-auto px-4 mb-10">
-          <h2 className="font-heading font-extrabold uppercase text-2xl md:text-4xl text-center leading-tight tracking-tight">
+        <motion.div {...reveal} className="container mx-auto px-4 mb-10">
+          <h2 className="font-heading font-extrabold text-2xl md:text-4xl text-center leading-tight tracking-tight">
             Resultados que falam por nós
           </h2>
-        </div>
+        </motion.div>
         <InfiniteMarquee
           gapClassName="gap-4 md:gap-5"
           items={RESULTS_CAROUSEL.map((r) => (
-            <div key={r.id} className="w-[260px] md:w-[300px] rounded-2xl overflow-hidden bg-white/[0.04] border border-white/10">
+            <div
+              key={r.id}
+              className="group w-[260px] md:w-[300px] rounded-2xl overflow-hidden bg-white/[0.04] border border-white/10 transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/40 hover:bg-white/[0.07] hover:shadow-[0_12px_32px_-8px_rgba(242,101,34,0.3)]"
+            >
               <div className="relative aspect-[4/3] bg-white overflow-hidden">
-                <img src={r.logo} alt={r.clientName} className="absolute inset-0 w-full h-full object-cover" />
+                <img
+                  src={r.logo}
+                  alt={r.clientName}
+                  className="absolute inset-0 w-full h-full object-contain p-8 transition-transform duration-300 group-hover:scale-105"
+                  loading="lazy"
+                />
                 {r.isPlaceholder && <PlaceholderBanner label="métrica" className="absolute top-2 right-2 z-10" />}
               </div>
               <div className="p-4">
@@ -137,7 +169,6 @@ const Index = () => {
         <VideoPlayerHero
           eyebrow="EM 90 SEGUNDOS"
           title="Por que criativo virou o gargalo da sua mídia"
-          cover="https://images.unsplash.com/photo-1551434678-e076c223a692?w=1200&h=675&fit=crop"
         />
       </section>
 
@@ -146,7 +177,7 @@ const Index = () => {
       {/* ================================================================ */}
       <section className="py-16 md:py-24 bg-[#0a0a0a] text-white">
         <div className="container mx-auto px-4 text-center mb-4">
-          <h2 className="font-heading font-extrabold uppercase text-2xl md:text-4xl leading-tight tracking-tight">
+          <h2 className="font-heading font-extrabold text-2xl md:text-4xl leading-tight tracking-tight">
             Volume é a nossa assinatura
           </h2>
           <p className="mt-3 text-white/60 max-w-xl mx-auto">
@@ -165,13 +196,13 @@ const Index = () => {
       {/* ================================================================ */}
       <section className="py-16 md:py-20 bg-[#FFF6E4] dark:bg-[#1a1715]">
         <div className="container mx-auto px-4 text-center mb-10">
-          <h2 className="font-heading font-extrabold uppercase text-2xl md:text-3xl tracking-tight">
+          <h2 className="font-heading font-extrabold text-2xl md:text-3xl tracking-tight">
             Marcas que escalam com a gente
           </h2>
         </div>
         <InfiniteMarquee
           items={CLIENT_LOGOS.map((logo) => (
-            <img key={logo.alt} src={logo.src} alt={logo.alt} className="h-14 md:h-16 w-auto object-contain" />
+            <img key={logo.alt} src={logo.src} alt={logo.alt} className="h-14 md:h-16 w-auto object-contain" loading="lazy" />
           ))}
           className="logo-marquee-wrapper"
         />
@@ -190,10 +221,11 @@ const Index = () => {
       {/* ================================================================ */}
       <section className="py-16 md:py-24 bg-[#0a0a0a] text-white">
         <div className="container mx-auto px-4 space-y-20 md:space-y-28">
-          <h2 className="font-heading font-extrabold uppercase text-2xl md:text-4xl text-center leading-tight tracking-tight">
+          <h2 className="font-heading font-extrabold text-2xl md:text-4xl text-center leading-tight tracking-tight">
             Cases
           </h2>
-          {CASE_STUDIES.map((c, i) => (
+          {/* Só cases com conteúdo real vão ao ar — evita headline/métrica "a definir" em produção */}
+          {CASE_STUDIES.filter((c) => !c.isPlaceholder).map((c, i) => (
             <CaseStudyCard key={c.id} caseStudy={c} reverse={i % 2 === 1} />
           ))}
         </div>
@@ -203,8 +235,8 @@ const Index = () => {
       {/* 09 — Faixa de Oferta (bloco cheio laranja) */}
       {/* ================================================================ */}
       <section className="py-16 md:py-20 bg-primary text-primary-foreground text-center">
-        <div className="container mx-auto px-4">
-          <h2 className="font-heading font-extrabold uppercase text-3xl md:text-5xl leading-tight tracking-tight">
+        <motion.div {...reveal} className="container mx-auto px-4">
+          <h2 className="font-heading font-extrabold text-3xl md:text-5xl leading-tight tracking-tight">
             Diagnóstico de Criativo Gratuito
           </h2>
           <a
@@ -213,7 +245,7 @@ const Index = () => {
           >
             Agendar Diagnóstico
           </a>
-        </div>
+        </motion.div>
       </section>
 
       {/* ================================================================ */}
@@ -221,8 +253,8 @@ const Index = () => {
       {/* ================================================================ */}
       <section className="py-16 md:py-24 bg-[#FFF6E4] dark:bg-[#1a1715] text-[#1a1715] dark:text-[#f5f0e6]">
         <div className="container mx-auto px-4">
-          <h2 className="font-heading font-extrabold uppercase text-2xl md:text-4xl text-center leading-tight tracking-tight mb-12">
-            Proven. Preferred. Performance at scale.
+          <h2 className="font-heading font-extrabold text-2xl md:text-4xl text-center leading-tight tracking-tight mb-12">
+            Comprovado. Preferido. Performance em escala.
           </h2>
           <DraggableTestimonialCarousel testimonials={TESTIMONIALS} />
         </div>
@@ -231,12 +263,14 @@ const Index = () => {
       {/* ================================================================ */}
       {/* 11 — Número Gigante */}
       {/* ================================================================ */}
-      <section className="relative py-24 md:py-36 bg-[#0a0a0a] text-white overflow-hidden text-center">
-        <img
+      <section ref={numeroGiganteRef} className="relative py-24 md:py-36 bg-[#0a0a0a] text-white overflow-hidden text-center">
+        <motion.img
           src={heroDashboard}
           alt=""
           aria-hidden
-          className="absolute inset-0 w-full h-full object-cover opacity-10 pointer-events-none select-none"
+          loading="lazy"
+          style={{ y: bgParallaxY }}
+          className="absolute inset-0 w-full h-full object-cover opacity-10 pointer-events-none select-none scale-110"
         />
         <div className="container mx-auto px-4 relative">
           {BIG_NUMBER.isPlaceholder && <PlaceholderBanner label="valor de receita gerada" className="mb-4" />}
@@ -252,7 +286,7 @@ const Index = () => {
       {/* ================================================================ */}
       <section className="py-16 md:py-24 bg-[#0a0a0a] text-white">
         <div className="container mx-auto px-4">
-          <h2 className="font-heading font-extrabold uppercase text-2xl md:text-4xl text-center leading-tight tracking-tight mb-16 md:mb-20">
+          <h2 className="font-heading font-extrabold text-2xl md:text-4xl text-center leading-tight tracking-tight mb-16 md:mb-20">
             O Motor Guará
           </h2>
           <div className="space-y-20 md:space-y-28">
@@ -308,7 +342,6 @@ const Index = () => {
         <VideoPlayerHero
           eyebrow="BASTIDORES"
           title="Como é trabalhar com a gente"
-          cover="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&h=675&fit=crop"
         />
       </section>
 
@@ -317,7 +350,7 @@ const Index = () => {
       {/* ================================================================ */}
       <section className="py-16 md:py-24 bg-[#FFF6E4] dark:bg-[#1a1715] text-[#1a1715] dark:text-[#f5f0e6]">
         <div className="container mx-auto px-4">
-          <h2 className="font-heading font-extrabold uppercase text-2xl md:text-4xl text-center leading-tight tracking-tight mb-12">
+          <h2 className="font-heading font-extrabold text-2xl md:text-4xl text-center leading-tight tracking-tight mb-12">
             A Guará em números
           </h2>
           <div className="grid sm:grid-cols-3 gap-8">
@@ -347,7 +380,7 @@ const Index = () => {
       {/* 16 — CTA Final */}
       {/* ================================================================ */}
       <section className="py-16 md:py-24 bg-[#0a0a0a] text-white text-center overflow-hidden">
-        <div className="container mx-auto px-4">
+        <motion.div {...reveal} className="container mx-auto px-4">
           <h2 className="font-heading font-extrabold uppercase text-3xl sm:text-5xl md:text-6xl leading-[1.05] tracking-tight max-w-4xl mx-auto">
             Vamos produzir os próximos criativos que vão escalar sua marca
           </h2>
@@ -357,17 +390,38 @@ const Index = () => {
           >
             Agendar Diagnóstico
           </a>
-        </div>
+        </motion.div>
         <div className="mt-14">
           <InfiniteMarquee
             speed="fast"
             gapClassName="gap-8"
             items={VALUES_CAROUSEL_ITEMS.map((v) => (
               <span key={v} className="font-heading font-extrabold uppercase text-xl md:text-2xl text-white/20 whitespace-nowrap">
-                {v} <span className="text-primary">✳</span>
+                {v} <span className="text-primary">·</span>
               </span>
             ))}
           />
+        </div>
+      </section>
+
+      {/* ================================================================ */}
+      {/* 16b — FAQ (reduz objeção antes do CTA final) */}
+      {/* ================================================================ */}
+      <section className="py-16 md:py-20 bg-[#0a0a0a] text-white">
+        <div className="container mx-auto px-4 max-w-2xl">
+          <h2 className="font-heading font-extrabold text-2xl md:text-3xl text-center leading-tight tracking-tight mb-10">
+            Perguntas frequentes
+          </h2>
+          <Accordion type="single" collapsible className="w-full">
+            {FAQ_ITEMS.map((faq) => (
+              <AccordionItem key={faq.id} value={faq.id} className="border-white/10">
+                <AccordionTrigger className="text-left font-heading font-semibold hover:no-underline">
+                  {faq.question}
+                </AccordionTrigger>
+                <AccordionContent className="text-white/70 leading-relaxed">{faq.answer}</AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
       </section>
 
@@ -377,7 +431,7 @@ const Index = () => {
       <section id="diagnostico" className="py-16 md:py-24 bg-[#FFF6E4] dark:bg-[#1a1715] text-[#1a1715] dark:text-[#f5f0e6]">
         <div className="container mx-auto px-4 max-w-2xl">
           <div className="text-center mb-10">
-            <h2 className="font-heading font-extrabold uppercase text-2xl md:text-4xl leading-tight tracking-tight">
+            <h2 className="font-heading font-extrabold text-2xl md:text-4xl leading-tight tracking-tight">
               Agende seu diagnóstico gratuito
             </h2>
             <p className="mt-3 opacity-70">Preencha o formulário e nosso time de especialistas retornará em até 24h úteis.</p>

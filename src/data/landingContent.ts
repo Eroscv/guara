@@ -112,50 +112,50 @@ const REAL_VIDEOS: CreativeItem[] = [
   { id: "v-ugc-2", type: "video", src: `${VIDEO_BASE_URL}/estagio.mp4`, aspect: "9/16", category: "ugc", persona: "JOVEM PROFISSIONAL", angulo: "OPORTUNIDADE", modelo: "UGC DEPOIMENTO", isPlaceholder: false },
   { id: "v-ugc-3", type: "video", src: `${VIDEO_BASE_URL}/iranni-ecommerce.mp4`, aspect: "9/16", category: "ugc", persona: "COMPRADOR ONLINE", angulo: "DOR DE CONFIANÇA", modelo: "UGC REVIEW", isPlaceholder: false },
   { id: "v-ugc-4", type: "video", src: `${VIDEO_BASE_URL}/sociedade-canina.mp4`, aspect: "9/16", category: "ugc", persona: "TUTOR DE PET", angulo: "CUIDADO", modelo: "UGC DEPOIMENTO", isPlaceholder: false },
-  // Lote novo enviado pelo cliente — tags de persona/ângulo/modelo são um chute
-  // razoável (não assisti o conteúdo); ajustar em landingContent.ts quando
-  // alguém revisar os vídeos de fato.
-  { id: "v-real-1", type: "video", src: `${VIDEO_BASE_URL}/criativo-1.mp4`, aspect: "9/16", category: "alta-producao", persona: "PERSONA A REVISAR", angulo: "ÂNGULO A REVISAR", modelo: "ANÚNCIO EDITADO", isPlaceholder: false },
-  { id: "v-real-2", type: "video", src: `${VIDEO_BASE_URL}/criativo-2.mp4`, aspect: "9/16", category: "alta-producao", persona: "PERSONA A REVISAR", angulo: "ÂNGULO A REVISAR", modelo: "ANÚNCIO EDITADO", isPlaceholder: false },
-  { id: "v-real-3", type: "video", src: `${VIDEO_BASE_URL}/criativo-3.mp4`, aspect: "9/16", category: "alta-producao", persona: "PERSONA A REVISAR", angulo: "ÂNGULO A REVISAR", modelo: "ANÚNCIO EDITADO", isPlaceholder: false },
-  { id: "v-real-4", type: "video", src: `${VIDEO_BASE_URL}/criativo-4.mp4`, aspect: "9/16", category: "ugc", persona: "PERSONA A REVISAR", angulo: "ÂNGULO A REVISAR", modelo: "UGC DEPOIMENTO", isPlaceholder: false },
-  { id: "v-real-5", type: "video", src: `${VIDEO_BASE_URL}/criativo-5.mp4`, aspect: "9/16", category: "ugc", persona: "PERSONA A REVISAR", angulo: "ÂNGULO A REVISAR", modelo: "UGC DEPOIMENTO", isPlaceholder: false },
-  { id: "v-real-6", type: "video", src: `${VIDEO_BASE_URL}/criativo-6.mp4`, aspect: "9/16", category: "ugc", persona: "PERSONA A REVISAR", angulo: "ÂNGULO A REVISAR", modelo: "UGC DEPOIMENTO", isPlaceholder: false },
-  { id: "v-real-7", type: "video", src: `${VIDEO_BASE_URL}/criativo-7.mp4`, aspect: "9/16", category: "estatico", persona: "PERSONA A REVISAR", angulo: "ÂNGULO A REVISAR", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
-  { id: "v-real-8", type: "video", src: `${VIDEO_BASE_URL}/criativo-8.mp4`, aspect: "9/16", category: "estatico", persona: "PERSONA A REVISAR", angulo: "ÂNGULO A REVISAR", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
-  { id: "v-real-9", type: "video", src: `${VIDEO_BASE_URL}/criativo-9.mp4`, aspect: "9/16", category: "estatico", persona: "PERSONA A REVISAR", angulo: "ÂNGULO A REVISAR", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
+  // Lote novo enviado pelo cliente — persona/ângulo ainda não foram revisados,
+  // por isso ficam de fora (evita mostrar "a revisar" pro usuário final).
+  // Adicionar persona/angulo aqui quando alguém revisar os vídeos de fato.
+  { id: "v-real-1", type: "video", src: `${VIDEO_BASE_URL}/criativo-1.mp4`, aspect: "9/16", category: "alta-producao", modelo: "ANÚNCIO EDITADO", isPlaceholder: false },
+  { id: "v-real-2", type: "video", src: `${VIDEO_BASE_URL}/criativo-2.mp4`, aspect: "9/16", category: "alta-producao", modelo: "ANÚNCIO EDITADO", isPlaceholder: false },
+  { id: "v-real-3", type: "video", src: `${VIDEO_BASE_URL}/criativo-3.mp4`, aspect: "9/16", category: "alta-producao", modelo: "ANÚNCIO EDITADO", isPlaceholder: false },
+  { id: "v-real-4", type: "video", src: `${VIDEO_BASE_URL}/criativo-4.mp4`, aspect: "9/16", category: "ugc", modelo: "UGC DEPOIMENTO", isPlaceholder: false },
+  { id: "v-real-5", type: "video", src: `${VIDEO_BASE_URL}/criativo-5.mp4`, aspect: "9/16", category: "ugc", modelo: "UGC DEPOIMENTO", isPlaceholder: false },
+  { id: "v-real-6", type: "video", src: `${VIDEO_BASE_URL}/criativo-6.mp4`, aspect: "9/16", category: "ugc", modelo: "UGC DEPOIMENTO", isPlaceholder: false },
+  { id: "v-real-7", type: "video", src: `${VIDEO_BASE_URL}/criativo-7.mp4`, aspect: "9/16", category: "estatico", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
+  { id: "v-real-8", type: "video", src: `${VIDEO_BASE_URL}/criativo-8.mp4`, aspect: "9/16", category: "estatico", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
+  { id: "v-real-9", type: "video", src: `${VIDEO_BASE_URL}/criativo-9.mp4`, aspect: "9/16", category: "estatico", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
 ];
 
 // Estáticos reais enviados pelo cliente (imagens 1080x1350). "outro-cliente"
 // ainda não foi identificado — confirmar a marca e trocar pelo nome real
 // (e adicionar o logo em CLIENT_LOGOS, se fizer sentido).
 export const REAL_STATICS: CreativeItem[] = [
-  { id: "s-livup-1", type: "image", src: "/creativos/livup/livup-estatico-01.png", aspect: "4/5", category: "estatico", persona: "CLIENTE LIVUP", angulo: "BENEFÍCIO", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
-  { id: "s-livup-2", type: "image", src: "/creativos/livup/livup-estatico-02.png", aspect: "4/5", category: "estatico", persona: "CLIENTE LIVUP", angulo: "BENEFÍCIO", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
-  { id: "s-livup-3", type: "image", src: "/creativos/livup/livup-estatico-03.png", aspect: "4/5", category: "estatico", persona: "CLIENTE LIVUP", angulo: "BENEFÍCIO", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
-  { id: "s-livup-4", type: "image", src: "/creativos/livup/livup-estatico-04.png", aspect: "4/5", category: "estatico", persona: "CLIENTE LIVUP", angulo: "BENEFÍCIO", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
-  { id: "s-livup-5", type: "image", src: "/creativos/livup/livup-estatico-05.png", aspect: "4/5", category: "estatico", persona: "CLIENTE LIVUP", angulo: "BENEFÍCIO", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
-  { id: "s-livup-6", type: "image", src: "/creativos/livup/livup-estatico-06.png", aspect: "4/5", category: "estatico", persona: "CLIENTE LIVUP", angulo: "BENEFÍCIO", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
-  { id: "s-livup-7", type: "image", src: "/creativos/livup/livup-estatico-07.png", aspect: "4/5", category: "estatico", persona: "CLIENTE LIVUP", angulo: "BENEFÍCIO", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
-  { id: "s-pod-1", type: "image", src: "/creativos/pod/pod-beneficio-01.png", aspect: "4/5", category: "estatico", persona: "CLIENTE POD KOMBUCHA", angulo: "BENEFÍCIO", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
-  { id: "s-pod-2", type: "image", src: "/creativos/pod/pod-beneficio-02.png", aspect: "4/5", category: "estatico", persona: "CLIENTE POD KOMBUCHA", angulo: "BENEFÍCIO", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
-  { id: "s-pod-3", type: "image", src: "/creativos/pod/pod-beneficio-03.png", aspect: "4/5", category: "estatico", persona: "CLIENTE POD KOMBUCHA", angulo: "BENEFÍCIO", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
-  { id: "s-pod-4", type: "image", src: "/creativos/pod/pod-beneficio-04.png", aspect: "4/5", category: "estatico", persona: "CLIENTE POD KOMBUCHA", angulo: "BENEFÍCIO", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
-  { id: "s-pod-5", type: "image", src: "/creativos/pod/pod-prova-social-01.png", aspect: "4/5", category: "estatico", persona: "CLIENTE POD KOMBUCHA", angulo: "PROVA SOCIAL", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
-  { id: "s-pod-6", type: "image", src: "/creativos/pod/pod-prova-social-02.png", aspect: "4/5", category: "estatico", persona: "CLIENTE POD KOMBUCHA", angulo: "PROVA SOCIAL", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
-  { id: "s-pod-7", type: "image", src: "/creativos/pod/pod-infografico-beneficio-01.png", aspect: "4/5", category: "estatico", persona: "CLIENTE POD KOMBUCHA", angulo: "BENEFÍCIO", modelo: "INFOGRÁFICO", isPlaceholder: false },
-  { id: "s-oc-1", type: "image", src: "/creativos/outro-cliente/outro-cliente-beneficios-01.png", aspect: "4/5", category: "estatico", persona: "CLIENTE A IDENTIFICAR", angulo: "BENEFÍCIO", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
-  { id: "s-oc-2", type: "image", src: "/creativos/outro-cliente/outro-cliente-marmita-01.png", aspect: "4/5", category: "estatico", persona: "CLIENTE A IDENTIFICAR", angulo: "PRODUTO", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
-  { id: "s-oc-3", type: "image", src: "/creativos/outro-cliente/outro-cliente-pratos-01.png", aspect: "4/5", category: "estatico", persona: "CLIENTE A IDENTIFICAR", angulo: "PRODUTO", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
-  { id: "s-oc-4", type: "image", src: "/creativos/outro-cliente/outro-cliente-marmita-02.png", aspect: "4/5", category: "estatico", persona: "CLIENTE A IDENTIFICAR", angulo: "PRODUTO", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
-  { id: "s-oc-5", type: "image", src: "/creativos/outro-cliente/outro-cliente-carrossel-macros-01.png", aspect: "4/5", category: "estatico", persona: "CLIENTE A IDENTIFICAR", angulo: "MACROS", modelo: "CARROSSEL", isPlaceholder: false },
-  { id: "s-oc-6", type: "image", src: "/creativos/outro-cliente/outro-cliente-carrossel-macros-02.png", aspect: "4/5", category: "estatico", persona: "CLIENTE A IDENTIFICAR", angulo: "MACROS", modelo: "CARROSSEL", isPlaceholder: false },
-  { id: "s-oc-7", type: "image", src: "/creativos/outro-cliente/outro-cliente-carrossel-macros-03.png", aspect: "4/5", category: "estatico", persona: "CLIENTE A IDENTIFICAR", angulo: "MACROS", modelo: "CARROSSEL", isPlaceholder: false },
-  { id: "s-oc-8", type: "image", src: "/creativos/outro-cliente/outro-cliente-carrossel-macros-04.png", aspect: "4/5", category: "estatico", persona: "CLIENTE A IDENTIFICAR", angulo: "MACROS", modelo: "CARROSSEL", isPlaceholder: false },
-  { id: "s-oc-9", type: "image", src: "/creativos/outro-cliente/outro-cliente-carrossel-pratos-01.png", aspect: "4/5", category: "estatico", persona: "CLIENTE A IDENTIFICAR", angulo: "PRATOS", modelo: "CARROSSEL", isPlaceholder: false },
-  { id: "s-oc-10", type: "image", src: "/creativos/outro-cliente/outro-cliente-carrossel-pratos-02.png", aspect: "4/5", category: "estatico", persona: "CLIENTE A IDENTIFICAR", angulo: "PRATOS", modelo: "CARROSSEL", isPlaceholder: false },
-  { id: "s-oc-11", type: "image", src: "/creativos/outro-cliente/outro-cliente-carrossel-pratos-03.png", aspect: "4/5", category: "estatico", persona: "CLIENTE A IDENTIFICAR", angulo: "PRATOS", modelo: "CARROSSEL", isPlaceholder: false },
-  { id: "s-oc-12", type: "image", src: "/creativos/outro-cliente/outro-cliente-carrossel-pratos-04.png", aspect: "4/5", category: "estatico", persona: "CLIENTE A IDENTIFICAR", angulo: "PRATOS", modelo: "CARROSSEL", isPlaceholder: false },
+  { id: "s-livup-1", type: "image", src: "/creativos/livup/livup-estatico-01.webp", aspect: "4/5", category: "estatico", persona: "CLIENTE LIVUP", angulo: "BENEFÍCIO", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
+  { id: "s-livup-2", type: "image", src: "/creativos/livup/livup-estatico-02.webp", aspect: "4/5", category: "estatico", persona: "CLIENTE LIVUP", angulo: "BENEFÍCIO", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
+  { id: "s-livup-3", type: "image", src: "/creativos/livup/livup-estatico-03.webp", aspect: "4/5", category: "estatico", persona: "CLIENTE LIVUP", angulo: "BENEFÍCIO", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
+  { id: "s-livup-4", type: "image", src: "/creativos/livup/livup-estatico-04.webp", aspect: "4/5", category: "estatico", persona: "CLIENTE LIVUP", angulo: "BENEFÍCIO", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
+  { id: "s-livup-5", type: "image", src: "/creativos/livup/livup-estatico-05.webp", aspect: "4/5", category: "estatico", persona: "CLIENTE LIVUP", angulo: "BENEFÍCIO", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
+  { id: "s-livup-6", type: "image", src: "/creativos/livup/livup-estatico-06.webp", aspect: "4/5", category: "estatico", persona: "CLIENTE LIVUP", angulo: "BENEFÍCIO", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
+  { id: "s-livup-7", type: "image", src: "/creativos/livup/livup-estatico-07.webp", aspect: "4/5", category: "estatico", persona: "CLIENTE LIVUP", angulo: "BENEFÍCIO", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
+  { id: "s-pod-1", type: "image", src: "/creativos/pod/pod-beneficio-01.webp", aspect: "4/5", category: "estatico", persona: "CLIENTE POD KOMBUCHA", angulo: "BENEFÍCIO", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
+  { id: "s-pod-2", type: "image", src: "/creativos/pod/pod-beneficio-02.webp", aspect: "4/5", category: "estatico", persona: "CLIENTE POD KOMBUCHA", angulo: "BENEFÍCIO", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
+  { id: "s-pod-3", type: "image", src: "/creativos/pod/pod-beneficio-03.webp", aspect: "4/5", category: "estatico", persona: "CLIENTE POD KOMBUCHA", angulo: "BENEFÍCIO", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
+  { id: "s-pod-4", type: "image", src: "/creativos/pod/pod-beneficio-04.webp", aspect: "4/5", category: "estatico", persona: "CLIENTE POD KOMBUCHA", angulo: "BENEFÍCIO", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
+  { id: "s-pod-5", type: "image", src: "/creativos/pod/pod-prova-social-01.webp", aspect: "4/5", category: "estatico", persona: "CLIENTE POD KOMBUCHA", angulo: "PROVA SOCIAL", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
+  { id: "s-pod-6", type: "image", src: "/creativos/pod/pod-prova-social-02.webp", aspect: "4/5", category: "estatico", persona: "CLIENTE POD KOMBUCHA", angulo: "PROVA SOCIAL", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
+  { id: "s-pod-7", type: "image", src: "/creativos/pod/pod-infografico-beneficio-01.webp", aspect: "4/5", category: "estatico", persona: "CLIENTE POD KOMBUCHA", angulo: "BENEFÍCIO", modelo: "INFOGRÁFICO", isPlaceholder: false },
+  { id: "s-oc-1", type: "image", src: "/creativos/outro-cliente/outro-cliente-beneficios-01.webp", aspect: "4/5", category: "estatico", persona: "CLIENTE A IDENTIFICAR", angulo: "BENEFÍCIO", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
+  { id: "s-oc-2", type: "image", src: "/creativos/outro-cliente/outro-cliente-marmita-01.webp", aspect: "4/5", category: "estatico", persona: "CLIENTE A IDENTIFICAR", angulo: "PRODUTO", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
+  { id: "s-oc-3", type: "image", src: "/creativos/outro-cliente/outro-cliente-pratos-01.webp", aspect: "4/5", category: "estatico", persona: "CLIENTE A IDENTIFICAR", angulo: "PRODUTO", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
+  { id: "s-oc-4", type: "image", src: "/creativos/outro-cliente/outro-cliente-marmita-02.webp", aspect: "4/5", category: "estatico", persona: "CLIENTE A IDENTIFICAR", angulo: "PRODUTO", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
+  { id: "s-oc-5", type: "image", src: "/creativos/outro-cliente/outro-cliente-carrossel-macros-01.webp", aspect: "4/5", category: "estatico", persona: "CLIENTE A IDENTIFICAR", angulo: "MACROS", modelo: "CARROSSEL", isPlaceholder: false },
+  { id: "s-oc-6", type: "image", src: "/creativos/outro-cliente/outro-cliente-carrossel-macros-02.webp", aspect: "4/5", category: "estatico", persona: "CLIENTE A IDENTIFICAR", angulo: "MACROS", modelo: "CARROSSEL", isPlaceholder: false },
+  { id: "s-oc-7", type: "image", src: "/creativos/outro-cliente/outro-cliente-carrossel-macros-03.webp", aspect: "4/5", category: "estatico", persona: "CLIENTE A IDENTIFICAR", angulo: "MACROS", modelo: "CARROSSEL", isPlaceholder: false },
+  { id: "s-oc-8", type: "image", src: "/creativos/outro-cliente/outro-cliente-carrossel-macros-04.webp", aspect: "4/5", category: "estatico", persona: "CLIENTE A IDENTIFICAR", angulo: "MACROS", modelo: "CARROSSEL", isPlaceholder: false },
+  { id: "s-oc-9", type: "image", src: "/creativos/outro-cliente/outro-cliente-carrossel-pratos-01.webp", aspect: "4/5", category: "estatico", persona: "CLIENTE A IDENTIFICAR", angulo: "PRATOS", modelo: "CARROSSEL", isPlaceholder: false },
+  { id: "s-oc-10", type: "image", src: "/creativos/outro-cliente/outro-cliente-carrossel-pratos-02.webp", aspect: "4/5", category: "estatico", persona: "CLIENTE A IDENTIFICAR", angulo: "PRATOS", modelo: "CARROSSEL", isPlaceholder: false },
+  { id: "s-oc-11", type: "image", src: "/creativos/outro-cliente/outro-cliente-carrossel-pratos-03.webp", aspect: "4/5", category: "estatico", persona: "CLIENTE A IDENTIFICAR", angulo: "PRATOS", modelo: "CARROSSEL", isPlaceholder: false },
+  { id: "s-oc-12", type: "image", src: "/creativos/outro-cliente/outro-cliente-carrossel-pratos-04.webp", aspect: "4/5", category: "estatico", persona: "CLIENTE A IDENTIFICAR", angulo: "PRATOS", modelo: "CARROSSEL", isPlaceholder: false },
 ];
 
 // Imagens temáticas (Unsplash) usadas de fundo nos cards placeholder da galeria,
@@ -263,6 +263,8 @@ export const CASE_STUDIES: CaseStudy[] = [
 // Carrossel de Resultados (seção 04) — 16 cards, padrão Soar (imagem+logo+métrica)
 // ---------------------------------------------------------------------------
 
+// 16 métricas únicas (uma por card) — evita repetição visível na volta do loop,
+// que fazia a mesma frase aparecer 2-3x entre clientes diferentes.
 const PLACEHOLDER_METRICS = [
   "AUMENTO DE 120% EM VENDAS",
   "REDUÇÃO DE 38% NO CAC",
@@ -270,6 +272,16 @@ const PLACEHOLDER_METRICS = [
   "ROAS DE 6.2",
   "3X MAIS LEADS QUALIFICADOS",
   "CRESCIMENTO DE 200% EM 90 DIAS",
+  "TICKET MÉDIO +45%",
+  "CTR 2.8X ACIMA DA MÉDIA",
+  "CUSTO POR LEAD -52%",
+  "TAXA DE CONVERSÃO 3.1X MAIOR",
+  "FATURAMENTO +180% EM 6 MESES",
+  "ROAS DE 8.4 NO PICO",
+  "REDUÇÃO DE 30% NO CPA",
+  "DOBROU O VOLUME DE VENDAS",
+  "5X MAIS ALCANCE QUALIFICADO",
+  "PAYBACK EM MENOS DE 60 DIAS",
 ];
 
 export const RESULTS_CAROUSEL: ResultCard[] = Array.from({ length: 16 }, (_, i) => {
@@ -385,4 +397,47 @@ export const VALUES_CAROUSEL_ITEMS = [
   "OBCECADO POR GENTE",
   "EXCELÊNCIA RECORRENTE",
   "NINGUÉM CONSTRÓI NADA SOZINHO",
+];
+
+// ---------------------------------------------------------------------------
+// FAQ (antes do formulário, seção 17) — reduz objeção antes do CTA final
+// ---------------------------------------------------------------------------
+
+export interface FaqItem {
+  id: string;
+  question: string;
+  answer: string;
+}
+
+export const FAQ_ITEMS: FaqItem[] = [
+  {
+    id: "faq-1",
+    question: "Quanto tempo leva pra ver resultado?",
+    answer:
+      "Os primeiros criativos e testes de mídia costumam ir ao ar nas primeiras semanas. Como trabalhamos com experimentação estruturada, o volume de dados pra otimizar de verdade cresce rápido — a maioria dos clientes vê sinais claros de performance dentro do primeiro mês.",
+  },
+  {
+    id: "faq-2",
+    question: "Funciona pra qualquer nicho ou porte de empresa?",
+    answer:
+      "Nascemos justamente pra atender pequenas e médias empresas que não têm o time interno de uma grande marca. O método (produção de criativos em volume + mídia orientada a dados) se adapta a diferentes nichos — o que muda é o volume e o ritmo de testes conforme o orçamento disponível.",
+  },
+  {
+    id: "faq-3",
+    question: "Vocês cuidam só da criação ou também da mídia?",
+    answer:
+      "Os dois juntos, como um único sistema. Separar criativo de mídia é um dos motivos mais comuns de campanha estagnada — por isso operamos as duas frentes integradas, testando ângulo, formato e verba de forma coordenada.",
+  },
+  {
+    id: "faq-4",
+    question: "Preciso ter estrutura de gravação/produção pra começar?",
+    answer:
+      "Não. Produzimos os criativos — estáticos, UGC e vídeos de alta produção — como parte do processo. No diagnóstico gratuito, mapeamos o que já existe (se houver) e o que precisa ser criado do zero.",
+  },
+  {
+    id: "faq-5",
+    question: "Como funciona o diagnóstico gratuito?",
+    answer:
+      "Você preenche o formulário abaixo, nosso time analisa seu cenário atual (site, oferta, mídia se já houver) e retorna em até 24h úteis com um plano inicial — sem compromisso.",
+  },
 ];

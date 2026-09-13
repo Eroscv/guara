@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Moon, Sun } from "lucide-react";
+import { motion, useScroll, useSpring } from "framer-motion";
 import logo from "@/assets/logo-guara.png";
 import { useTheme } from "@/hooks/use-theme";
 
@@ -16,9 +17,16 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
   const { theme, toggleTheme } = useTheme();
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, { stiffness: 300, damping: 40, restDelta: 0.001 });
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a]/85 backdrop-blur-md border-b border-white/5">
+      <motion.div
+        aria-hidden
+        style={{ scaleX }}
+        className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-primary origin-left"
+      />
       <div className="container mx-auto flex items-center justify-between h-16 px-4">
         <Link to="/" className="flex items-center gap-2">
           <img src={logo} alt="Guará Media" className="h-9" />
@@ -54,7 +62,7 @@ const Navbar = () => {
 
         {/* Mobile toggle */}
         <button
-          className="md:hidden text-white"
+          className="md:hidden -mr-2.5 p-2.5 text-white"
           onClick={() => setOpen(!open)}
           aria-label="Menu"
         >

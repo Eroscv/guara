@@ -28,7 +28,10 @@ const InfiniteMarquee = ({
   className = "",
 }: Props) => (
   <div
-    className={`relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)] ${pauseOnHover ? "logo-marquee-wrapper" : ""} ${className}`}
+    tabIndex={0}
+    role="group"
+    aria-label="Carrossel automático — foco pausa a animação"
+    className={`relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)] ${pauseOnHover ? "logo-marquee-wrapper" : ""} focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 ${className}`}
   >
     <div
       className={`flex w-max ${gapClassName} animate-logo-marquee`}

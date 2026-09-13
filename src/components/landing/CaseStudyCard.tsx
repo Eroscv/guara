@@ -25,7 +25,7 @@ const CaseStudyCard = ({ caseStudy, reverse = false }: Props) => (
 
     <div>
       <div className="flex items-center gap-3 mb-4">
-        <img src={caseStudy.clientLogo} alt={caseStudy.clientName} className="h-8 w-auto object-contain" />
+        <img src={caseStudy.clientLogo} alt={caseStudy.clientName} className="h-8 w-auto object-contain" loading="lazy" />
         {caseStudy.isPlaceholder && <PlaceholderBanner label={`case ${caseStudy.clientName}`} />}
       </div>
       <h3 className="font-heading font-extrabold uppercase text-2xl md:text-3xl leading-tight">{caseStudy.headline}</h3>
