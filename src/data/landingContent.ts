@@ -106,10 +106,9 @@ export const CLIENT_LOGOS = [
 
 const REAL_VIDEOS: CreativeItem[] = [
   { id: "v-alta-1", type: "video", src: `${VIDEO_BASE_URL}/ad-1.mp4`, aspect: "9/16", category: "alta-producao", persona: "GESTOR DE E-COMMERCE", angulo: "PROVA SOCIAL", modelo: "ANÚNCIO EDITADO", isPlaceholder: false },
-  { id: "v-alta-2", type: "video", src: `${VIDEO_BASE_URL}/catperform-academia.mp4`, aspect: "9/16", category: "alta-producao", persona: "DONO DE ACADEMIA", angulo: "RESULTADO RÁPIDO", modelo: "ANÚNCIO EDITADO", isPlaceholder: false },
-  { id: "v-alta-4", type: "video", src: `${VIDEO_BASE_URL}/mushin.mp4`, aspect: "9/16", category: "alta-producao", persona: "CONSUMIDOR PREMIUM", angulo: "POSICIONAMENTO DE MARCA", modelo: "BRANDED CONTENT", isPlaceholder: false },
-  { id: "v-ugc-1", type: "video", src: `${VIDEO_BASE_URL}/manu-rita.mp4`, aspect: "9/16", category: "ugc", persona: "MULHER 30+", angulo: "ANTES E DEPOIS", modelo: "UGC DEPOIMENTO", isPlaceholder: false },
-  { id: "v-ugc-2", type: "video", src: `${VIDEO_BASE_URL}/estagio.mp4`, aspect: "9/16", category: "ugc", persona: "JOVEM PROFISSIONAL", angulo: "OPORTUNIDADE", modelo: "UGC DEPOIMENTO", isPlaceholder: false },
+  // catperform-academia.mp4, mushin.mp4, manu-rita.mp4 e estagio.mp4 foram
+  // deletados do Vercel Blob (cota de 1GB do plano Hobby) e removidos daqui —
+  // deixá-los na lista fazia o VideoCard travar tentando tocar um src 404.
   { id: "v-ugc-3", type: "video", src: `${VIDEO_BASE_URL}/iranni-ecommerce.mp4`, aspect: "9/16", category: "ugc", persona: "COMPRADOR ONLINE", angulo: "DOR DE CONFIANÇA", modelo: "UGC REVIEW", isPlaceholder: false },
   { id: "v-ugc-4", type: "video", src: `${VIDEO_BASE_URL}/sociedade-canina.mp4`, aspect: "9/16", category: "ugc", persona: "TUTOR DE PET", angulo: "CUIDADO", modelo: "UGC DEPOIMENTO", isPlaceholder: false },
   // Lote novo enviado pelo cliente — persona/ângulo ainda não foram revisados,
@@ -123,7 +122,6 @@ const REAL_VIDEOS: CreativeItem[] = [
   { id: "v-real-6", type: "video", src: `${VIDEO_BASE_URL}/criativo-6.mp4`, aspect: "9/16", category: "ugc", modelo: "UGC DEPOIMENTO", isPlaceholder: false },
   { id: "v-real-7", type: "video", src: `${VIDEO_BASE_URL}/criativo-7.mp4`, aspect: "9/16", category: "estatico", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
   { id: "v-real-8", type: "video", src: `${VIDEO_BASE_URL}/criativo-8.mp4`, aspect: "9/16", category: "estatico", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
-  { id: "v-real-9", type: "video", src: `${VIDEO_BASE_URL}/criativo-9.mp4`, aspect: "9/16", category: "estatico", modelo: "CRIATIVO ESTÁTICO", isPlaceholder: false },
 ];
 
 // Estáticos reais enviados pelo cliente (imagens 1080x1350). "outro-cliente"
@@ -365,7 +363,7 @@ export const METHODOLOGY_STEPS: MethodologyStepData[] = [
   {
     step: 5,
     title: "Otimização Contínua",
-    description: "O ciclo nunca para — cada resultado vira insumo pro próximo criativo.",
+    description: "O ciclo nunca para: cada resultado vira insumo pro próximo criativo.",
     bullets: ["Dashboards em tempo real", "Reporte semanal de performance", "Reinvestimento no que funciona"],
   },
 ];
@@ -414,30 +412,30 @@ export const FAQ_ITEMS: FaqItem[] = [
     id: "faq-1",
     question: "Quanto tempo leva pra ver resultado?",
     answer:
-      "Os primeiros criativos e testes de mídia costumam ir ao ar nas primeiras semanas. Como trabalhamos com experimentação estruturada, o volume de dados pra otimizar de verdade cresce rápido — a maioria dos clientes vê sinais claros de performance dentro do primeiro mês.",
+      "Os primeiros criativos e testes de mídia costumam ir ao ar nas primeiras semanas. Como trabalhamos com experimentação estruturada, o volume de dados pra otimizar de verdade cresce rápido, e a maioria dos clientes vê sinais claros de performance dentro do primeiro mês.",
   },
   {
     id: "faq-2",
     question: "Funciona pra qualquer nicho ou porte de empresa?",
     answer:
-      "Nascemos justamente pra atender pequenas e médias empresas que não têm o time interno de uma grande marca. O método (produção de criativos em volume + mídia orientada a dados) se adapta a diferentes nichos — o que muda é o volume e o ritmo de testes conforme o orçamento disponível.",
+      "Nascemos justamente pra atender pequenas e médias empresas que não têm o time interno de uma grande marca. O método (produção de criativos em volume + mídia orientada a dados) se adapta a diferentes nichos. O que muda é o volume e o ritmo de testes conforme o orçamento disponível.",
   },
   {
     id: "faq-3",
     question: "Vocês cuidam só da criação ou também da mídia?",
     answer:
-      "Os dois juntos, como um único sistema. Separar criativo de mídia é um dos motivos mais comuns de campanha estagnada — por isso operamos as duas frentes integradas, testando ângulo, formato e verba de forma coordenada.",
+      "Os dois juntos, como um único sistema. Separar criativo de mídia é um dos motivos mais comuns de campanha estagnada, por isso operamos as duas frentes integradas, testando ângulo, formato e verba de forma coordenada.",
   },
   {
     id: "faq-4",
     question: "Preciso ter estrutura de gravação/produção pra começar?",
     answer:
-      "Não. Produzimos os criativos — estáticos, UGC e vídeos de alta produção — como parte do processo. No diagnóstico gratuito, mapeamos o que já existe (se houver) e o que precisa ser criado do zero.",
+      "Não. Produzimos os criativos (estáticos, UGC e vídeos de alta produção) como parte do processo. No diagnóstico gratuito, mapeamos o que já existe (se houver) e o que precisa ser criado do zero.",
   },
   {
     id: "faq-5",
     question: "Como funciona o diagnóstico gratuito?",
     answer:
-      "Você preenche o formulário abaixo, nosso time analisa seu cenário atual (site, oferta, mídia se já houver) e retorna em até 24h úteis com um plano inicial — sem compromisso.",
+      "Você preenche o formulário abaixo, nosso time analisa seu cenário atual (site, oferta, mídia se já houver) e retorna em até 24h úteis com um plano inicial, sem compromisso.",
   },
 ];

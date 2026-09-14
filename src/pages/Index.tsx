@@ -1,6 +1,6 @@
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, MessageCircle } from "lucide-react";
 import Layout from "@/components/Layout";
 import SEO from "@/components/SEO";
 import RotatingWord from "@/components/landing/RotatingWord";
@@ -37,25 +37,14 @@ import {
 const ROTATING_WORDS = ["Publicidade", "Criativos", "Performance", "Escala"];
 
 const heroVideos = GALLERY_ITEMS.filter((i) => !i.isPlaceholder && i.type === "video").slice(0, 3);
+const numerosFinaisReais = NUMEROS_FINAIS.filter((n) => !n.isPlaceholder);
 const heroStaticImages = REAL_STATICS.map((s) => s.src);
 const heroColumn = (offset: number, count: number) =>
   heroStaticImages.slice(offset, offset + count).length
     ? heroStaticImages.slice(offset, offset + count)
     : heroStaticImages.slice(0, count);
 
-/** Fade + leve subida ao entrar no viewport — respeita prefers-reduced-motion. */
-const useRevealProps = () => {
-  const prefersReducedMotion = useReducedMotion();
-  return {
-    initial: { opacity: 0, y: prefersReducedMotion ? 0 : 14 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, margin: "-80px" },
-    transition: { duration: 0.35, ease: "easeOut" as const },
-  };
-};
-
 const Index = () => {
-  const reveal = useRevealProps();
   const numeroGiganteRef = useRef<HTMLElement>(null);
   const prefersReducedMotion = useReducedMotion();
   const { scrollYProgress: numeroScrollProgress } = useScroll({
@@ -67,7 +56,7 @@ const Index = () => {
   return (
     <Layout>
       <SEO
-        title="Guará Media — Marketing Visual de Performance"
+        title="Guará Media: Marketing Visual de Performance"
         description="A Guará produz criativos em grande volume e opera mídia e criatividade como um único sistema. Criatividade não é inspiração, é processo."
         path="/"
       />
@@ -86,11 +75,11 @@ const Index = () => {
               </h1>
               <p className="mt-6 text-white/70 text-lg max-w-md">
                 Produzimos criativos em volume, operamos mídia e criatividade como um único sistema. Performance vem de
-                experimentação estruturada — não de sorte.
+                experimentação estruturada, não de sorte.
               </p>
               <a
                 href="#diagnostico"
-                className="inline-flex items-center gap-2 mt-8 bg-gradient-primary text-primary-foreground px-7 py-3.5 rounded-xl font-semibold hover:opacity-90 transition-opacity shadow-soft uppercase tracking-wide text-sm"
+                className="inline-flex items-center gap-2 mt-8 bg-gradient-primary text-primary-foreground px-7 py-3.5 rounded-xl font-semibold hover:opacity-90 transition-opacity shadow-soft text-sm"
               >
                 Agendar Diagnóstico
               </a>
@@ -98,9 +87,17 @@ const Index = () => {
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 h-[420px] sm:h-[500px] md:h-[680px] lg:h-[760px]">
               <VerticalMarqueeColumn images={heroColumn(0, 5)} direction="up" duration={26} />
-              <div className="flex flex-col gap-3 md:gap-4">
+              <div className="flex flex-col gap-3 md:gap-4 h-full">
                 {heroVideos.map((v, i) => (
-                  <VideoCard key={v.id} src={v.src} type={v.type} aspect="9/16" index={i} autoPlayOnView className="flex-1" />
+                  <VideoCard
+                    key={v.id}
+                    src={v.src}
+                    type={v.type}
+                    aspect="9/16"
+                    index={i}
+                    autoPlayOnView
+                    className="flex-1 min-h-0 !aspect-auto"
+                  />
                 ))}
               </div>
               <VerticalMarqueeColumn images={heroColumn(5, 5)} direction="down" duration={30} className="hidden md:block" />
@@ -114,41 +111,40 @@ const Index = () => {
       {/* 03 — O que é a Guará (pausa em bege, sem criativos) */}
       {/* ================================================================ */}
       <section className="py-16 md:py-24 bg-[#FFF6E4] dark:bg-[#1a1715] text-[#1a1715] dark:text-[#f5f0e6]">
-        <motion.div {...reveal} className="container mx-auto px-4 max-w-2xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-widest text-primary">O que é a Guará</p>
-          <h2 className="mt-3 font-heading font-extrabold text-2xl md:text-4xl leading-tight tracking-tight">
+        <div className="container mx-auto px-4 max-w-2xl text-center">
+          <h2 className="font-heading font-extrabold text-2xl md:text-4xl leading-tight tracking-tight">
             Criatividade não é inspiração. É processo.
           </h2>
           <p className="mt-6 text-lg leading-relaxed opacity-80">
             Somos a resposta a uma injustiça que se repete há décadas: enquanto as grandes empresas concentram os
             melhores talentos e tecnologias, as pequenas e médias ficam com as sobras. A Guará nasceu para
-            democratizar o acesso ao crescimento exponencial — produzindo criativos em escala, guiados por método, não
+            democratizar o acesso ao crescimento exponencial, produzindo criativos em escala, guiados por método, não
             por achismo.
           </p>
-        </motion.div>
+        </div>
       </section>
 
       {/* ================================================================ */}
       {/* 04 — Carrossel de Resultados */}
       {/* ================================================================ */}
       <section className="py-16 md:py-24 bg-[#0a0a0a] text-white overflow-hidden">
-        <motion.div {...reveal} className="container mx-auto px-4 mb-10">
+        <div className="container mx-auto px-4 mb-10">
           <h2 className="font-heading font-extrabold text-2xl md:text-4xl text-center leading-tight tracking-tight">
             Resultados que falam por nós
           </h2>
-        </motion.div>
+        </div>
         <InfiniteMarquee
           gapClassName="gap-4 md:gap-5"
           items={RESULTS_CAROUSEL.map((r) => (
             <div
               key={r.id}
-              className="group w-[260px] md:w-[300px] rounded-2xl overflow-hidden bg-white/[0.04] border border-white/10 transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/40 hover:bg-white/[0.07] hover:shadow-[0_12px_32px_-8px_rgba(242,101,34,0.3)]"
+              className="w-[260px] md:w-[300px] rounded-lg overflow-hidden bg-white/[0.04] border border-white/10 transition-colors duration-300 hover:border-primary/40"
             >
               <div className="relative aspect-[4/3] bg-white overflow-hidden">
                 <img
                   src={r.logo}
                   alt={r.clientName}
-                  className="absolute inset-0 w-full h-full object-contain p-8 transition-transform duration-300 group-hover:scale-105"
+                  className="absolute inset-0 w-full h-full object-contain p-8"
                   loading="lazy"
                 />
                 {r.isPlaceholder && <PlaceholderBanner label="métrica" className="absolute top-2 right-2 z-10" />}
@@ -166,10 +162,7 @@ const Index = () => {
       {/* 05 — Vídeo de apresentação */}
       {/* ================================================================ */}
       <section className="py-16 md:py-24 bg-[#FFF6E4] dark:bg-[#1a1715] text-[#1a1715] dark:text-[#f5f0e6]">
-        <VideoPlayerHero
-          eyebrow="EM 90 SEGUNDOS"
-          title="Por que criativo virou o gargalo da sua mídia"
-        />
+        <VideoPlayerHero title="Por que criativo virou o gargalo da sua mídia" />
       </section>
 
       {/* ================================================================ */}
@@ -181,7 +174,7 @@ const Index = () => {
             Volume é a nossa assinatura
           </h2>
           <p className="mt-3 text-white/60 max-w-xl mx-auto">
-            Estático, UGC e alta produção — tudo produzido internamente, em escala.
+            Estático, UGC e alta produção. Tudo produzido internamente, em escala.
           </p>
         </div>
         <div className="mt-10">
@@ -204,12 +197,12 @@ const Index = () => {
           items={CLIENT_LOGOS.map((logo) => (
             <img key={logo.alt} src={logo.src} alt={logo.alt} className="h-14 md:h-16 w-auto object-contain" loading="lazy" />
           ))}
-          className="logo-marquee-wrapper"
+          className="logo-dim-wrapper"
         />
         <div className="text-center mt-10">
           <a
             href="#diagnostico"
-            className="inline-flex items-center gap-2 bg-gradient-primary text-primary-foreground px-7 py-3.5 rounded-xl font-semibold hover:opacity-90 transition-opacity shadow-soft uppercase tracking-wide text-sm"
+            className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-7 py-3.5 rounded-xl font-semibold hover:opacity-90 transition-opacity shadow-soft text-sm"
           >
             Agendar Diagnóstico
           </a>
@@ -221,9 +214,12 @@ const Index = () => {
       {/* ================================================================ */}
       <section className="py-16 md:py-24 bg-[#0a0a0a] text-white">
         <div className="container mx-auto px-4 space-y-20 md:space-y-28">
-          <h2 className="font-heading font-extrabold text-2xl md:text-4xl text-center leading-tight tracking-tight">
-            Cases
-          </h2>
+          <div>
+            <h2 className="font-heading font-extrabold text-2xl md:text-4xl text-center leading-tight tracking-tight">
+              Cases
+            </h2>
+            <p className="mt-3 text-white/60 text-center max-w-xl mx-auto">Prova real. Sem enrolação.</p>
+          </div>
           {/* Só cases com conteúdo real vão ao ar — evita headline/métrica "a definir" em produção */}
           {CASE_STUDIES.filter((c) => !c.isPlaceholder).map((c, i) => (
             <CaseStudyCard key={c.id} caseStudy={c} reverse={i % 2 === 1} />
@@ -234,18 +230,34 @@ const Index = () => {
       {/* ================================================================ */}
       {/* 09 — Faixa de Oferta (bloco cheio laranja) */}
       {/* ================================================================ */}
-      <section className="py-16 md:py-20 bg-primary text-primary-foreground text-center">
-        <motion.div {...reveal} className="container mx-auto px-4">
+      <section className="relative py-16 md:py-20 bg-primary text-primary-foreground text-center overflow-hidden">
+        <div
+          aria-hidden
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: "radial-gradient(circle, rgba(0,0,0,0.12) 1.5px, transparent 1.5px)",
+            backgroundSize: "18px 18px",
+          }}
+        />
+        <div className="relative container mx-auto px-4 max-w-2xl">
           <h2 className="font-heading font-extrabold text-3xl md:text-5xl leading-tight tracking-tight">
             Diagnóstico de Criativo Gratuito
           </h2>
+          <p className="mt-4 text-primary-foreground/80 text-base md:text-lg">
+            Conta pra gente como está seu anúncio hoje. A gente dá uma olhada de verdade no site, na oferta e na
+            mídia, e te devolve um caminho prático pra destravar o crescimento, sem enrolação.
+          </p>
           <a
             href="#diagnostico"
-            className="inline-flex items-center gap-2 mt-8 bg-[#0a0a0a] text-white px-8 py-4 rounded-xl font-semibold hover:opacity-90 transition-opacity shadow-soft uppercase tracking-wide"
+            className="inline-flex items-center gap-2 mt-8 bg-[#0a0a0a] text-white px-8 py-4 rounded-xl font-semibold shadow-soft transition-opacity hover:opacity-90"
           >
-            Agendar Diagnóstico
+            Agendar meu diagnóstico
           </a>
-        </motion.div>
+          <p className="mt-4 flex items-center justify-center gap-1.5 text-sm text-primary-foreground/70">
+            <MessageCircle size={14} aria-hidden />
+            Sem compromisso, a gente te chama em até 24h úteis
+          </p>
+        </div>
       </section>
 
       {/* ================================================================ */}
@@ -261,25 +273,26 @@ const Index = () => {
       </section>
 
       {/* ================================================================ */}
-      {/* 11 — Número Gigante */}
+      {/* 11 — Número Gigante (só entra no ar com valor real, não faz sentido animar até 0) */}
       {/* ================================================================ */}
-      <section ref={numeroGiganteRef} className="relative py-24 md:py-36 bg-[#0a0a0a] text-white overflow-hidden text-center">
-        <motion.img
-          src={heroDashboard}
-          alt=""
-          aria-hidden
-          loading="lazy"
-          style={{ y: bgParallaxY }}
-          className="absolute inset-0 w-full h-full object-cover opacity-10 pointer-events-none select-none scale-110"
-        />
-        <div className="container mx-auto px-4 relative">
-          {BIG_NUMBER.isPlaceholder && <PlaceholderBanner label="valor de receita gerada" className="mb-4" />}
-          <p className="font-heading font-black text-6xl sm:text-7xl md:text-8xl lg:text-9xl leading-none">
-            <AnimatedCounter value={BIG_NUMBER.value} prefix={BIG_NUMBER.prefix} suffix={BIG_NUMBER.suffix} />
-          </p>
-          <p className="mt-6 text-white/70 uppercase tracking-widest text-sm md:text-base">{BIG_NUMBER.label}</p>
-        </div>
-      </section>
+      {!BIG_NUMBER.isPlaceholder && (
+        <section ref={numeroGiganteRef} className="relative py-24 md:py-36 bg-[#0a0a0a] text-white overflow-hidden text-center">
+          <motion.img
+            src={heroDashboard}
+            alt=""
+            aria-hidden
+            loading="lazy"
+            style={{ y: bgParallaxY }}
+            className="absolute inset-0 w-full h-full object-cover opacity-10 pointer-events-none select-none scale-110"
+          />
+          <div className="container mx-auto px-4 relative">
+            <p className="font-heading font-black text-6xl sm:text-7xl md:text-8xl lg:text-9xl leading-none">
+              <AnimatedCounter value={BIG_NUMBER.value} prefix={BIG_NUMBER.prefix} suffix={BIG_NUMBER.suffix} />
+            </p>
+            <p className="mt-6 text-white/70 uppercase tracking-widest text-sm md:text-base">{BIG_NUMBER.label}</p>
+          </div>
+        </section>
+      )}
 
       {/* ================================================================ */}
       {/* 12 — Motor Guará */}
@@ -339,48 +352,47 @@ const Index = () => {
       {/* 14 — Como é Trabalhar com a Gente */}
       {/* ================================================================ */}
       <section className="py-16 md:py-24 bg-[#FFF6E4] dark:bg-[#1a1715] text-[#1a1715] dark:text-[#f5f0e6]">
-        <VideoPlayerHero
-          eyebrow="BASTIDORES"
-          title="Como é trabalhar com a gente"
-        />
+        <VideoPlayerHero title="Como é trabalhar com a gente" />
       </section>
 
       {/* ================================================================ */}
-      {/* 15 — A Guará em Números (última inversão pra bege) */}
+      {/* 15 — A Guará em Números (última inversão pra bege). Só entra no ar */}
+      {/* com números reais — animar contadores até 0 parece quebrado. */}
       {/* ================================================================ */}
-      <section className="py-16 md:py-24 bg-[#FFF6E4] dark:bg-[#1a1715] text-[#1a1715] dark:text-[#f5f0e6]">
-        <div className="container mx-auto px-4">
-          <h2 className="font-heading font-extrabold text-2xl md:text-4xl text-center leading-tight tracking-tight mb-12">
-            A Guará em números
-          </h2>
-          <div className="grid sm:grid-cols-3 gap-8">
-            {NUMEROS_FINAIS.map((n, i) => (
-              <motion.div
-                key={n.label}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.5 }}
-                className="text-center"
-              >
-                {n.isPlaceholder && <PlaceholderBanner label={n.label} className="mb-3" />}
-                <p className="font-heading font-extrabold text-4xl md:text-5xl text-primary">
-                  <AnimatedCounter value={n.value} prefix={n.prefix} suffix={n.suffix} />
-                </p>
-                <p className="mt-2 text-sm opacity-70 flex items-center justify-center gap-1.5">
-                  <CheckCircle2 size={14} className="text-[#C8E64A]" /> {n.label}
-                </p>
-              </motion.div>
-            ))}
+      {numerosFinaisReais.length > 0 && (
+        <section className="py-16 md:py-24 bg-[#FFF6E4] dark:bg-[#1a1715] text-[#1a1715] dark:text-[#f5f0e6]">
+          <div className="container mx-auto px-4">
+            <h2 className="font-heading font-extrabold text-2xl md:text-4xl text-center leading-tight tracking-tight mb-12">
+              A Guará em números
+            </h2>
+            <div className="grid sm:grid-cols-3 gap-8">
+              {numerosFinaisReais.map((n, i) => (
+                <motion.div
+                  key={n.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1, duration: 0.5 }}
+                  className="text-center"
+                >
+                  <p className="font-heading font-extrabold text-4xl md:text-5xl text-primary">
+                    <AnimatedCounter value={n.value} prefix={n.prefix} suffix={n.suffix} />
+                  </p>
+                  <p className="mt-2 text-sm opacity-70 flex items-center justify-center gap-1.5">
+                    <CheckCircle2 size={14} className="text-[#C8E64A]" /> {n.label}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ================================================================ */}
       {/* 16 — CTA Final */}
       {/* ================================================================ */}
       <section className="py-16 md:py-24 bg-[#0a0a0a] text-white text-center overflow-hidden">
-        <motion.div {...reveal} className="container mx-auto px-4">
+        <div className="container mx-auto px-4">
           <h2 className="font-heading font-extrabold uppercase text-3xl sm:text-5xl md:text-6xl leading-[1.05] tracking-tight max-w-4xl mx-auto">
             Vamos produzir os próximos criativos que vão escalar sua marca
           </h2>
@@ -390,7 +402,7 @@ const Index = () => {
           >
             Agendar Diagnóstico
           </a>
-        </motion.div>
+        </div>
         <div className="mt-14">
           <InfiniteMarquee
             speed="fast"
@@ -434,7 +446,7 @@ const Index = () => {
             <h2 className="font-heading font-extrabold text-2xl md:text-4xl leading-tight tracking-tight">
               Agende seu diagnóstico gratuito
             </h2>
-            <p className="mt-3 opacity-70">Preencha o formulário e nosso time de especialistas retornará em até 24h úteis.</p>
+            <p className="mt-3 opacity-70">Preenche aí embaixo que a gente te chama em até 24h úteis.</p>
           </div>
           <LeadForm />
         </div>

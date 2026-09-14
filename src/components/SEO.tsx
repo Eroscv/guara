@@ -1,7 +1,7 @@
 import { Helmet } from "react-helmet-async";
 
 const SITE = "https://prospectpath-studio.lovable.app";
-const DEFAULT_DESC = "Guará Media — destravamos o crescimento de empresas com marketing, publicidade e tecnologia.";
+const DEFAULT_DESC = "Guará Media: destravamos o crescimento de empresas com marketing, publicidade e tecnologia.";
 
 interface Props {
   title: string;

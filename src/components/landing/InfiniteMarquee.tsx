@@ -30,7 +30,7 @@ const InfiniteMarquee = ({
   <div
     tabIndex={0}
     role="group"
-    aria-label="Carrossel automático — foco pausa a animação"
+    aria-label="Carrossel automático. Foco pausa a animação"
     className={`relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)] ${pauseOnHover ? "logo-marquee-wrapper" : ""} focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 ${className}`}
   >
     <div

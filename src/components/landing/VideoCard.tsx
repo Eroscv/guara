@@ -42,6 +42,7 @@ const VideoCard = ({
 }: Props) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
+  const [videoError, setVideoError] = useState(false);
   const prefersReducedMotion =
     typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
@@ -116,14 +117,14 @@ const VideoCard = ({
     [],
   );
 
-  if (!src || isPlaceholder) {
+  if (!src || isPlaceholder || videoError) {
     return (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-50px" }}
         transition={{ duration: 0.5, delay: (index % 5) * 0.05 }}
-        className={`shrink-0 ${ASPECT_CLASS[aspect]} rounded-2xl relative overflow-hidden border border-dashed border-white/20 bg-white/[0.03] ${className}`}
+        className={`shrink-0 ${ASPECT_CLASS[aspect]} rounded-lg relative overflow-hidden border border-dashed border-white/20 bg-white/[0.03] ${className}`}
       >
         {placeholderImage ? (
           <>
@@ -132,11 +133,13 @@ const VideoCard = ({
           </>
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
-            <p className="text-[11px] text-white/40 text-center px-3">Criativo em produção</p>
+            <p className="text-[11px] text-white/40 text-center px-3">
+              {videoError ? "Vídeo indisponível" : "Criativo em produção"}
+            </p>
           </div>
         )}
         <span className="absolute top-2 left-2 z-10 text-[9px] uppercase tracking-wide text-primary bg-black/60 border border-primary/40 rounded-full px-2 py-0.5">
-          Em produção
+          {videoError ? "Indisponível" : "Em produção"}
         </span>
         {overlay && <div className="absolute inset-0 flex items-end p-3 opacity-0 hover:opacity-100 transition-opacity z-10">{overlay}</div>}
       </motion.div>
@@ -149,7 +152,7 @@ const VideoCard = ({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5, delay: (index % 5) * 0.05 }}
-      className={`shrink-0 ${ASPECT_CLASS[aspect]} rounded-2xl overflow-hidden relative group ${type === "video" ? "cursor-pointer" : ""} ring-1 ring-white/10 hover:ring-primary/50 transition-all bg-black ${className}`}
+      className={`shrink-0 ${ASPECT_CLASS[aspect]} rounded-lg overflow-hidden relative group ${type === "video" ? "cursor-pointer" : ""} ring-1 ring-white/10 hover:ring-primary/50 transition-all bg-black ${className}`}
       onClick={type === "video" ? handleClick : undefined}
       role={type === "video" ? "button" : undefined}
       tabIndex={type === "video" ? 0 : undefined}
@@ -168,6 +171,7 @@ const VideoCard = ({
           preload="none"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
+          onError={() => setVideoError(true)}
         />
       )}
 

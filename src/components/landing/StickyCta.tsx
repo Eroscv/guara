@@ -23,7 +23,7 @@ const StickyCta = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.25 }}
-          className="fixed bottom-5 right-5 z-40 inline-flex items-center gap-2 bg-gradient-primary text-primary-foreground px-5 py-3.5 rounded-full font-semibold text-sm uppercase tracking-wide shadow-soft hover:opacity-90 transition-opacity"
+          className="fixed bottom-5 right-5 z-40 inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-3.5 rounded-full font-semibold text-sm shadow-soft hover:opacity-90 transition-opacity"
         >
           Agendar Diagnóstico
           <ArrowRight size={16} />

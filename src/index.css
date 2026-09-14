@@ -157,12 +157,16 @@
     animation-play-state: paused;
   }
 }
-.logo-marquee-wrapper img {
+/* Dessaturação até o hover — opt-in via classe própria (não acoplada ao
+   pause-on-hover, que se aplica a todo InfiniteMarquee por padrão). Usado só
+   na parede de logos "Marcas que Confiam"; o Carrossel de Resultados usa
+   logos coloridos desde o início. */
+.logo-dim-wrapper img {
   filter: grayscale(100%);
   opacity: 0.55;
   transition: filter 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
 }
-.logo-marquee-wrapper img:hover {
+.logo-dim-wrapper img:hover {
   filter: grayscale(0%);
   opacity: 1;
   transform: scale(1.08);

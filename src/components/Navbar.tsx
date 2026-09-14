@@ -54,7 +54,7 @@ const Navbar = () => {
           </button>
           <Link
             to="/contato"
-            className="bg-gradient-primary text-primary-foreground px-5 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
+            className="bg-primary text-primary-foreground px-5 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
           >
             Agendar Diagnóstico
           </Link>
@@ -88,7 +88,7 @@ const Navbar = () => {
           <Link
             to="/contato"
             onClick={() => setOpen(false)}
-            className="block mt-3 text-center bg-gradient-primary text-primary-foreground px-5 py-2.5 rounded-lg text-sm font-semibold"
+            className="block mt-3 text-center bg-primary text-primary-foreground px-5 py-2.5 rounded-lg text-sm font-semibold"
           >
             Agendar Diagnóstico
           </Link>

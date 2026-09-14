@@ -5,7 +5,7 @@ import tornPaperDivider from "@/assets/torn-paper-divider.png.asset.json";
 // TODO: CNPJ e endereço completo (Parque Científico e Tecnológico da Unicamp)
 // ainda não foram informados — atualizar com os dados reais da empresa.
 const CNPJ: string | null = null;
-const ADDRESS = "Parque Científico e Tecnológico da Unicamp — Campinas, SP";
+const ADDRESS = "Parque Científico e Tecnológico da Unicamp, Campinas, SP";
 
 const Footer = () => (
   <footer className="relative bg-[#0a0a0a] text-white overflow-hidden">

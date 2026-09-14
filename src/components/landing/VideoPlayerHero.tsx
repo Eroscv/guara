@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Play } from "lucide-react";
+import { Clapperboard, Play } from "lucide-react";
 
 interface Props {
   src?: string;
@@ -38,8 +38,14 @@ const VideoPlayerHero = ({ src, cover, eyebrow, title }: Props) => {
               {cover ? (
                 <img src={cover} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover opacity-70" />
               ) : (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <p className="text-white/30 text-sm">{src ? "Capa em produção" : "Vídeo em produção"}</p>
+                <div
+                  className="absolute inset-0 flex flex-col items-center justify-center gap-3"
+                  style={{
+                    backgroundImage: "radial-gradient(circle at center, rgba(242,101,34,0.12), transparent 65%)",
+                  }}
+                >
+                  <Clapperboard className="w-10 h-10 text-primary/50" strokeWidth={1.5} />
+                  <p className="text-white/40 text-sm">{src ? "Capa em produção" : "Vídeo em produção"}</p>
                 </div>
               )}
               <div className="absolute inset-0 bg-black/30" />

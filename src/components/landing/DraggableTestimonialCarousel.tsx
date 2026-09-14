@@ -11,7 +11,7 @@ const DraggableTestimonialCarousel = ({ testimonials }: Props) => (
     <CarouselContent>
       {testimonials.map((t) => (
         <CarouselItem key={t.id} className="md:basis-2/3">
-          <div className="bg-white dark:bg-card rounded-2xl p-8 md:p-10 shadow-card h-full flex flex-col">
+          <div className="bg-white dark:bg-card rounded-lg p-8 md:p-10 shadow-card h-full flex flex-col">
             {t.isPlaceholder && <PlaceholderBanner label="foto de depoimento" className="mb-3 self-start" />}
             <h3 className="font-heading font-bold text-lg md:text-xl">{t.headline}</h3>
             <p className="mt-4 text-muted-foreground leading-relaxed italic flex-1">"{t.quote}"</p>
