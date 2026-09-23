@@ -452,6 +452,25 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
 #contato .fok svg{color:#0a0a0a}
 @media (max-width:640px){#contato{padding-top:72px}#contato::before{height:32px;top:-18px}#contato .fbox{transform:none;box-shadow:6px 6px 0 #0a0a0a}#contato .fbox::after{right:12px}}
 @media (prefers-reduced-motion:reduce){#contato .fbox{transform:none}}
+/* Hero: papel pontilhado, título maior e leque de criativos */
+.hero-adesivo{border-bottom:4px solid #0a0a0a;background-image:radial-gradient(rgba(10,10,10,.14) 1.2px,transparent 1.2px);background-size:22px 22px;padding-top:64px}
+.hero-adesivo .h1{font-size:clamp(42px,6.2vw,92px);line-height:.98}
+.hero-adesivo .lead{color:#0a0a0a;font-size:clamp(17px,1.5vw,20px)}
+.hero-adesivo .grid-ed{align-items:center}
+.stage{position:relative;height:clamp(360px,44vw,560px);margin:24px 0 8px}
+.stage .card{position:absolute;top:50%;left:50%;width:44%;border:3px solid #0a0a0a;box-shadow:8px 8px 0 #0a0a0a;border-radius:14px}
+.stage .st-l{transform:translate(-118%,-46%) rotate(-9deg);z-index:1}
+.stage .st-c{transform:translate(-50%,-50%) rotate(-1deg);z-index:3;width:48%}
+.stage .st-r{transform:translate(18%,-42%) rotate(8deg);z-index:2}
+.stage .card.rv{opacity:0}
+.stage .st-l.rv{transform:translate(-50%,-40%) rotate(0deg)}.stage .st-c.rv{transform:translate(-50%,-40%) rotate(0deg)}.stage .st-r.rv{transform:translate(-50%,-40%) rotate(0deg)}
+.stage .card.rv.in{opacity:1}
+.stage .st-l.rv.in{transform:translate(-118%,-46%) rotate(-9deg)}.stage .st-c.rv.in{transform:translate(-50%,-50%) rotate(-1deg)}.stage .st-r.rv.in{transform:translate(18%,-42%) rotate(8deg)}
+.stage .card:hover{z-index:4}
+.stk-c{right:0;top:8px;--rot:6deg}
+.stk-d{position:absolute;left:0;bottom:8px;--rot:-5deg;transform:rotate(var(--rot));background:#fff;z-index:4}
+.hero-adesivo .stk-d{animation:pop .55s cubic-bezier(.34,1.56,.64,1) both;animation-delay:1.05s}
+@media (max-width:640px){.stage{height:clamp(300px,86vw,360px);margin-top:12px}.stage .card{width:46%;box-shadow:5px 5px 0 #0a0a0a}.stage .st-c{width:50%}.stage .st-l.rv.in{transform:translate(-104%,-46%) rotate(-9deg)}.stage .st-r.rv.in{transform:translate(4%,-42%) rotate(8deg)}.stk-c{top:-4px;max-width:50%}.stk-d{bottom:-6px;font-size:12px}}
 </style>
 </head>
 <body class="v13-adesivo">
@@ -478,8 +497,9 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
       <div class="cta-row"><a href="#contato" class="btn btn-lg">Quero saber mais</a><span class="stk stk-b" aria-hidden="true">24h úteis</span></div>
     </div>
     <figure class="fig fig-adesivo">
-      <div class="fig-grid"><figure class="card is-vid " style="--ar:9/16" data-src="../videos-web/ad-1.mp4"><video muted loop playsinline preload="none" aria-label="Criativo em vídeo 1"></video><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="40" height="40" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><button type="button" class="snd" aria-label="Ativar som"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line class="mute-x" x1="23" y1="9" x2="17" y2="15"/><line class="mute-x" x1="17" y1="9" x2="23" y2="15"/><path class="wave" d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button></figure><figure class="card is-img " style="--ar:4/5"><img src="../creativos/pod/pod-beneficio-01.webp" alt="Criativo Pod Kombucha" loading="lazy" decoding="async"></figure></div>
+      <div class="stage"><figure class="card is-img st-l" style="--ar:4/5"><img src="../creativos/livup/livup-estatico-01.webp" alt="Criativo estático LivUp" loading="lazy" decoding="async"></figure><figure class="card is-vid st-c" style="--ar:9/16" data-src="../videos-web/ad-1.mp4"><video muted loop playsinline preload="none" aria-label="Criativo em vídeo 1"></video><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="40" height="40" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><button type="button" class="snd" aria-label="Ativar som"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line class="mute-x" x1="23" y1="9" x2="17" y2="15"/><line class="mute-x" x1="17" y1="9" x2="23" y2="15"/><path class="wave" d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button></figure><figure class="card is-img st-r" style="--ar:4/5"><img src="../creativos/pod/pod-beneficio-01.webp" alt="Criativo Pod Kombucha" loading="lazy" decoding="async"></figure></div>
       <span class="stk stk-c" aria-hidden="true">Feito em escala</span>
+      <span class="stk stk-d" aria-hidden="true">Estático, UGC e vídeo</span>
     </figure>
   </div>
 </section>
