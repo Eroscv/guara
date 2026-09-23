@@ -14,7 +14,7 @@
 :root{--light:#FFF6E4;--lightInk:#1a1715;--dark:#1a1715;--darkInk:#FFF6E4;--accent:#F26522;--accentInk:#1a1715;--green:#C8E64A;--lineW:1px;--r:0px;--rL:0px;--rBtn:0px;--display:Inter,sans-serif;--displayW:900;--displayTf:none;--displayLs:-0.035em;--body:'Noto Serif Display',Georgia,serif;--ui:Inter,sans-serif;--btnBg:#F26522;--btnInk:#1a1715;--hdrBg:#FFF6E4;--hdrInk:#1a1715;--navHi:#F26522;--tcardBg:#fff;--tcardInk:#1a1715;--tcardLine:#1a1715;--fboxBg:transparent;--fboxInk:#1a1715;--fboxLine:#1a1715;--fieldBg:transparent;color-scheme:light}
 
 *,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;scroll-padding-top:88px;overflow-x:clip}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;scroll-padding-top:88px}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .hdr{transition:box-shadow .3s}
@@ -223,71 +223,32 @@ details[open] .chev{transform:rotate(-135deg)}
 .fok svg{color:var(--green)}
 .fok .muted{max-width:36ch}
 /* footer */
-.ftr{background:#0a0a0a;color:#fff;padding:72px 0 48px}
-.ftr-top{display:flex;flex-direction:column;gap:32px}
+.ftr{--acc:var(--ftrAcc,#F26522);position:relative;overflow:hidden;background:#0a0a0a;color:#FFF6E4;padding:0 0 40px;border-top:4px solid var(--acc)}
+.ftr-cta{display:flex;flex-direction:column;gap:28px;padding:64px 0 48px;border-bottom:1px solid rgba(255,246,228,.12)}
+.ftr-h2{font-size:clamp(32px,5vw,64px);line-height:.98}
+.ftr-cta-r{display:flex;flex-direction:column;gap:14px;align-items:flex-start}
+.ftr-btn{background:var(--acc);color:#0a0a0a;border-radius:var(--rBtn)}
+.ftr-mail{font-family:var(--ui);font-size:15px;color:#FFF6E4;text-decoration:none;border-bottom:1px solid rgba(255,246,228,.35);padding-bottom:2px}
+.ftr-mail:hover{border-color:var(--acc);color:var(--acc)}
+@media (min-width:900px){.ftr-cta{flex-direction:row;align-items:flex-end;justify-content:space-between;padding:80px 0 56px}.ftr-cta-r{align-items:flex-end}}
+.ftr-grid{display:grid;gap:36px;padding:48px 0}
+@media (min-width:640px){.ftr-grid{grid-template-columns:1fr 1fr}}
+@media (min-width:1024px){.ftr-grid{grid-template-columns:1.6fr 1fr 1.2fr 1fr;gap:48px}}
 .ftr-logo{height:40px;width:auto;margin-bottom:16px}
-address{font-style:normal;font-size:14px;opacity:.6;line-height:1.7;max-width:320px}
-address a{text-decoration:none}address a:hover{color:#f97316}
-.ftr-right{display:flex;flex-direction:column;gap:16px}
-.soc{display:flex;gap:12px}
-.soc a{width:36px;height:36px;border-radius:999px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.7)}
-.soc a:hover{color:#f97316;background:rgba(255,255,255,.2)}
-.legal{display:flex;gap:16px;font-size:12px;opacity:.5}
-.legal a{text-decoration:none}
-.copy{margin-top:48px;padding-top:24px;border-top:1px solid rgba(255,255,255,.1);text-align:center;font-size:12px;opacity:.4}
-@media (min-width:768px){.ftr-top{flex-direction:row;justify-content:space-between}.ftr-right{align-items:flex-end}}
-/* progresso, reveal, rotativo */
-.prog{position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent);transform-origin:left;transform:scaleX(0)}
-.rv{--ease:cubic-bezier(.22,1,.36,1);opacity:0;transform:translateY(28px);transition:opacity .8s var(--ease),transform .9s var(--ease),clip-path .9s var(--ease);transition-delay:var(--d,0s);will-change:opacity,transform}
-.rv.in{opacity:1;transform:none;clip-path:inset(0 0 0 0)}
-.rv-left{transform:translateX(-48px)}
-.rv-right{transform:translateX(48px)}
-.rv-scale{transform:translateY(20px) scale(.94)}
-.rv-clip{opacity:1;transform:translateY(0);clip-path:inset(0 0 100% 0)}
-.rv-clip.in{clip-path:inset(0 0 -0.2em 0)}
-.rv-line{transform:scaleX(0);transform-origin:left;opacity:1}
-.rv-line.in{transform:scaleX(1)}
-.px{will-change:transform}
-.statement .w{opacity:.22;transition:opacity .35s ease}
-.statement .w.on{opacity:1}
-.tarja .h2.rv{transform:translateX(-40px)}
-.hero .rv{transition-duration:1s,1.1s,1s}
-@media (prefers-reduced-motion:reduce){.rv,.rv-clip{opacity:1;transform:none;clip-path:none;transition:none}.px{transform:none!important}.statement .w{opacity:1}}
-.rot{display:inline-block;color:var(--accent);transition:opacity .25s,transform .25s}
-.rot.out{opacity:0;transform:translateY(.15em)}
-.t-accent .rot{color:#FFF6E4}
-.ftr-nav{display:flex;flex-direction:column;gap:8px;font-size:14px}
-.ftr-nav a{text-decoration:none;opacity:.6}.ftr-nav a:hover{opacity:1;color:#f97316}
-.ftr-h{font-family:var(--ui);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.06em;opacity:.5;margin-bottom:4px}
-.step+.step{border-top:1px solid var(--line);padding-top:56px}
-/* copy v2 */
-.h1-m{font-size:clamp(40px,7.4vw,112px)}
-.h1-s{font-size:clamp(34px,4.2vw,56px)}
-.narrow-3{max-width:calc(960px + var(--pad)*2)}
-.statement{font-family:var(--display);font-weight:var(--displayW);text-transform:var(--displayTf);letter-spacing:var(--displayLs);font-size:clamp(26px,3.4vw,44px);line-height:1.12;text-wrap:balance}
-.tarja{display:grid;gap:32px;align-items:start}
-.tarja .lead{max-width:none;margin-top:0}
-.tarja-txt{display:flex;flex-direction:column;gap:16px;align-items:flex-start}
-.tarja-txt .btn{margin-top:12px}
-@media (min-width:1024px){.tarja{grid-template-columns:1fr 1fr;gap:64px}}
-.faixa.center .btn{margin-top:32px}
-.vert{display:grid;gap:40px}
-.vcol{padding-top:24px;border-top:var(--lineW) solid var(--ink)}
-.vcol .lead{max-width:none}
-.vnum{display:inline-block;font-family:var(--ui);font-weight:900;font-size:14px;color:var(--accent);margin-bottom:12px}
-@media (min-width:900px){.vert{grid-template-columns:1fr 1fr;gap:64px}}
-.origem{display:grid;gap:40px;align-items:center}
-.origem .lead{max-width:none}
-.origem-media{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:520px}
-.origem-media .card:nth-child(even){margin-top:40px}
-@media (min-width:1024px){.origem{grid-template-columns:1.1fr 1fr;gap:72px}.origem-media{justify-self:end}}
-.ofertas{display:grid;gap:24px}
-.oferta{display:flex;flex-direction:column;gap:14px;padding:32px 28px;border-radius:var(--rL);background:var(--tcardBg);color:var(--tcardInk);border:var(--lineW) solid var(--tcardLine)}
-.oferta .h3{margin-top:0}.oferta .osub{font-size:16px;line-height:1.4}.oferta .muted{flex:1;font-size:15px;line-height:1.55}
-.oferta .btn{align-self:flex-start;margin-top:8px}
-.onum{font-family:var(--ui);font-weight:900;font-size:14px;color:var(--accent)}
-@media (min-width:900px){.ofertas{grid-template-columns:repeat(3,1fr)}}
-.fgrid .micro{justify-content:center}
+.ftr-tag{font-family:var(--ui);font-size:15px;line-height:1.5;max-width:300px;margin-bottom:14px}
+address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-height:1.7}
+.ftr-col{display:flex;flex-direction:column;gap:10px;font-family:var(--ui);font-size:14px}
+.ftr-col a{text-decoration:none;opacity:.7;transition:opacity .2s,color .2s}.ftr-col a:hover{opacity:1;color:var(--acc)}
+.ftr-h{font-family:var(--ui);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.06em;opacity:.5;margin-bottom:6px}
+.ftr-small{font-size:13px;opacity:.6}
+.soc{display:flex;gap:10px}
+.soc a{width:40px;height:40px;border-radius:999px;border:1px solid rgba(255,246,228,.2);display:flex;align-items:center;justify-content:center;color:#FFF6E4;opacity:1!important;transition:border-color .2s,background .2s}
+.soc a:hover{border-color:var(--acc);background:var(--acc);color:#0a0a0a}
+.ftr-bottom{display:flex;flex-direction:column;gap:10px;padding-top:24px;border-top:1px solid rgba(255,246,228,.12);font-family:var(--ui);font-size:12px;opacity:.55}
+.ftr-bottom .legal{display:flex;gap:16px;opacity:1}
+.legal a{text-decoration:none}.legal a:hover{color:var(--acc)}
+@media (min-width:640px){.ftr-bottom{flex-direction:row;justify-content:space-between}}
+.ftr-word{position:absolute;left:50%;bottom:-0.28em;transform:translateX(-50%);font-family:var(--display);font-weight:900;font-size:clamp(120px,26vw,420px);line-height:1;letter-spacing:-0.05em;color:rgba(255,246,228,.035);pointer-events:none;user-select:none;white-space:nowrap}
 /* sticky cta */
 .sticky{position:fixed;right:16px;bottom:16px;z-index:60;display:inline-flex;align-items:center;gap:8px;padding:14px 20px;border-radius:var(--rBtn);background:var(--accent);color:var(--accentInk);font-family:var(--ui);font-weight:700;font-size:14px;text-decoration:none;box-shadow:0 8px 24px rgba(0,0,0,.25);transition:transform .3s,opacity .3s}
 .sticky[hidden]{display:none}
@@ -470,16 +431,19 @@ address a{text-decoration:none}address a:hover{color:#f97316}
 
 <footer class="ftr">
   <div class="wrap">
-    <div class="ftr-top">
-      <div><img src="img/logo-guara-footer.png" alt="Guará Media" class="ftr-logo"><address>Parque Científico e Tecnológico da Unicamp, Campinas, SP<br>CNPJ: <i>a definir</i><br><a href="mailto:contato@guaramedia.com.br">contato@guaramedia.com.br</a></address></div>
-      <nav class="ftr-nav" aria-label="Rodapé"><p class="ftr-h">Navegue</p><a href="v6-split.html">Home</a><a href="v6-split-blog.html">Blog</a><a href="v6-split-ferramentas.html">Ferramentas</a><a href="v6-split-talentos.html">Talentos</a><a href="v6-split-artigos.html">Artigos</a><a href="v6-split.html#contato">Fale com a Guará</a></nav>
-      <div class="ftr-right">
-        <div class="soc"><a href="https://www.instagram.com/guara_media/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a><a href="https://www.linkedin.com/company/guara-media/posts/?feedView=all" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a></div>
-        <div class="legal"><a href="#">Termos de Uso</a><a href="#">Política de Privacidade</a></div>
-      </div>
+    <div class="ftr-cta">
+      <h2 class="ftr-h2">Tem um projeto?<br>Vamos conversar.</h2>
+      <div class="ftr-cta-r"><a href="v6-split.html#contato" class="btn btn-lg ftr-btn">Fale com a Guará</a><a href="mailto:contato@guaramedia.com.br" class="ftr-mail">contato@guaramedia.com.br</a></div>
     </div>
-    <p class="copy">© 2026 Guará Media. Todos os direitos reservados.</p>
+    <div class="ftr-grid">
+      <div class="ftr-brand"><img src="img/logo-guara-footer.png" alt="Guará Media" class="ftr-logo"><p class="ftr-tag">Startup-agência de geração de receita, nascida na Unicamp.</p><address>Parque Científico e Tecnológico da Unicamp<br>Campinas, SP<br>CNPJ: <i>a definir</i></address></div>
+      <nav class="ftr-col" aria-label="Páginas"><p class="ftr-h">Navegue</p><a href="v6-split.html">Home</a><a href="v6-split-blog.html">Blog</a><a href="v6-split-ferramentas.html">Ferramentas</a><a href="v6-split-talentos.html">Talentos</a><a href="v6-split-artigos.html">Artigos</a></nav>
+      <nav class="ftr-col" aria-label="Soluções"><p class="ftr-h">Soluções</p><a href="v6-split.html#ofertas">Auditoria de Mídia Paga</a><a href="v6-split.html#ofertas">Consultoria Estratégica & Produção em Escala</a><a href="v6-split.html#ofertas">Parceria estratégica completa</a><a href="v6-split.html#contato">Ainda não sei, quero conversar</a></nav>
+      <div class="ftr-col"><p class="ftr-h">Siga a Guará</p><div class="soc"><a href="https://www.instagram.com/guara_media/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a><a href="https://www.linkedin.com/company/guara-media/posts/?feedView=all" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a></div><p class="ftr-small">Resposta em até 24h úteis.</p></div>
+    </div>
+    <div class="ftr-bottom"><span>© 2026 Guará Media. Todos os direitos reservados.</span><span class="legal"><a href="#">Termos de Uso</a><a href="#">Política de Privacidade</a></span></div>
   </div>
+  <div class="ftr-word" aria-hidden="true">Guará</div>
 </footer>
 <script>(function(){
   
