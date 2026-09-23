@@ -445,6 +445,39 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
 /* rodapé */
 .ftr{border-top-width:6px}.ftr-btn{border:3px solid #FFF6E4;box-shadow:4px 4px 0 #FFF6E4}.ftr-btn:hover{box-shadow:2px 2px 0 #FFF6E4}
 .hdr .brand img{filter:none}.stk{pointer-events:none}
+/* 1 hero no celular: um só bloco laranja na dobra */
+@media (max-width:767px){.hero-adesivo .btn{background:#FFF6E4;color:#0a0a0a}}
+/* 2 etiqueta dentro do card no celular */
+@media (max-width:640px){.stk-c{right:8px;top:-12px;max-width:58%;white-space:normal;text-align:center;font-size:12px;line-height:1.2;padding:6px 12px}}
+/* 3 cards do hero empilhados no celular, segundo colado por cima */
+@media (max-width:640px){.fig-grid{grid-template-columns:1fr;position:relative;padding:12px 0 40px}.fig-grid .card:first-child{width:84%}.fig-grid .card:last-child{position:absolute;right:0;bottom:0;width:46%}.fig-grid .card.rv.in:last-child{transform:rotate(3deg)}}
+/* 4 statement sem rotação no celular */
+@media (max-width:640px){.s-dark .narrow-3{transform:none;box-shadow:6px 6px 0 #C8E64A;padding:28px 20px}}
+/* 5 marcas como selos brancos */
+.s-dark .logos-dim img{filter:none;opacity:1;background:#fff;border:3px solid #0a0a0a;border-radius:999px;padding:10px 22px;height:64px!important;width:auto;box-shadow:3px 3px 0 #FFF6E4}
+/* 6 uma sombra só: preto por padrão, verde só no statement, bege sobre preto */
+.s-dark .card{box-shadow:6px 6px 0 #FFF6E4}.s-dark .oferta,.s-dark .rcard{box-shadow:6px 6px 0 #FFF6E4}.s-dark .origem-media .card{box-shadow:4px 4px 0 #FFF6E4}.fgrid input:focus,.fgrid select:focus,.fgrid textarea:focus{box-shadow:3px 3px 0 #0a0a0a}
+/* 7 galeria coerente no preto */
+.s-dark .gal .card{border:3px solid #FFF6E4;box-shadow:4px 4px 0 #FFF6E4}.s-dark .tab{box-shadow:3px 3px 0 #FFF6E4;border-color:#FFF6E4;color:#FFF6E4}.s-dark .tab.on{background:#FFF6E4;color:#0a0a0a;border-color:#0a0a0a;box-shadow:3px 3px 0 #FFF6E4}
+/* 8 tarja: bolinhas só do lado esquerdo */
+.faixa::before{-webkit-mask-image:linear-gradient(90deg,#000 40%,transparent 62%);mask-image:linear-gradient(90deg,#000 40%,transparent 62%)}
+/* 9 oferta principal em destaque */
+.oferta:nth-child(2){position:relative;box-shadow:10px 10px 0 #0a0a0a}.oferta:nth-child(2)::before{content:"Mais completa";position:absolute;top:-16px;right:20px;transform:rotate(3deg);font-family:var(--ui);font-weight:900;font-size:12px;text-transform:uppercase;letter-spacing:.04em;padding:6px 12px;border:3px solid #0a0a0a;border-radius:999px;background:#F26522;color:#0a0a0a;box-shadow:3px 3px 0 #0a0a0a}
+/* 10 feedback de toque */
+.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 #0a0a0a;transition-duration:.06s}.s-dark .btn:active{box-shadow:1px 1px 0 #FFF6E4}
+/* 11 alvo de toque das abas */
+.tab{min-height:46px}
+/* 12 contraste do texto secundário sobre bege */
+.s-light{--muted:color-mix(in srgb,var(--ink) 82%,transparent)}
+/* 13 seta do select no traço grosso */
+.fgrid select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230a0a0a' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>");background-repeat:no-repeat;background-position:right 12px center;background-size:16px;padding-right:40px}
+/* 14 wordmark do rodapé em contorno */
+.ftr-word{color:transparent;-webkit-text-stroke:2px rgba(255,246,228,.14)}
+/* 15 pop das etiquetas fechando a sequência do hero */
+.stk-a{--rot:-6deg}.stk-b{--rot:4deg}.stk-c{--rot:6deg}.stk-a,.stk-b,.stk-c{transform:rotate(var(--rot))}
+.hero-adesivo .stk{animation:pop .55s cubic-bezier(.34,1.56,.64,1) both}.stk-a{animation-delay:.35s}.stk-b{animation-delay:.6s}.stk-c{animation-delay:.85s}
+@keyframes pop{from{opacity:0;transform:scale(.6) rotate(var(--rot))}to{opacity:1;transform:scale(1) rotate(var(--rot))}}
+@media (prefers-reduced-motion:reduce){.hero-adesivo .stk{animation:none}}
 </style>
 </head>
 <body class="v13-adesivo inner">
