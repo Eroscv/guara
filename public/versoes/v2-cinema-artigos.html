@@ -14,7 +14,7 @@
 :root{--light:#161311;--lightInk:#FFF6E4;--dark:#0a0a0a;--darkInk:#FFF6E4;--accent:#F26522;--accentInk:#0a0a0a;--green:#C8E64A;--lineW:1px;--r:6px;--rL:16px;--rBtn:999px;--display:Inter,sans-serif;--displayW:900;--displayTf:uppercase;--displayLs:-0.035em;--body:'Noto Serif Display',Georgia,serif;--ui:Inter,sans-serif;--btnBg:#F26522;--btnInk:#0a0a0a;--hdrBg:#0a0a0a;--hdrInk:#FFF6E4;--navHi:#F26522;--tcardBg:#1a1715;--tcardInk:#FFF6E4;--tcardLine:#2a2724;--fboxBg:#0a0a0a;--fboxInk:#FFF6E4;--fboxLine:#2a2724;--fieldBg:#141210;color-scheme:light}
 
 *,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;scroll-padding-top:88px}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;scroll-padding-top:88px;overflow-x:clip}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .hdr{transition:box-shadow .3s}
@@ -529,6 +529,7 @@ address a{text-decoration:none}address a:hover{color:#f97316}
   }
   var cnts = document.querySelectorAll('[data-count]');
   if (cnts.length && !rm) { var cio = new IntersectionObserver(function(es){ es.forEach(function(en){ if (!en.isIntersecting) return; var el = en.target, to = +el.dataset.count, suf = el.dataset.suffix || '', t0 = performance.now(); cio.unobserve(el); (function tick(now){ var p = Math.min(1, (now - t0) / 1400), e = 1 - Math.pow(1 - p, 3); el.textContent = Math.round(to * e) + suf; if (p < 1) requestAnimationFrame(tick); })(t0); }); }, { threshold: 0.5 }); cnts.forEach(function(c){ cio.observe(c); }); }
+  var ck = document.getElementById('clock'); if (ck) { var tk = function(){ ck.textContent = new Date().toLocaleTimeString('pt-BR'); }; tk(); setInterval(tk, 1000); }
   var rot = document.querySelector('.rot');
   if (rot && !rm) { var words = rot.dataset.words.split('|'), wi = 0; setInterval(function(){ rot.classList.add('out'); setTimeout(function(){ wi = (wi + 1) % words.length; rot.textContent = words[wi]; rot.classList.remove('out'); }, 260); }, 2600); }
 
