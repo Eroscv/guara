@@ -5,14 +5,15 @@
  * real antes do lançamento — busque por "isPlaceholder: true" neste arquivo
  * para ver a lista completa do que falta.
  *
- * Vídeos: hospedados no Vercel Blob Store "guara-blob" (bucket público).
- * `public/videos/` (pasta no .gitignore) continua tendo os arquivos locais
- * pra dev, mas em produção o site consome direto da URL do Blob abaixo.
- * O plano Hobby da Vercel tem 1GB de cota — `video-02.mp4` não coube e por
- * isso não faz parte de REAL_VIDEOS (ficou só a imagem placeholder no lugar).
+ * Vídeos: versões comprimidas (720x1280, H.264, 2 a 11 MB cada) ficam em
+ * `public/videos-web/` e são servidas pelo próprio site. O Vercel Blob
+ * ("guara-blob") que hospedava os originais foi bloqueado pela Vercel
+ * ("Your store is blocked"), por isso o site não depende mais dele.
+ * `public/videos/` (no .gitignore) guarda os originais em 1080p pra
+ * regerar os comprimidos com ffmpeg se precisar.
  */
 
-const VIDEO_BASE_URL = "https://y7tml9uonsrwk3h6.public.blob.vercel-storage.com/videos";
+const VIDEO_BASE_URL = `${import.meta.env.BASE_URL}videos-web`;
 
 import logoConsorcioSorteado from "@/assets/logos/consorcio-sorteado.png";
 import logoEvi from "@/assets/logos/evi.png";
