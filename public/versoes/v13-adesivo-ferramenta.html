@@ -290,8 +290,8 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
 .sol-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
 .sol-chip{font-family:var(--ui);font-size:13px;font-weight:600;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:none;color:var(--ink);cursor:pointer;min-height:40px}
 .sol-chip.on{background:var(--accent);color:var(--accentInk);border-color:var(--accent)}
-.fprog{display:flex;flex-direction:column;gap:6px;margin:0 0 20px;font-family:var(--ui);font-size:12px;color:var(--muted)}
-.fprog-bar{display:block;height:6px;border-radius:999px;background:var(--line);overflow:hidden}
+.fprog{display:block;margin:0 0 20px;font-family:var(--ui);font-size:12px;color:var(--muted)}
+.fprog-bar{display:block;margin-top:8px;height:6px;border-radius:999px;background:var(--line);overflow:hidden}
 .fprog-bar b{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
 .fprog.done{color:var(--ink)}
 .marcas-l{margin-top:56px;font-family:var(--ui);font-size:13px;font-weight:600;color:var(--muted)}
@@ -657,9 +657,9 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
 
 /* Acelerar a qualquer custo: bilhete de alerta com faixa zebrada */
 .hero-adesivo + .sec{padding-top:80px;padding-bottom:80px;background-image:radial-gradient(rgba(10,10,10,.10) 1.2px,transparent 1.2px);background-size:22px 22px}
-.hero-adesivo + .sec .narrow-2{max-width:calc(1040px + var(--pad)*2);text-align:left;position:relative;transform:rotate(-.6deg);padding:56px 48px 72px;border-radius:20px;box-shadow:10px 10px 0 #0a0a0a;overflow:hidden}
+.hero-adesivo + .sec .narrow-2{max-width:calc(1040px + var(--pad)*2);text-align:left;position:relative;transform:rotate(-.6deg);padding:56px 48px 72px;border-radius:20px;box-shadow:10px 10px 0 #0a0a0a}
 .hero-adesivo + .sec .narrow-2::before{content:"";position:absolute;top:-14px;left:40px;width:140px;height:32px;transform:rotate(-6deg);background:#F26522;border:3px solid #0a0a0a;background-image:repeating-linear-gradient(135deg,transparent 0 10px,rgba(10,10,10,.14) 10px 12px)}
-.hero-adesivo + .sec .narrow-2::after{content:"";position:absolute;left:0;right:0;bottom:0;height:18px;background:repeating-linear-gradient(135deg,#0a0a0a 0 14px,#C8E64A 14px 28px);border-top:3px solid #0a0a0a}
+.hero-adesivo + .sec .narrow-2::after{content:"";position:absolute;left:0;right:0;bottom:0;height:18px;background:repeating-linear-gradient(135deg,#0a0a0a 0 14px,#C8E64A 14px 28px);border-top:3px solid #0a0a0a;border-radius:0 0 17px 17px}
 .hero-adesivo + .sec .narrow-2 .h2{font-size:clamp(30px,3.6vw,50px);line-height:1;max-width:none;margin:0}
 .hero-adesivo + .sec .narrow-2 .lead{margin:0;max-width:none;font-size:clamp(17px,1.5vw,20px);line-height:1.55;color:#0a0a0a}
 .hl2{background:linear-gradient(transparent 58%,#C8E64A 58%);padding:0 .06em;font-weight:700}
@@ -686,7 +686,7 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
 @media (max-width:640px){.faixa{padding-top:64px;padding-bottom:64px}.faixa .wrap::before{inset:8px;border-radius:14px}.faixa .tarja{padding:24px calc(var(--pad) + 12px) 12px}.faixa .h2{font-size:32px}.faixa .tarja-txt .lead:nth-child(2){margin-left:0}.faixa .tarja-txt .lead{padding:16px;box-shadow:4px 4px 0 #0a0a0a}.faixa .tarja-txt::before{width:80px;height:22px;top:-12px}.faixa .tarja-txt .btn{width:100%;justify-content:center}}
 /* Rodapé: cartão de visita colado, selos e fita */
 .ftr{border-top:4px solid #0a0a0a;position:relative;background-image:radial-gradient(rgba(255,246,228,.10) 1.2px,transparent 1.2px);background-size:22px 22px}
-.ftr::before{content:"";position:absolute;top:-22px;left:50%;width:min(260px,60%);height:40px;transform:translateX(-50%) rotate(2deg);background:#F26522;border:3px solid #0a0a0a;box-shadow:4px 4px 0 #FFF6E4;background-image:repeating-linear-gradient(135deg,transparent 0 10px,rgba(10,10,10,.14) 10px 12px);z-index:2}
+#contato::after{content:"";position:absolute;z-index:3;bottom:-22px;left:50%;width:min(260px,60%);height:40px;transform:translateX(-50%) rotate(2deg);background:#F26522;border:3px solid #0a0a0a;box-shadow:4px 4px 0 #FFF6E4;background-image:repeating-linear-gradient(135deg,transparent 0 10px,rgba(10,10,10,.14) 10px 12px)}
 .ftr-cta{padding-top:96px;border-bottom:3px solid rgba(255,246,228,.25)}
 .ftr-h2{font-size:clamp(34px,5vw,64px)}
 .ftr-h2::after{content:"";display:block;width:110px;height:10px;margin-top:18px;background:#C8E64A;border-radius:999px;transform:rotate(-2deg)}
@@ -705,7 +705,7 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
 .soc a:hover{background:#C8E64A;border-color:#0a0a0a;color:#0a0a0a;transform:translate(-1px,-2px)}
 .ftr-bottom{border-top:3px solid rgba(255,246,228,.25);opacity:.75}
 .ftr-word{color:transparent;-webkit-text-stroke:2px rgba(200,230,74,.18)}
-@media (max-width:640px){.ftr::before{height:32px;top:-18px}.ftr-cta{padding-top:72px}.ftr-brand{transform:none;box-shadow:4px 4px 0 #C8E64A;padding:24px 18px 20px}.ftr-h2{font-size:32px}}
+@media (max-width:640px){#contato::after{height:32px;bottom:-18px}.ftr-cta{padding-top:72px}.ftr-brand{transform:none;box-shadow:4px 4px 0 #C8E64A;padding:24px 18px 20px}.ftr-h2{font-size:32px}}
 /* Header: barra que vira cartão flutuante ao rolar */
 .hdr{background:#FFF6E4;border-bottom:3px solid #0a0a0a;transition:background .25s,border-color .25s,box-shadow .25s,margin .25s,border-radius .25s}
 .hdr .prog{height:5px;background:#C8E64A;border-bottom:2px solid #0a0a0a;top:-2px}
@@ -750,7 +750,7 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
 @media (max-width:640px){#contato .c-head .h2{font-size:32px}#contato .fbox::before{width:80px;height:22px;top:-12px;left:14px}}
 /* Duas verticais: dois cartões colados lado a lado */
 #verticais{border-top:4px solid #0a0a0a;position:relative;padding-top:88px;background-image:radial-gradient(rgba(10,10,10,.10) 1.2px,transparent 1.2px);background-size:22px 22px}
-#verticais::before{content:"";position:absolute;top:-22px;left:50%;width:min(260px,60%);height:40px;transform:translateX(-50%) rotate(2deg);background:#FFF6E4;border:3px solid #0a0a0a;box-shadow:4px 4px 0 #0a0a0a;background-image:repeating-linear-gradient(135deg,transparent 0 10px,rgba(10,10,10,.12) 10px 12px)}
+#verticais::before{content:"";position:absolute;z-index:3;top:-22px;left:50%;width:min(260px,60%);height:40px;transform:translateX(-50%) rotate(2deg);background:#FFF6E4;border:3px solid #0a0a0a;box-shadow:4px 4px 0 #0a0a0a;background-image:repeating-linear-gradient(135deg,transparent 0 10px,rgba(10,10,10,.12) 10px 12px)}
 #verticais .vert{gap:40px;align-items:stretch}
 #verticais .vcol{position:relative;background:#fff;border:3px solid #0a0a0a;border-radius:18px;box-shadow:8px 8px 0 #0a0a0a;padding:40px 32px 36px;transition:transform .2s,box-shadow .2s}
 #verticais .vcol:first-child{transform:rotate(-1deg)}#verticais .vcol:last-child{transform:rotate(1deg);background:#FFF6E4}
@@ -765,7 +765,7 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
 @media (max-width:899px){#verticais .vcol:nth-child(n),#verticais .vcol.rv.in:nth-child(n){transform:none}#verticais .vcol{padding:36px 22px 30px;box-shadow:6px 6px 0 #0a0a0a}#verticais{padding-top:72px}#verticais::before{height:32px;top:-18px}}
 /* Galeria: mural de criativos colados */
 #criativos{position:relative;border-top:4px solid #0a0a0a;padding-top:88px;background-image:radial-gradient(rgba(255,246,228,.10) 1.2px,transparent 1.2px);background-size:22px 22px}
-#criativos::before{content:"";position:absolute;top:-22px;left:50%;width:min(260px,60%);height:40px;transform:translateX(-50%) rotate(-2deg);background:#C8E64A;border:3px solid #0a0a0a;box-shadow:4px 4px 0 #FFF6E4;background-image:repeating-linear-gradient(135deg,transparent 0 10px,rgba(10,10,10,.12) 10px 12px)}
+#criativos::before{content:"";position:absolute;z-index:3;top:-22px;left:50%;width:min(260px,60%);height:40px;transform:translateX(-50%) rotate(-2deg);background:#C8E64A;border:3px solid #0a0a0a;box-shadow:4px 4px 0 #FFF6E4;background-image:repeating-linear-gradient(135deg,transparent 0 10px,rgba(10,10,10,.12) 10px 12px)}
 #criativos .sub{color:#FFF6E4;opacity:.85}
 #criativos .tabs{gap:14px}
 #criativos .tab{background:#0a0a0a;color:#FFF6E4;border:3px solid #FFF6E4;box-shadow:4px 4px 0 #FFF6E4}
@@ -783,7 +783,7 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
 @media (max-width:640px){#criativos{padding-top:72px}#criativos::before{height:32px;top:-18px}#criativos .gal{gap:14px}#criativos .gal .card{border-width:2px;box-shadow:3px 3px 0 #FFF6E4}#criativos .tab{box-shadow:3px 3px 0 #FFF6E4}}
 /* Origem na Unicamp: bloco bege com divisória clara (linha grossa + fita) */
 #origem{--bg:#FFF6E4;--ink:#0a0a0a;--muted:color-mix(in srgb,#0a0a0a 82%,transparent);--line:#0a0a0a;background:#FFF6E4;color:#0a0a0a;border-top:4px solid #0a0a0a;position:relative;padding-top:88px}
-#origem::before{content:"";position:absolute;top:-22px;left:50%;width:min(260px,60%);height:40px;transform:translateX(-50%) rotate(-2deg);background:#C8E64A;border:3px solid #0a0a0a;box-shadow:4px 4px 0 #0a0a0a;background-image:repeating-linear-gradient(135deg,transparent 0 10px,rgba(10,10,10,.12) 10px 12px)}
+#origem::before{content:"";position:absolute;z-index:3;top:-22px;left:50%;width:min(260px,60%);height:40px;transform:translateX(-50%) rotate(-2deg);background:#C8E64A;border:3px solid #0a0a0a;box-shadow:4px 4px 0 #0a0a0a;background-image:repeating-linear-gradient(135deg,transparent 0 10px,rgba(10,10,10,.12) 10px 12px)}
 #origem .h2{max-width:14ch}
 #origem .lead:first-of-type{font-size:clamp(19px,1.9vw,24px);color:#0a0a0a;font-weight:600}
 #origem .lead{color:var(--muted)}
@@ -796,7 +796,7 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
 @media (max-width:640px){#origem{padding-top:72px}#origem::before{height:32px;top:-18px}#origem .origem-media::after{left:auto;right:0;top:-6px;transform:rotate(4deg)}}
 /* Ofertas: bloco verde-lima com divisória clara (linha grossa + fita laranja) */
 #ofertas{--bg:#C8E64A;--ink:#0a0a0a;--muted:color-mix(in srgb,#0a0a0a 82%,transparent);--line:#0a0a0a;background:#C8E64A;color:#0a0a0a;border-top:4px solid #0a0a0a;position:relative;padding-top:88px}
-#ofertas::before{content:"";position:absolute;top:-22px;left:50%;width:min(260px,60%);height:40px;transform:translateX(-50%) rotate(2deg);background:#F26522;border:3px solid #0a0a0a;box-shadow:4px 4px 0 #0a0a0a;background-image:repeating-linear-gradient(135deg,transparent 0 10px,rgba(10,10,10,.14) 10px 12px)}
+#ofertas::before{content:"";position:absolute;z-index:3;top:-22px;left:50%;width:min(260px,60%);height:40px;transform:translateX(-50%) rotate(2deg);background:#F26522;border:3px solid #0a0a0a;box-shadow:4px 4px 0 #0a0a0a;background-image:repeating-linear-gradient(135deg,transparent 0 10px,rgba(10,10,10,.14) 10px 12px)}
 #ofertas .h2{max-width:20ch;margin-left:auto;margin-right:auto}
 #ofertas .oferta{background:#fff;border:3px solid #0a0a0a;box-shadow:6px 6px 0 #0a0a0a;border-radius:16px}
 #ofertas .oferta:nth-child(1){transform:rotate(-1deg)}#ofertas .oferta:nth-child(3){transform:rotate(1deg)}#ofertas .oferta:nth-child(2){transform:translateY(-8px);box-shadow:10px 10px 0 #0a0a0a}
@@ -810,7 +810,7 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
 @media (max-width:640px){#ofertas{padding-top:72px}#ofertas::before{height:32px;top:-18px}}
 /* Contato: bloco laranja com divisória clara (linha grossa + fita verde) */
 #contato{--bg:#F26522;--ink:#0a0a0a;--muted:color-mix(in srgb,#0a0a0a 82%,transparent);--line:#0a0a0a;background:#F26522;color:#0a0a0a;border-top:4px solid #0a0a0a;position:relative;padding-top:88px}
-#contato::before{content:"";position:absolute;top:-22px;left:50%;width:min(260px,60%);height:40px;transform:translateX(-50%) rotate(-2deg);background:#C8E64A;border:3px solid #0a0a0a;box-shadow:4px 4px 0 #0a0a0a;background-image:repeating-linear-gradient(135deg,transparent 0 10px,rgba(10,10,10,.12) 10px 12px)}
+#contato::before{content:"";position:absolute;z-index:3;top:-22px;left:50%;width:min(260px,60%);height:40px;transform:translateX(-50%) rotate(-2deg);background:#C8E64A;border:3px solid #0a0a0a;box-shadow:4px 4px 0 #0a0a0a;background-image:repeating-linear-gradient(135deg,transparent 0 10px,rgba(10,10,10,.12) 10px 12px)}
 #contato .sub{color:#0a0a0a;font-weight:600}
 #contato .fbox{background:#fff;border:3px solid #0a0a0a;box-shadow:8px 8px 0 #0a0a0a;border-radius:16px;position:relative;transform:rotate(-0.6deg)}
 #contato .fbox::after{content:"Resposta em 24h úteis";position:absolute;top:-16px;right:24px;transform:rotate(3deg);font-family:var(--ui);font-weight:900;font-size:12px;text-transform:uppercase;letter-spacing:.04em;padding:6px 12px;border:3px solid #0a0a0a;border-radius:999px;background:#C8E64A;color:#0a0a0a;box-shadow:3px 3px 0 #0a0a0a}
