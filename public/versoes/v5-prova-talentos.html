@@ -10,6 +10,7 @@
 <link rel="icon" href="../favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&family=Noto+Serif+Display:ital,wght@0,400;0,700;1,400&display=swap">
+
 <style>
 :root{--light:#FFF6E4;--lightInk:#1a1715;--dark:#1a1715;--darkInk:#FFF6E4;--accent:#F26522;--accentInk:#1a1715;--green:#C8E64A;--lineW:1px;--r:0px;--rL:0px;--rBtn:0px;--display:Inter,sans-serif;--displayW:900;--displayTf:none;--displayLs:-0.03em;--body:'Noto Serif Display',Georgia,serif;--ui:Inter,sans-serif;--btnBg:#F26522;--btnInk:#1a1715;--hdrBg:#FFF6E4;--hdrInk:#1a1715;--navHi:#F26522;--tcardBg:#fff;--tcardInk:#1a1715;--tcardLine:#1a1715;--fboxBg:#1a1715;--fboxInk:#FFF6E4;--fboxLine:#5a534c;--fieldBg:#0a0a0a;color-scheme:light}
 
@@ -418,8 +419,31 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
 .arts{justify-items:center}
 .art{position:relative;width:100%;max-width:504px}
 .art iframe{width:100%;height:542px;border:1px solid var(--line);border-radius:var(--rL);background:var(--tcardBg);display:block}
-.art a{position:absolute;top:12px;right:12px;display:inline-flex;align-items:center;gap:4px;font-family:var(--ui);font-size:12px;font-weight:600;padding:6px 12px;border-radius:999px;background:color-mix(in srgb,var(--ink) 85%,transparent);color:var(--bg);text-decoration:none;opacity:0;transition:opacity .2s}
+.art a{position:absolute;top:12px;right:12px;display:inline-flex;align-items:center;gap:4px;font-family:var(--ui);font-size:12px;font-weight:600;padding:6px 12px;border-radius:999px;background:color-mix(in srgb,var(--ink) 85%,transparent);color:var(--bg);text-decoration:none;opacity:.88;transition:opacity .2s}
 .art:hover a,.art a:focus{opacity:1}
+.back-link{display:inline-flex;align-items:center;gap:6px;font-family:var(--ui);font-weight:700;font-size:14px;text-decoration:none;color:var(--ink);margin-bottom:32px}
+.back-link:hover{color:var(--accent)}
+.d-badges{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px}
+.d-tag{display:inline-flex;align-items:center;gap:6px;font-family:var(--ui);font-size:13px;font-weight:600;padding:6px 12px;border-radius:999px;background:var(--surface);color:var(--ink)}
+.d-block{margin-top:40px}
+.d-block h2{font-family:var(--ui);font-weight:700;font-size:20px;margin:0 0 12px}
+.d-desc{white-space:pre-line;max-width:none;color:var(--ink);font-size:17px;line-height:1.6}
+.d-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.d-list li{display:flex;gap:10px;align-items:flex-start;color:var(--muted)}
+.d-list svg{flex-shrink:0;margin-top:3px;color:var(--accent)}
+.d-apply{display:inline-flex;margin-top:40px;text-decoration:none}
+.d-cover{margin:32px 0;border-radius:var(--rL);overflow:hidden}
+.d-cover img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
+.d-meta{margin-top:16px;gap:20px;flex-wrap:wrap}
+.prose{margin-top:32px;font-family:var(--body);font-size:17px;line-height:1.75;max-width:none;color:var(--ink)}
+.prose p{margin:0 0 20px}
+.prose h2{font-family:var(--ui);font-weight:800;font-size:24px;margin:36px 0 14px}
+.prose h3{font-family:var(--ui);font-weight:700;font-size:20px;margin:28px 0 12px}
+.prose a{color:var(--accent)}
+.prose img{max-width:100%;border-radius:var(--r);margin:20px 0;display:block}
+.prose ul,.prose ol{padding-left:22px;margin:0 0 20px}
+.prose li{margin-bottom:8px}
+.mt-16{margin-top:16px}
 
 .s-light .num,.s-light .rmetric,.s-light .tbl .num{color:#6f8a00}.s-light{--line:var(--ink)}.fbox .btn{background:#C8E64A;color:#1a1715}.hdr{border-bottom:1px solid #1a1715}.s-dark .btn{background:#C8E64A;color:#1a1715}.faq details,.faq details:first-child{border-color:currentColor}
 </style>
@@ -548,7 +572,7 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
   var BR='<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>';
   var MP='<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>';
   var MO='<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8M12 17v4"/></svg>';
-  function render(){var s=q.toLowerCase();var f=jobs.filter(function(j){return !s||j.title.toLowerCase().includes(s)||(j.department||'').toLowerCase().includes(s)||(j.location||'').toLowerCase().includes(s);});st.hidden=f.length>0;st.textContent='Nenhuma vaga encontrada.';box.innerHTML=f.map(function(j){var wm=j.work_model||'';var cls=wm.normalize('NFD').replace(/[^a-z]/g,'');return '<a class="job" href="../talentos/'+esc(j.id)+'"><div><h3 class="h3-s">'+esc(j.title)+'</h3><div class="meta"><span>'+BR+' '+esc(j.department)+'</span><span>'+MP+' '+esc(j.location)+'</span><span>'+MO+' '+esc(wm)+'</span></div></div><span class="badge '+cls+'">'+esc(wm)+'</span></a>';}).join('');}
+  function render(){var s=q.toLowerCase();var f=jobs.filter(function(j){return !s||j.title.toLowerCase().includes(s)||(j.department||'').toLowerCase().includes(s)||(j.location||'').toLowerCase().includes(s);});st.hidden=f.length>0;st.textContent='Nenhuma vaga encontrada.';box.innerHTML=f.map(function(j){var wm=j.work_model||'';var cls=wm.normalize('NFD').replace(/[^a-z]/g,'');return '<a class="job" href="'+'../talentos/'+esc(j.id)+'"><div><h3 class="h3-s">'+esc(j.title)+'</h3><div class="meta"><span>'+BR+' '+esc(j.department)+'</span><span>'+MP+' '+esc(j.location)+'</span><span>'+MO+' '+esc(wm)+'</span></div></div><span class="badge '+cls+'">'+esc(wm)+'</span></a>';}).join('');}
   sb('jobs?select=id,title,department,location,work_model&is_open=eq.true&order=created_at.desc').then(function(d){skOff();jobs=d;render();}).catch(function(){skOff();st.hidden=false;st.textContent='Não foi possível carregar as vagas. Recarregue a página pra tentar de novo.';});
   document.getElementById('q').addEventListener('input',function(e){q=e.target.value;render();});
 })();</script>
