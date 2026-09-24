@@ -283,8 +283,10 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
 @media (min-width:900px){.ofertas{grid-template-columns:repeat(3,1fr)}}
 .fgrid .micro{justify-content:center}
 .lg{display:inline-flex;align-items:center;justify-content:center}
-.hl2,.hl3{background:none;color:inherit}
+.hl2,.hl3,.hl4{background:none;color:inherit}
 .stamp{display:none}
+.tlabel{display:none}
+.tarrow{display:none}
 .o-ic{display:none}
 .o-top{display:flex;align-items:center;gap:10px}
 .o-more{margin-top:32px;font-family:var(--ui);font-size:14px}
@@ -686,10 +688,16 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
 .faixa .tarja-txt .btn{margin-top:8px;background:#0a0a0a;color:#FFF6E4;border-color:#0a0a0a;box-shadow:4px 4px 0 #C8E64A}
 .faixa .tarja-txt .btn:hover{box-shadow:2px 2px 0 #C8E64A}
 .faixa .tarja-txt::before{content:"";position:absolute;right:-6px;top:-16px;width:110px;height:28px;transform:rotate(6deg);background:#C8E64A;border:3px solid #0a0a0a;background-image:repeating-linear-gradient(135deg,transparent 0 10px,rgba(10,10,10,.14) 10px 12px);z-index:2}
+.faixa .h2 .hl4{background:#0a0a0a;color:#C8E64A;padding:2px 10px;border-radius:8px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.tlabel{display:inline-block;margin:0 0 8px;font-family:var(--ui);font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding:4px 10px;border-radius:999px}
+.tp{display:flex;flex-direction:column}
+.tp-ok .tlabel{background:#C8E64A;color:#0a0a0a;align-self:flex-start}
+.tp-bad .tlabel{background:#0a0a0a;color:#FFF6E4;align-self:flex-start}
+.tarrow{display:flex;align-self:flex-end;margin:-6px 44px -6px 0;color:#0a0a0a;opacity:.75;transform:rotate(-4deg)}
 .faixa .tarja-txt{position:relative}
 .faixa.center{text-align:left}
 .faixa .lead{color:#0a0a0a}
-@media (max-width:640px){.faixa{padding-top:64px;padding-bottom:64px}.faixa .wrap::before{inset:8px;border-radius:14px}.faixa .tarja{padding:24px calc(var(--pad) + 12px) 12px}.faixa .h2{font-size:32px}.faixa .tarja-txt .lead:nth-child(2){margin-left:0}.faixa .tarja-txt .lead{padding:16px;box-shadow:4px 4px 0 #0a0a0a}.faixa .tarja-txt::before{width:80px;height:22px;top:-12px}.faixa .tarja-txt .btn{width:100%;justify-content:center}}
+@media (max-width:640px){.faixa{padding-top:64px;padding-bottom:64px}.faixa .wrap::before{inset:8px;border-radius:14px}.faixa .tarja{padding:24px calc(var(--pad) + 12px) 12px}.faixa .h2{font-size:32px}.faixa .tarja-txt .lead:nth-child(2){margin-left:0}.faixa .tarja-txt .lead{padding:16px;box-shadow:4px 4px 0 #0a0a0a}.faixa .tarja-txt::before{width:80px;height:22px;top:-12px}.faixa .tarja-txt .btn{width:100%;justify-content:center}.faixa .tarrow{align-self:center;margin:-4px 0;transform:rotate(80deg)}}
 /* Rodapé: cartão de visita colado, selos e fita */
 .ftr{border-top:4px solid #0a0a0a;position:relative;background-image:radial-gradient(rgba(255,246,228,.10) 1.2px,transparent 1.2px);background-size:22px 22px}
 #contato::after{content:"";position:absolute;z-index:3;bottom:-22px;left:50%;width:min(260px,60%);height:40px;transform:translateX(-50%) rotate(2deg);background:#F26522;border:3px solid #0a0a0a;box-shadow:4px 4px 0 #FFF6E4;background-image:repeating-linear-gradient(135deg,transparent 0 10px,rgba(10,10,10,.14) 10px 12px)}
@@ -956,10 +964,11 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
 
 <section class="s-accent sec faixa">
   <div class="wrap tarja">
-    <h2 class="h2 h2-l">O futuro chegou para mudar exatamente isso:</h2>
+    <h2 class="h2 h2-l">O futuro chegou para <mark class="hl4">mudar exatamente isso</mark>:</h2>
     <div class="tarja-txt">
-      <p class="lead">Atualmente é possível entregar uma estratégia de marketing digital de extrema qualidade com velocidade alta.</p>
-      <p class="lead">Só que as agências de marketing brasileiras estão preocupadas em vender mais invés de melhorar a entrega.</p>
+      <p class="lead tp tp-ok"><span class="tlabel">O que já é possível</span>Atualmente é possível entregar uma estratégia de marketing digital de extrema qualidade com velocidade alta.</p>
+      <span class="tarrow" aria-hidden="true"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6c6 10 14 12 16 12"/><path d="m14 14 6 4-2 7"/></svg></span>
+      <p class="lead tp tp-bad"><span class="tlabel">O que trava</span>Só que as agências de marketing brasileiras estão preocupadas em vender mais invés de melhorar a entrega.</p>
       <a href="v13-adesivo.html#contato" class="btn btn-ink btn-lg">Quero saber mais</a>
     </div>
   </div>
