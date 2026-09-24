@@ -471,6 +471,39 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
 .stk-d{position:absolute;left:0;bottom:8px;--rot:-5deg;transform:rotate(var(--rot));background:#fff;z-index:4}
 .hero-adesivo .stk-d{animation:pop .55s cubic-bezier(.34,1.56,.64,1) both;animation-delay:1.05s}
 @media (max-width:640px){.stage{height:clamp(300px,86vw,360px);margin-top:12px}.stage .card{width:46%;box-shadow:5px 5px 0 #0a0a0a}.stage .st-c{width:50%}.stage .st-l.rv.in{transform:translate(-104%,-46%) rotate(-9deg)}.stage .st-r.rv.in{transform:translate(4%,-42%) rotate(8deg)}.stk-c{top:-4px;max-width:50%}.stk-d{bottom:-6px;font-size:12px}}
+/* Responsividade no celular */
+@media (max-width:640px){
+  .hero-adesivo{padding-top:40px;padding-bottom:48px}
+  .hero-adesivo .h1{font-size:clamp(34px,9.6vw,42px);line-height:1.02}
+  .hl{padding:0 .1em;margin-left:-.1em}
+  .hero-adesivo .lead{font-size:16px;margin-top:16px}
+  .stk-a{margin-bottom:14px;font-size:12px}
+  .cta-row{gap:12px 16px;margin-top:24px}
+  .hero-adesivo .btn{width:100%;justify-content:center}
+  .stage{height:clamp(280px,80vw,340px);margin:20px 0 0}
+  .stage .card{width:44%;box-shadow:4px 4px 0 #0a0a0a;border-width:2px}
+  .stage .st-c{width:50%}
+  .stage .st-l.rv.in{transform:translate(-90%,-46%) rotate(-8deg)}
+  .stage .st-r.rv.in{transform:translate(-10%,-42%) rotate(7deg)}
+  /* cards de seção não podem sangrar até a borda */
+  .hero-adesivo + .sec .narrow-2,.s-dark .narrow-3{width:calc(100% - 32px);margin-left:auto;margin-right:auto;padding-left:20px;padding-right:20px;box-shadow:6px 6px 0 #0a0a0a}
+  .s-dark .narrow-3{box-shadow:6px 6px 0 #C8E64A}
+  .hero-adesivo + .sec .narrow-2 .h2{font-size:26px}
+  .statement{font-size:22px}
+  /* tarja e blocos */
+  .faixa .h2{font-size:30px}
+  .vert{gap:32px}
+  .vnum,.onum{width:40px;height:40px;font-size:15px;margin-bottom:12px}
+  .ofertas{gap:36px}
+  .oferta{padding:28px 20px}
+  .oferta:nth-child(2)::before{top:-14px;right:14px}
+  #ofertas .h2{font-size:28px}
+  #contato .fbox{padding:20px 16px}
+  #contato .fbox::after{font-size:11px;padding:5px 10px;right:10px;top:-14px}
+  .tabs{gap:10px}.tab{padding:10px 16px;font-size:12px}
+  .sticky{right:12px;bottom:12px;padding:12px 16px;font-size:13px}
+  .ftr-h2{font-size:30px}
+}
 </style>
 </head>
 <body class="v13-adesivo">
