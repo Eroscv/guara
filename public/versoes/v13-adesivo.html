@@ -431,6 +431,21 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
 .hero-adesivo .stk{animation:pop .55s cubic-bezier(.34,1.56,.64,1) both}.stk-a{animation-delay:.35s}.stk-b{animation-delay:.6s}.stk-c{animation-delay:.85s}
 @keyframes pop{from{opacity:0;transform:scale(.6) rotate(var(--rot))}to{opacity:1;transform:scale(1) rotate(var(--rot))}}
 @media (prefers-reduced-motion:reduce){.hero-adesivo .stk{animation:none}}
+/* Duas verticais: dois cartões colados lado a lado */
+#verticais{border-top:4px solid #0a0a0a;position:relative;padding-top:88px;background-image:radial-gradient(rgba(10,10,10,.10) 1.2px,transparent 1.2px);background-size:22px 22px}
+#verticais::before{content:"";position:absolute;top:-22px;left:50%;width:min(260px,60%);height:40px;transform:translateX(-50%) rotate(2deg);background:#FFF6E4;border:3px solid #0a0a0a;box-shadow:4px 4px 0 #0a0a0a;background-image:repeating-linear-gradient(135deg,transparent 0 10px,rgba(10,10,10,.12) 10px 12px)}
+#verticais .vert{gap:40px;align-items:stretch}
+#verticais .vcol{position:relative;background:#fff;border:3px solid #0a0a0a;border-radius:18px;box-shadow:8px 8px 0 #0a0a0a;padding:40px 32px 36px;transition:transform .2s,box-shadow .2s}
+#verticais .vcol:first-child{transform:rotate(-1deg)}#verticais .vcol:last-child{transform:rotate(1deg);background:#FFF6E4}
+#verticais .vcol.rv.in:first-child{transform:rotate(-1deg)}#verticais .vcol.rv.in:last-child{transform:rotate(1deg)}
+#verticais .vcol:hover{transform:translate(-2px,-4px) rotate(0);box-shadow:12px 12px 0 #0a0a0a}
+#verticais .vcol::before{content:"";position:absolute;top:-16px;left:50%;width:120px;height:30px;transform:translateX(-50%) rotate(-3deg);background:#C8E64A;border:3px solid #0a0a0a;background-image:repeating-linear-gradient(135deg,transparent 0 10px,rgba(10,10,10,.14) 10px 12px)}
+#verticais .vcol:last-child::before{background-color:#F26522;transform:translateX(-50%) rotate(3deg)}
+#verticais .vnum{width:52px;height:52px;font-size:20px;box-shadow:4px 4px 0 #0a0a0a}
+#verticais .vcol:last-child .vnum{background:#F26522}
+#verticais .h3{font-size:clamp(24px,2.4vw,32px);line-height:1.05;margin-top:4px}
+#verticais .vcol .lead{font-size:16px;line-height:1.6;color:#0a0a0a;margin-top:14px}
+@media (max-width:899px){#verticais .vcol:nth-child(n),#verticais .vcol.rv.in:nth-child(n){transform:none}#verticais .vcol{padding:36px 22px 30px;box-shadow:6px 6px 0 #0a0a0a}#verticais{padding-top:72px}#verticais::before{height:32px;top:-18px}}
 /* Origem na Unicamp: bloco bege com divisória clara (linha grossa + fita) */
 #origem{--bg:#FFF6E4;--ink:#0a0a0a;--muted:color-mix(in srgb,#0a0a0a 82%,transparent);--line:#0a0a0a;background:#FFF6E4;color:#0a0a0a;border-top:4px solid #0a0a0a;position:relative;padding-top:88px}
 #origem::before{content:"";position:absolute;top:-22px;left:50%;width:min(260px,60%);height:40px;transform:translateX(-50%) rotate(-2deg);background:#C8E64A;border:3px solid #0a0a0a;box-shadow:4px 4px 0 #0a0a0a;background-image:repeating-linear-gradient(135deg,transparent 0 10px,rgba(10,10,10,.12) 10px 12px)}
