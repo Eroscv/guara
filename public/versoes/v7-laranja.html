@@ -9,7 +9,7 @@
 <meta name="description" content="Versão Laranja da Home da Guará Media. A Guará produz criativos em grande volume e opera mídia e criatividade como um único sistema.">
 <link rel="icon" href="../favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&family=Noto+Serif+Display:ital,wght@0,400;0,700;1,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&family=Noto+Serif+Display:ital,wght@0,400;0,700;1,400&family=Anton&family=Caveat:wght@600;700&display=swap">
 <style>
 :root{--light:#F26522;--lightInk:#1a1715;--dark:#1a1715;--darkInk:#FFF6E4;--accent:#1a1715;--accentInk:#F26522;--green:#C8E64A;--lineW:2px;--r:0px;--rL:0px;--rBtn:0px;--display:Inter,sans-serif;--displayW:900;--displayTf:uppercase;--displayLs:-0.045em;--body:'Noto Serif Display',Georgia,serif;--ui:Inter,sans-serif;--btnBg:#1a1715;--btnInk:#F26522;--hdrBg:#F26522;--hdrInk:#1a1715;--navHi:#FFF6E4;--tcardBg:#1a1715;--tcardInk:#FFF6E4;--tcardLine:#1a1715;--fboxBg:#1a1715;--fboxInk:#FFF6E4;--fboxLine:#F26522;--fieldBg:#0a0a0a;color-scheme:light}
 
@@ -628,14 +628,14 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
   var fm = document.getElementById('lead');
   if (fm) {
     var reqs = fm.querySelectorAll('[required]'), pn = document.getElementById('fprog-n'), pb = document.getElementById('fprog-b');
-    var prog = function(){ if (!pn) return; var n = 0; reqs.forEach(function(i){ if (i.value && i.checkValidity()) n++; }); pn.textContent = n; pb.style.width = (n / reqs.length * 100) + '%'; pb.parentNode.parentNode.classList.toggle('done', n === reqs.length); };
-    fm.addEventListener('input', prog); fm.addEventListener('change', prog); prog();
+    var fprog = function(){ if (!pn) return; var n = 0; reqs.forEach(function(i){ if (i.value && i.checkValidity()) n++; }); pn.textContent = n; pb.style.width = (n / reqs.length * 100) + '%'; pb.parentNode.parentNode.classList.toggle('done', n === reqs.length); };
+    fm.addEventListener('input', fprog); fm.addEventListener('change', fprog); fprog();
     var wa = fm.querySelector('[name=whatsapp]');
     if (wa) wa.addEventListener('input', function(){ var d = wa.value.replace(/\D/g, '').slice(0, 11); var o = d; if (d.length > 2) o = '(' + d.slice(0, 2) + ') ' + d.slice(2); if (d.length > 7) o = '(' + d.slice(0, 2) + ') ' + d.slice(2, 7) + '-' + d.slice(7); wa.value = o; });
     var sel = document.getElementById('f-sol');
     var syncChips = function(){ document.querySelectorAll('.sol-chip').forEach(function(c){ c.classList.toggle('on', sel && sel.value === c.dataset.sol); }); };
     if (sel) sel.addEventListener('change', syncChips);
-    document.querySelectorAll('.sol-chip').forEach(function(c){ c.addEventListener('click', function(){ if (sel) { sel.value = c.dataset.sol; sel.classList.remove('bad'); sel.dispatchEvent(new Event('change')); } syncChips(); prog(); }); });
+    document.querySelectorAll('.sol-chip').forEach(function(c){ c.addEventListener('click', function(){ if (sel) { sel.value = c.dataset.sol; sel.classList.remove('bad'); sel.dispatchEvent(new Event('change')); } syncChips(); fprog(); }); });
   }
   var fcheck = function(i){ var bad = !i.checkValidity(), m = document.getElementById('e-' + i.name); i.classList.toggle('bad', bad); i.setAttribute('aria-invalid', bad); if (m) { m.textContent = bad ? i.dataset.msg : ''; m.hidden = !bad; } return !bad; };
   if (fm) fm.querySelectorAll('input, select, textarea').forEach(function(i){ i.addEventListener('blur', function(){ if (i.value || i.required) fcheck(i); }); i.addEventListener('input', function(){ if (i.classList.contains('bad')) fcheck(i); }); });

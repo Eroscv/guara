@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#0a0a0a">
-<title>Guará Media: Tela | Marketing Visual de Performance</title>
-<meta name="description" content="Versão Tela da Home da Guará Media. A Guará produz criativos em grande volume e opera mídia e criatividade como um único sistema.">
+<title>Guará Media: Proposta | Marketing Visual de Performance</title>
+<meta name="description" content="Versão Proposta da Home da Guará Media. A Guará produz criativos em grande volume e opera mídia e criatividade como um único sistema.">
 <link rel="icon" href="../favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&family=Noto+Serif+Display:ital,wght@0,400;0,700;1,400&family=Anton&family=Caveat:wght@600;700&display=swap">
 <style>
-:root{--light:#141210;--lightInk:#FFF6E4;--dark:#0a0a0a;--darkInk:#FFF6E4;--accent:#F26522;--accentInk:#0a0a0a;--green:#C8E64A;--lineW:1px;--r:10px;--rL:18px;--rBtn:12px;--display:Inter,sans-serif;--displayW:900;--displayTf:uppercase;--displayLs:-0.035em;--body:'Noto Serif Display',Georgia,serif;--ui:Inter,sans-serif;--btnBg:#F26522;--btnInk:#0a0a0a;--hdrBg:#0a0a0a;--hdrInk:#FFF6E4;--navHi:#F26522;--tcardBg:#1a1715;--tcardInk:#FFF6E4;--tcardLine:#2a2724;--fboxBg:#0a0a0a;--fboxInk:#FFF6E4;--fboxLine:#2a2724;--fieldBg:#141210;color-scheme:light}
+:root{--light:#F4F1EA;--lightInk:#0a0a0a;--dark:#0a0a0a;--darkInk:#F4F1EA;--accent:#F26522;--accentInk:#0a0a0a;--green:#C8E64A;--lineW:3px;--r:14px;--rL:26px;--rBtn:999px;--display:'Anton',Inter,sans-serif;--displayW:400;--displayTf:uppercase;--displayLs:-0.01em;--body:Inter,sans-serif;--ui:Inter,sans-serif;--btnBg:#F26522;--btnInk:#0a0a0a;--hdrBg:#0a0a0a;--hdrInk:#F4F1EA;--navHi:#F26522;--tcardBg:#fff;--tcardInk:#0a0a0a;--tcardLine:#0a0a0a;--fboxBg:#fff;--fboxInk:#0a0a0a;--fboxLine:#0a0a0a;--fieldBg:#F4F1EA;color-scheme:light}
 
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;scroll-padding-top:88px}
@@ -374,35 +374,116 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
 .strip5 .card:nth-child(n+4){display:none}
 @media (min-width:768px){.strip5{grid-template-columns:repeat(5,1fr)}.strip5 .card:nth-child(n+4){display:block}}
 
-.hero-tela{position:relative;min-height:88vh;display:flex;align-items:flex-end;padding:120px 0 72px}.tela-bg{position:absolute;inset:0}.tela-bg video{width:100%;height:100%;object-fit:cover;opacity:.55}.tela-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,10,.55),rgba(10,10,10,.25) 40%,#0a0a0a 100%)}.tela-in{position:relative}.hero-tela .lead{color:#FFF6E4}.tela-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 var(--pad) 48px;background:#0a0a0a}.tela-strip .card{width:100%}@media (min-width:768px){.tela-strip{grid-template-columns:repeat(6,1fr)}}.hdr{background:color-mix(in srgb,#0a0a0a 70%,transparent)}.h3-s,.strong{text-transform:none}.faixa .h2{color:#0a0a0a}.faixa .lead{color:#0a0a0a}.s-light .rcard{background:#1a1715}
+
+h1,h2,h3{letter-spacing:var(--displayLs)}
+mark,.hl,.hl2,.hl3,.hl4{background:none;color:var(--accent);font-family:'Caveat',cursive;font-weight:700;font-size:1.28em;line-height:1;padding:0 .06em;display:inline-block;transform:rotate(-2deg);text-transform:none;letter-spacing:0}
+.s-dark mark,.s-dark .hl,.s-dark .hl2,.s-dark .hl3,.s-dark .hl4{color:var(--green)}
+.s-accent mark,.s-accent .hl,.s-accent .hl2,.s-accent .hl3,.s-accent .hl4{color:#0a0a0a}
+.btn{border-radius:999px;font-weight:800;text-transform:uppercase;letter-spacing:.03em}
+.btn:not(.nl-btn)::after{content:"→";font-family:Inter,sans-serif;font-weight:900}
+.btn:hover{opacity:1;transform:translateY(-2px)}
+.hdr{border-bottom-width:3px}
+.nav a[aria-current]{color:var(--navHi);text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:6px}
+.sec{position:relative}
+.faixa{position:relative}
+/* Hero: papel quadriculado, rótulo e seta, canto em xadrez */
+.hero-deck{position:relative;overflow:hidden;padding-top:56px;padding-bottom:0;background-image:linear-gradient(rgba(244,241,234,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(244,241,234,.05) 1px,transparent 1px);background-size:44px 44px}
+.hero-deck::after{content:"";position:absolute;top:0;right:0;width:96px;height:96px;background-image:conic-gradient(var(--accent) 90deg,transparent 90deg 180deg,var(--accent) 180deg 270deg,transparent 270deg 360deg);background-size:24px 24px;pointer-events:none;display:none}
+@media (min-width:900px){.hero-deck::after{display:block}}
+.deck-top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:28px}
+.deck-eyebrow{font-family:var(--ui);font-weight:800;text-transform:uppercase;letter-spacing:.1em;font-size:13px;color:#F4F1EA;opacity:.7}
+.deck-arrow{display:inline-flex;color:var(--accent)}
+.h1-deck{font-size:clamp(38px,7.4vw,104px);line-height:.94;max-width:17ch}
+.deck-sub{margin-top:28px;display:flex;flex-direction:column;gap:20px;max-width:620px}
+.hero-deck .lead{color:#F4F1EA;opacity:.82;max-width:none}
+.deck-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:2px;margin-top:56px}
+.deck-strip .card{border-radius:0;border:0}
+@media (max-width:900px){.deck-strip{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:640px){.hero-deck{padding-top:40px}.deck-eyebrow{font-size:11px}.deck-sub{margin-top:20px;gap:16px}.deck-strip{margin-top:36px}}
+/* Bordas rasgadas entre seções, como o papel picotado da apresentação */
+.hero+.sec::before,.faixa::before,.faixa+.sec::before,#verticais::before,#criativos::before,#ofertas::before{content:"";position:absolute;left:0;right:0;top:-1px;height:30px;z-index:3;pointer-events:none;clip-path:polygon(0 100%,0 0,10% 100%,20% 0,30% 100%,40% 0,50% 100%,60% 0,70% 100%,80% 0,90% 100%,100% 0,100% 100%)}
+.hero+.sec::before{background:var(--light)}
+.faixa::before{background:var(--accent)}
+.faixa+.sec::before{background:var(--dark)}
+#verticais::before{background:var(--light)}
+#criativos::before{background:var(--dark)}
+#ofertas::before{background:var(--light)}
+#contato{position:relative}
+#contato::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:30px;z-index:3;pointer-events:none;clip-path:polygon(0 0,0 100%,10% 0,20% 100%,30% 0,40% 100%,50% 0,60% 100%,70% 0,80% 100%,90% 0,100% 100%,100% 0);background:var(--dark)}
+/* Canto em xadrez na tarja laranja */
+.faixa::after{content:"";position:absolute;bottom:24px;left:calc(var(--pad) - 6px);width:56px;height:56px;background-image:conic-gradient(#0a0a0a 90deg,transparent 90deg 180deg,#0a0a0a 180deg 270deg,transparent 270deg);background-size:14px 14px;opacity:.5;pointer-events:none;display:none}
+@media (min-width:900px){.faixa::after{display:block}}
+.faixa .wrap{position:relative;z-index:2}
+/* Tarja: dois bilhetes rotulados ligados por seta, como a lâmina "Invertemos a lógica" */
+.tlabel{display:inline-block;margin:0 0 8px;font-family:var(--ui);font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding:4px 10px;border-radius:999px}
+.tp-ok .tlabel{background:var(--green);color:#0a0a0a}
+.tp-bad .tlabel{background:#0a0a0a;color:#F4F1EA}
+.tp{padding:20px 22px;background:#fff;color:#0a0a0a;border-radius:var(--rL)}
+.tarja-txt{gap:20px}
+.tarrow{display:flex;align-self:center;color:#0a0a0a;opacity:.7}
+@media (max-width:640px){.tarrow{transform:rotate(80deg);margin:-4px 0}}
+/* Cards lisos com sombra suave, sem contorno */
+.oferta,.pcard,.job,.vcard,.tcard,.nl,.fbox{border:0;border-radius:var(--rL);box-shadow:0 20px 44px -26px rgba(10,10,10,.35)}
+.rcard{border:0;border-radius:var(--rL);background:#fff}
+.onum{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:999px;background:#0a0a0a;color:var(--accent);font-family:var(--display);font-size:16px}
+.oferta:nth-child(2){background:#0a0a0a;color:#F4F1EA}
+.oferta:nth-child(2) .onum{background:var(--accent);color:#0a0a0a}
+.oferta:nth-child(2) .btn{background:var(--accent);color:#0a0a0a}
+.oferta:nth-child(2) .muted,.oferta:nth-child(2) .osub{color:#F4F1EA}
+/* Duas verticais: fichas brancas numeradas, como "A Guará é única" */
+.vert{gap:28px}
+.vcol{border-top:0;padding:36px 32px;border-radius:var(--rL);background:#fff;color:#0a0a0a;box-shadow:0 20px 44px -26px rgba(10,10,10,.28)}
+.vnum{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:999px;background:var(--accent);color:#0a0a0a;font-family:var(--display);font-size:17px;margin-bottom:16px}
+/* Depoimentos: aspas gigantes e foto com anel laranja */
+.tcard{position:relative;padding-top:60px}
+.tcard::before{content:"“";position:absolute;top:2px;left:22px;font-family:Georgia,serif;font-size:92px;line-height:1;color:var(--accent);opacity:.3}
+.tby img{border:3px solid var(--accent)}
+.tby .strong{font-family:var(--ui);color:var(--accent);text-transform:uppercase;font-size:12px;letter-spacing:.04em}
+/* Números gigantes ao estilo "RESULTADO: +1.217%" */
+.num{font-family:var(--display);font-weight:var(--displayW);font-size:clamp(40px,7vw,92px);color:#0a0a0a;letter-spacing:0}
+.s-dark .num{color:var(--accent)}
+.rmetric{font-family:var(--display);text-transform:uppercase;font-size:15px;letter-spacing:0;color:var(--accent)}
+.stepn{font-family:var(--display);color:color-mix(in srgb,var(--accent) 55%,transparent)}
+/* FAQ: interrogações gigantes ao fundo, como a lâmina "Mas por que outras soluções não fazem isso?" */
+#faq{overflow:hidden}
+#faq::before{content:"?";position:absolute;top:-64px;left:-14px;font-family:var(--display);font-size:260px;line-height:1;color:rgba(244,241,234,.05);transform:rotate(-10deg);pointer-events:none}
+#faq::after{content:"?";position:absolute;bottom:-88px;right:-14px;font-family:var(--display);font-size:220px;line-height:1;color:rgba(244,241,234,.05);transform:rotate(8deg);pointer-events:none}
+#faq .wrap{position:relative;z-index:2}
+/* Rodapé */
+.ftr-word{color:transparent;-webkit-text-stroke:2px rgba(242,101,34,.16)}
+.ftr-h2{line-height:.96}
+
 </style>
 </head>
-<body class="v12-tela">
+<body class="v15-proposta">
 <a href="#contato" class="sticky" id="sticky" hidden>Fale com a Guará <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
 
 <header class="hdr">
   <div class="prog" id="prog" aria-hidden="true"></div>
   <div class="wrap hdr-in">
-    <a href="v12-tela.html" class="brand"><img src="img/logo-guara.png" alt="Guará Media"></a>
+    <a href="v15-proposta.html" class="brand"><img src="img/logo-guara.png" alt="Guará Media"></a>
     <nav class="nav" id="nav">
-      <a href="v12-tela.html" aria-current="page">Home</a><a href="v12-tela-blog.html">Blog</a><a href="v12-tela-ferramentas.html">Ferramentas</a><a href="v12-tela-talentos.html">Talentos</a><a href="v12-tela-artigos.html">Artigos</a>
+      <a href="v15-proposta.html" aria-current="page">Home</a><a href="v15-proposta-blog.html">Blog</a><a href="v15-proposta-ferramentas.html">Ferramentas</a><a href="v15-proposta-talentos.html">Talentos</a><a href="v15-proposta-artigos.html">Artigos</a>
       <a href="#contato" class="btn btn-sm">Fale com a Guará</a>
     </nav>
     <button type="button" class="burger" aria-label="Menu" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
   </div>
 </header>
 
-<section class="s-dark hero hero-tela ovh">
-  <div class="tela-bg" aria-hidden="true"><video muted loop playsinline autoplay preload="metadata" src="../videos-web/ad-1.mp4"></video></div>
-  <div class="wrap tela-in">
-    <h1 class="h1 h1-m">Se a pressa é inimiga da perfeição<br>Então a perfeição é inimiga do lucro</h1>
-    <div class="grid-lar">
+<section class="s-dark hero hero-deck ovh">
+  <div class="wrap">
+    <div class="deck-top">
+      <span class="deck-eyebrow">Proposta Guará</span>
+      <span class="deck-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+    </div>
+    <h1 class="h1 h1-deck">Se a pressa é inimiga da perfeição<br>Então a perfeição é inimiga do lucro</h1>
+    <div class="deck-sub">
       <p class="lead">Em um mundo competitivo, as oportunidades são janelas com data de validade. E quem não se move rápido o bastante, morre.</p>
-      <div class="cta-col"><a href="#contato" class="btn btn-lg">Quero saber mais</a><span class="micro">Resposta em até 24h úteis.</span></div>
+      <div class="cta-row"><a href="#contato" class="btn btn-lg">Quero saber mais</a><span class="micro">Resposta em até 24h úteis.</span></div>
     </div>
   </div>
+  <div class="deck-strip"><figure class="card is-vid " style="--ar:4/5" data-src="../videos-web/ad-1.mp4"><video muted loop playsinline preload="none" aria-label="Criativo em vídeo 1"></video><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="40" height="40" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><button type="button" class="snd" aria-label="Ativar som"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line class="mute-x" x1="23" y1="9" x2="17" y2="15"/><line class="mute-x" x1="17" y1="9" x2="23" y2="15"/><path class="wave" d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button></figure><figure class="card is-img " style="--ar:4/5"><img src="../creativos/livup/livup-estatico-01.webp" alt="Criativo estático LivUp" loading="lazy" decoding="async"></figure><figure class="card is-vid " style="--ar:4/5" data-src="../videos-web/iranni-ecommerce.mp4"><video muted loop playsinline preload="none" aria-label="Criativo em vídeo 3"></video><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="40" height="40" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><button type="button" class="snd" aria-label="Ativar som"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line class="mute-x" x1="23" y1="9" x2="17" y2="15"/><line class="mute-x" x1="17" y1="9" x2="23" y2="15"/><path class="wave" d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button></figure><figure class="card is-img " style="--ar:4/5"><img src="../creativos/pod/pod-beneficio-01.webp" alt="Criativo Pod Kombucha" loading="lazy" decoding="async"></figure><figure class="card is-vid " style="--ar:4/5" data-src="../videos-web/sociedade-canina.mp4"><video muted loop playsinline preload="none" aria-label="Criativo em vídeo 5"></video><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="40" height="40" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><button type="button" class="snd" aria-label="Ativar som"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line class="mute-x" x1="23" y1="9" x2="17" y2="15"/><line class="mute-x" x1="17" y1="9" x2="23" y2="15"/><path class="wave" d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button></figure><figure class="card is-img " style="--ar:4/5"><img src="../creativos/outro-cliente/outro-cliente-marmita-01.webp" alt="Criativo de marmita" loading="lazy" decoding="async"></figure></div>
 </section>
-<div class="s-dark tela-strip"><figure class="card is-vid " style="--ar:4/5" data-src="../videos-web/iranni-ecommerce.mp4"><video muted loop playsinline preload="none" aria-label="Criativo em vídeo 1"></video><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="40" height="40" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><button type="button" class="snd" aria-label="Ativar som"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line class="mute-x" x1="23" y1="9" x2="17" y2="15"/><line class="mute-x" x1="17" y1="9" x2="23" y2="15"/><path class="wave" d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button></figure><figure class="card is-img " style="--ar:4/5"><img src="../creativos/livup/livup-estatico-01.webp" alt="Criativo estático LivUp" loading="lazy" decoding="async"></figure><figure class="card is-vid " style="--ar:4/5" data-src="../videos-web/sociedade-canina.mp4"><video muted loop playsinline preload="none" aria-label="Criativo em vídeo 3"></video><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="40" height="40" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><button type="button" class="snd" aria-label="Ativar som"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line class="mute-x" x1="23" y1="9" x2="17" y2="15"/><line class="mute-x" x1="17" y1="9" x2="23" y2="15"/><path class="wave" d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button></figure><figure class="card is-img " style="--ar:4/5"><img src="../creativos/pod/pod-beneficio-01.webp" alt="Criativo Pod Kombucha" loading="lazy" decoding="async"></figure><figure class="card is-vid " style="--ar:4/5" data-src="../videos-web/criativo-1.mp4"><video muted loop playsinline preload="none" aria-label="Criativo em vídeo 5"></video><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="40" height="40" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><button type="button" class="snd" aria-label="Ativar som"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line class="mute-x" x1="23" y1="9" x2="17" y2="15"/><line class="mute-x" x1="17" y1="9" x2="23" y2="15"/><path class="wave" d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button></figure><figure class="card is-img " style="--ar:4/5"><img src="../creativos/outro-cliente/outro-cliente-marmita-01.webp" alt="Criativo de marmita" loading="lazy" decoding="async"></figure></div>
 
 <section class="s-light sec">
   <div class="wrap narrow-2 center">
@@ -502,12 +583,12 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
   <div class="wrap">
     <div class="ftr-cta">
       <h2 class="ftr-h2">Tem um projeto?<br>Vamos conversar.</h2>
-      <div class="ftr-cta-r"><a href="v12-tela.html#contato" class="btn btn-lg ftr-btn">Fale com a Guará</a><a href="mailto:contato@guaramedia.com.br" class="ftr-mail">contato@guaramedia.com.br</a></div>
+      <div class="ftr-cta-r"><a href="v15-proposta.html#contato" class="btn btn-lg ftr-btn">Fale com a Guará</a><a href="mailto:contato@guaramedia.com.br" class="ftr-mail">contato@guaramedia.com.br</a></div>
     </div>
     <div class="ftr-grid">
       <div class="ftr-brand"><img src="img/logo-guara-footer.png" alt="Guará Media" class="ftr-logo"><p class="ftr-tag">Startup-agência de geração de receita, nascida na Unicamp.</p><address>Parque Científico e Tecnológico da Unicamp<br>Campinas, SP<br>CNPJ: <i>a definir</i></address></div>
-      <nav class="ftr-col" aria-label="Páginas"><p class="ftr-h">Navegue</p><a href="v12-tela.html">Home</a><a href="v12-tela-blog.html">Blog</a><a href="v12-tela-ferramentas.html">Ferramentas</a><a href="v12-tela-talentos.html">Talentos</a><a href="v12-tela-artigos.html">Artigos</a></nav>
-      <nav class="ftr-col" aria-label="Soluções"><p class="ftr-h">Soluções</p><a href="v12-tela.html#ofertas">Auditoria de Mídia Paga</a><a href="v12-tela.html#ofertas">Consultoria Estratégica & Produção em Escala</a><a href="v12-tela.html#ofertas">Parceria estratégica completa</a><a href="v12-tela.html#contato">Ainda não sei, quero conversar</a></nav>
+      <nav class="ftr-col" aria-label="Páginas"><p class="ftr-h">Navegue</p><a href="v15-proposta.html">Home</a><a href="v15-proposta-blog.html">Blog</a><a href="v15-proposta-ferramentas.html">Ferramentas</a><a href="v15-proposta-talentos.html">Talentos</a><a href="v15-proposta-artigos.html">Artigos</a></nav>
+      <nav class="ftr-col" aria-label="Soluções"><p class="ftr-h">Soluções</p><a href="v15-proposta.html#ofertas">Auditoria de Mídia Paga</a><a href="v15-proposta.html#ofertas">Consultoria Estratégica & Produção em Escala</a><a href="v15-proposta.html#ofertas">Parceria estratégica completa</a><a href="v15-proposta.html#contato">Ainda não sei, quero conversar</a></nav>
       <div class="ftr-col"><p class="ftr-h">Siga a Guará</p><div class="soc"><a href="https://www.instagram.com/guara_media/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a><a href="https://www.linkedin.com/company/guara-media/posts/?feedView=all" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a></div><p class="ftr-small">Resposta em até 24h úteis.</p></div>
     </div>
     <div class="ftr-bottom"><span>© 2026 Guará Media. Todos os direitos reservados.</span><span class="legal"><a href="#">Termos de Uso</a><a href="#">Política de Privacidade</a></span></div>
