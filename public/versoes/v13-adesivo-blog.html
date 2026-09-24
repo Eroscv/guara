@@ -511,6 +511,24 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
 #verticais .h3{font-size:clamp(24px,2.4vw,32px);line-height:1.05;margin-top:4px}
 #verticais .vcol .lead{font-size:16px;line-height:1.6;color:#0a0a0a;margin-top:14px}
 @media (max-width:899px){#verticais .vcol:nth-child(n),#verticais .vcol.rv.in:nth-child(n){transform:none}#verticais .vcol{padding:36px 22px 30px;box-shadow:6px 6px 0 #0a0a0a}#verticais{padding-top:72px}#verticais::before{height:32px;top:-18px}}
+/* Galeria: mural de criativos colados */
+#criativos{position:relative;border-top:4px solid #0a0a0a;padding-top:88px;background-image:radial-gradient(rgba(255,246,228,.10) 1.2px,transparent 1.2px);background-size:22px 22px}
+#criativos::before{content:"";position:absolute;top:-22px;left:50%;width:min(260px,60%);height:40px;transform:translateX(-50%) rotate(-2deg);background:#C8E64A;border:3px solid #0a0a0a;box-shadow:4px 4px 0 #FFF6E4;background-image:repeating-linear-gradient(135deg,transparent 0 10px,rgba(10,10,10,.12) 10px 12px)}
+#criativos .sub{color:#FFF6E4;opacity:.85}
+#criativos .tabs{gap:14px}
+#criativos .tab{background:#0a0a0a;color:#FFF6E4;border:3px solid #FFF6E4;box-shadow:4px 4px 0 #FFF6E4}
+#criativos .tab.on{background:#C8E64A;color:#0a0a0a;border-color:#0a0a0a;box-shadow:4px 4px 0 #FFF6E4;transform:translate(-1px,-1px)}
+#criativos .tab:hover{color:#0a0a0a;background:#FFF6E4}
+#criativos .tcount{background:#0a0a0a;color:#FFF6E4;border-radius:999px;padding:2px 7px;margin-left:8px;opacity:1;font-size:11px}
+#criativos .tab.on .tcount{background:#0a0a0a;color:#C8E64A}
+#criativos .gal{gap:18px;padding:8px 6px}
+#criativos .gal .card{border:3px solid #FFF6E4;box-shadow:5px 5px 0 #FFF6E4;border-radius:12px;transition:transform .25s,box-shadow .25s,z-index 0s}
+#criativos .gal .card:nth-child(3n+1){transform:rotate(-1.5deg)}#criativos .gal .card:nth-child(3n+2){transform:rotate(1.2deg)}#criativos .gal .card:nth-child(3n){transform:rotate(-.6deg)}
+#criativos .gal .card.rv.in:nth-child(3n+1){transform:rotate(-1.5deg)}#criativos .gal .card.rv.in:nth-child(3n+2){transform:rotate(1.2deg)}#criativos .gal .card.rv.in:nth-child(3n){transform:rotate(-.6deg)}
+#criativos .gal .card:hover{transform:rotate(0) translate(-2px,-4px);box-shadow:8px 8px 0 #C8E64A;z-index:5}
+#criativos .gal .card:nth-child(4n+2)::before{content:"";position:absolute;top:-10px;left:50%;width:70px;height:20px;transform:translateX(-50%) rotate(-4deg);background:#C8E64A;border:2px solid #0a0a0a;background-image:repeating-linear-gradient(135deg,transparent 0 8px,rgba(10,10,10,.14) 8px 10px);z-index:6}
+#criativos .gal .card:nth-child(4n)::before{content:"";position:absolute;top:-10px;left:50%;width:70px;height:20px;transform:translateX(-50%) rotate(3deg);background:#F26522;border:2px solid #0a0a0a;background-image:repeating-linear-gradient(135deg,transparent 0 8px,rgba(10,10,10,.14) 8px 10px);z-index:6}
+@media (max-width:640px){#criativos{padding-top:72px}#criativos::before{height:32px;top:-18px}#criativos .gal{gap:14px}#criativos .gal .card{border-width:2px;box-shadow:3px 3px 0 #FFF6E4}#criativos .tab{box-shadow:3px 3px 0 #FFF6E4}}
 /* Origem na Unicamp: bloco bege com divisória clara (linha grossa + fita) */
 #origem{--bg:#FFF6E4;--ink:#0a0a0a;--muted:color-mix(in srgb,#0a0a0a 82%,transparent);--line:#0a0a0a;background:#FFF6E4;color:#0a0a0a;border-top:4px solid #0a0a0a;position:relative;padding-top:88px}
 #origem::before{content:"";position:absolute;top:-22px;left:50%;width:min(260px,60%);height:40px;transform:translateX(-50%) rotate(-2deg);background:#C8E64A;border:3px solid #0a0a0a;box-shadow:4px 4px 0 #0a0a0a;background-image:repeating-linear-gradient(135deg,transparent 0 10px,rgba(10,10,10,.12) 10px 12px)}
