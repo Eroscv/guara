@@ -286,6 +286,9 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
 .hl2,.hl3{background:none;color:inherit}
 .stamp{display:none}
 .o-ic{display:none}
+.o-top{display:flex;align-items:center;gap:10px}
+.o-more{margin-top:32px;font-family:var(--ui);font-size:14px}
+.o-more a{color:var(--ink);font-weight:600}
 .o-notes{display:flex;flex-direction:column;gap:0}
 .o-note span{display:block}
 .gal-cta{display:flex;flex-direction:column;align-items:center;gap:16px;margin-top:40px;text-align:center}
@@ -818,6 +821,24 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
 #ofertas .oferta:nth-child(2)::before{background:#F26522}
 #ofertas .oferta .btn{background:#0a0a0a;color:#FFF6E4}#ofertas .oferta:nth-child(2) .btn{background:#F26522;color:#0a0a0a}
 #ofertas .osub{color:#0a0a0a}
+#ofertas .h2 .hl2{background:linear-gradient(transparent 58%,#FFF6E4 58%);padding:0 .04em}
+#ofertas .oferta{position:relative;padding-top:40px;gap:12px}
+#ofertas .oferta::before{content:"";position:absolute;top:-14px;left:28px;width:96px;height:26px;transform:rotate(-5deg);border:3px solid #0a0a0a;background:#FFF6E4;background-image:repeating-linear-gradient(135deg,transparent 0 10px,rgba(10,10,10,.14) 10px 12px)}
+#ofertas .oferta:nth-child(2)::before{background-color:#F26522}
+#ofertas .oferta:nth-child(2)::after{content:"Mais completa";position:absolute;top:-16px;right:20px;transform:rotate(3deg);font-family:var(--ui);font-weight:900;font-size:12px;text-transform:uppercase;letter-spacing:.04em;padding:6px 12px;border:3px solid #0a0a0a;border-radius:999px;background:#C8E64A;color:#0a0a0a;box-shadow:3px 3px 0 #0a0a0a;z-index:2}
+#ofertas .oferta:nth-child(3)::before{background-color:#C8E64A;transform:rotate(3deg)}
+#ofertas .o-top{justify-content:space-between;margin-bottom:6px}
+#ofertas .o-ic{display:inline-flex;width:48px;height:48px;align-items:center;justify-content:center;border-radius:14px;background:#FFF6E4;border:3px solid #0a0a0a;box-shadow:3px 3px 0 #0a0a0a;color:#0a0a0a;transform:rotate(-6deg)}
+#ofertas .oferta:nth-child(2) .o-ic{background:#F26522;transform:rotate(5deg)}#ofertas .oferta:nth-child(3) .o-ic{background:#C8E64A;transform:rotate(-3deg)}
+#ofertas .oferta .h3{font-size:clamp(22px,2.1vw,27px);line-height:1.08}
+#ofertas .oferta .osub{font-size:17px;line-height:1.4;padding:10px 12px;background:#FFF6E4;border-radius:10px;border:2px dashed rgba(10,10,10,.35)}
+#ofertas .oferta .muted{color:#1a1715;font-size:15px}
+#ofertas .oferta .btn{width:100%;justify-content:center}
+@media (min-width:900px){#ofertas .oferta:nth-child(2){transform:translateY(-14px) scale(1.03);z-index:2}#ofertas .oferta.rv.in:nth-child(2){transform:translateY(-14px) scale(1.03)}#ofertas .oferta:nth-child(2):hover{transform:translate(-2px,-18px) scale(1.03)}}
+#ofertas .o-more{margin-top:40px}
+#ofertas .o-more a{display:inline-block;padding:10px 18px;border:2px dashed #0a0a0a;border-radius:999px;background:#FFF6E4;text-decoration:none}
+#ofertas .o-more a:hover{background:#fff}
+@media (max-width:640px){#ofertas .oferta{padding-top:36px}#ofertas .oferta::before{width:80px;height:22px;top:-12px}#ofertas .oferta:nth-child(2)::after{right:12px;top:-14px}#ofertas .o-ic{width:42px;height:42px}}
 @media (max-width:900px){#ofertas .oferta:nth-child(n){transform:none}#ofertas .oferta.rv.in:nth-child(n){transform:none}#ofertas .oferta:nth-child(2){box-shadow:6px 6px 0 #0a0a0a}}
 @media (max-width:640px){#ofertas{padding-top:72px}#ofertas::before{height:32px;top:-18px}}
 /* Contato: bloco laranja com divisória clara (linha grossa + fita verde) */
