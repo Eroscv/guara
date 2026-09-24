@@ -565,6 +565,53 @@ mark,.hl,.hl2,.hl3,.hl4{background:none;color:var(--accent);font-family:'Caveat'
 /* Rodapé */
 .ftr-word{color:transparent;-webkit-text-stroke:2px rgba(242,101,34,.16)}
 .ftr-h2{line-height:.96}
+.soc a{transition:transform .2s}
+.soc a:hover{transform:translateY(-3px)}
+.ftr-brand{padding-top:4px}
+/* Correção: marca-texto em inline (não inline-block) evita pontuação órfã na quebra de linha */
+mark,.hl,.hl2,.hl3,.hl4{display:inline}
+/* Hero: título mais respirado, xadrez mais fino, leque com esmaecimento no rodapé */
+.h1-deck{max-width:19ch}
+.hero-deck::after{width:84px;height:84px;background-size:16px 16px;opacity:.85}
+.deck-strip{position:relative}
+.deck-strip::after{content:"";position:absolute;left:0;right:0;bottom:0;height:55%;background:linear-gradient(180deg,transparent,rgba(10,10,10,.55));pointer-events:none}
+.deck-eyebrow{display:inline-flex;align-items:center;gap:8px}
+.deck-eyebrow::before{content:"";width:8px;height:8px;border-radius:999px;background:var(--accent)}
+/* Acelerar: mesma textura pontilhada do hero, pra dar continuidade visual */
+.hero+.sec{background-image:radial-gradient(rgba(10,10,10,.08) 1.3px,transparent 1.3px);background-size:26px 26px}
+/* Tarja: seta maior e bilhetes com sombra e leve respiro */
+.tarrow svg{width:32px;height:32px}
+.tp{box-shadow:0 16px 34px -20px rgba(10,10,10,.45)}
+.tarja-txt .btn{box-shadow:0 12px 26px -14px rgba(10,10,10,.5)}
+/* Marcas: logos como fichas brancas arredondadas, mais legíveis que o filtro cinza padrão */
+.logos-dim{padding:6px 0}
+.logos-dim .lg{display:inline-flex;align-items:center;justify-content:center;background:#fff;border-radius:999px;padding:16px 30px;min-width:150px;box-shadow:0 10px 22px -14px rgba(0,0,0,.5)}
+.logos-dim img{filter:none;opacity:1;height:26px!important;width:auto;max-width:120px;object-fit:contain}
+.marcas-l{font-family:var(--ui);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:12px;opacity:.65}
+/* Duas verticais: barra de acento no topo e leve elevação no hover */
+.vcol{position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s}
+.vcol::before{content:"";position:absolute;top:0;left:0;right:0;height:6px;background:var(--accent);z-index:1}
+.vcol:hover{transform:translateY(-4px);box-shadow:0 30px 54px -26px rgba(10,10,10,.4)}
+/* Galeria: abas em Anton e cards com leve elevação no hover */
+.tab{font-family:var(--display);text-transform:uppercase;letter-spacing:0;font-size:14px}
+.tab.on{box-shadow:0 10px 22px -12px rgba(0,0,0,.5)}
+.gal .card{transition:transform .25s}
+.gal .card:hover{transform:translateY(-4px)}
+/* Origem: mídia com sombra suave em vez do contorno padrão */
+.origem-media .card{border:0;border-radius:var(--r);box-shadow:0 20px 40px -22px rgba(0,0,0,.6)}
+.origem-cap{opacity:.55;margin-top:14px}
+#origem .o-notes{gap:16px;margin-top:28px}
+#origem .o-note{display:flex;gap:14px;align-items:flex-start;margin:0;padding:16px 18px;background:rgba(244,241,234,.05);border-radius:var(--r)}
+#origem .o-ic{display:inline-flex;flex-shrink:0;width:38px;height:38px;margin-top:2px;align-items:center;justify-content:center;border-radius:999px;background:var(--accent);color:#0a0a0a}
+/* Ofertas: leve elevação no hover, como as demais fichas */
+.oferta{position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s}
+.oferta::before{content:"";position:absolute;top:0;left:0;right:0;height:6px;background:var(--accent);z-index:1}
+.oferta:hover{transform:translateY(-4px)}
+/* Contato: barra de acento no topo do formulário, como as demais fichas */
+.fbox{position:relative;overflow:hidden}
+.fbox::before{content:"";position:absolute;top:0;left:0;right:0;height:6px;background:var(--accent);z-index:1}
+.fgrid input,.fgrid select,.fgrid textarea{border-radius:14px}
+.sol-chip{border-radius:999px}
 
 </style>
 </head>
