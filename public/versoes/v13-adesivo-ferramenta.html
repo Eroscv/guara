@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#FFF6E4">
-<title>Ferramentas: Guará Media (Adesivo)</title>
-<meta name="description" content="Materiais gratuitos, templates e recursos para impulsionar sua estratégia de marketing.">
+<title>Ferramenta: Guará Media (Adesivo)</title>
+<meta name="description" content="Material gratuito da Guará Media.">
 <link rel="icon" href="../favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&family=Noto+Serif+Display:ital,wght@0,400;0,700;1,400&display=swap">
@@ -874,7 +874,7 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
 }
 </style>
 </head>
-<body class="v13-adesivo inner">
+<body class="v13-adesivo inner detail">
 
 <header class="hdr">
   <div class="prog" id="prog" aria-hidden="true"></div>
@@ -887,11 +887,36 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
     <button type="button" class="burger" aria-label="Menu" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
   </div>
 </header>
-
-<section class="s-light sec">
+<section class="s-light sec detail-top">
   <div class="wrap">
-    <div class="pg-head"><h1 class="h1-p">Ferramentas e Recursos</h1><p class="lead">Materiais gratuitos para impulsionar sua estratégia de marketing.</p></div>
-    <div class="cards3"><a href="v13-adesivo-ferramenta.html?slug=checklist-seo-on-page" class="pcard"><div class="pimg"><img src="https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=600&h=400&fit=crop" alt="Checklist de SEO On-Page" loading="lazy"></div><div class="pbody"><span class="chip">SEO</span><h3 class="h3-s">Checklist de SEO On-Page</h3><p class="muted sm clamp">Um checklist completo para garantir que suas páginas estejam otimizadas para os mecanismos de busca.</p><span class="more-link">Acessar <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></div></a><a href="v13-adesivo-ferramenta.html?slug=template-calendario-editorial" class="pcard"><div class="pimg"><img src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=600&h=400&fit=crop" alt="Template de Calendário Editorial" loading="lazy"></div><div class="pbody"><span class="chip">Conteúdo</span><h3 class="h3-s">Template de Calendário Editorial</h3><p class="muted sm clamp">Organize sua produção de conteúdo com nosso template profissional de calendário editorial.</p><span class="more-link">Acessar <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></div></a><a href="v13-adesivo-ferramenta.html?slug=ebook-guia-branding" class="pcard"><div class="pimg"><img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=600&h=400&fit=crop" alt="E-book: Guia de Branding" loading="lazy"></div><div class="pbody"><span class="chip">Branding</span><h3 class="h3-s">E-book: Guia de Branding</h3><p class="muted sm clamp">Tudo que você precisa saber para construir uma marca forte e memorável do zero.</p><span class="more-link">Acessar <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></div></a></div>
+    <a href="v13-adesivo-ferramentas.html" class="back-link"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg> Voltar às ferramentas</a>
+    <p class="muted center pad" id="state" hidden>Ferramenta não encontrada.</p>
+    <div class="dgrid" id="tool-art" hidden>
+      <article class="dmain">
+        <span class="stk stk-open" aria-hidden="true">Gratuito</span>
+        <span class="chip" id="tool-cat"></span>
+        <h1 class="h1-p mt-16" id="tool-title"></h1>
+        <p class="lead d-excerpt" id="tool-desc"></p>
+        <figure class="d-cover" id="tool-cover-wrap"><img id="tool-cover" alt=""></figure>
+        <div class="d-block"><h2>O que você leva</h2><ul class="d-list" id="tool-benefits"></ul></div>
+      </article>
+      <aside class="dside">
+        <div class="dcard">
+          <form id="dl" class="dform" novalidate>
+            <h2 class="h3-s">Baixe gratuitamente</h2>
+            <p class="muted sm">Preencha o formulário para acessar o material.</p>
+            <label>Nome *<input name="nome" required minlength="2" placeholder="Seu nome" autocomplete="name" data-msg="Informe seu nome" aria-describedby="e-nome"><small class="fe" id="e-nome" hidden></small></label>
+            <label>E-mail *<input name="email" type="email" required placeholder="voce@empresa.com" autocomplete="email" data-msg="Informe um e-mail válido" aria-describedby="e-email"><small class="fe" id="e-email" hidden></small></label>
+            <label>Empresa<input name="empresa" placeholder="Nome da empresa" autocomplete="organization"></label>
+            <label>Cargo<input name="cargo" placeholder="Opcional" autocomplete="organization-title"></label>
+            <button type="submit" class="btn btn-lg d-apply">Acessar material</button>
+          </form>
+          <div class="fok dok" id="dl-ok" hidden><svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><h3 class="h3-s">Material liberado!</h3><p class="muted sm">Clique no botão abaixo para fazer o download.</p><a class="btn btn-lg d-apply" id="dl-link" href="#"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg> Baixar agora</a></div>
+        </div>
+        <div class="dnote"><strong>Sem spam</strong><p>Usamos seu e-mail só pra enviar o material e, se você quiser, a newsletter.</p></div>
+      </aside>
+    </div>
+    <div class="mt-64" id="more-wrap"><h2 class="h2 h2-s">Outros materiais</h2><div class="cards3 mt-32" id="more"></div></div>
   </div>
 </section>
 
@@ -974,15 +999,26 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
   var rot = document.querySelector('.rot');
   if (rot && !rm) { var words = rot.dataset.words.split('|'), wi = 0; setInterval(function(){ rot.classList.add('out'); setTimeout(function(){ wi = (wi + 1) % words.length; rot.textContent = words[wi]; rot.classList.remove('out'); }, 260); }, 2600); }
 
-  
-  var nl=document.getElementById('nl');
-  if(nl){nl.querySelector('form').addEventListener('submit',function(e){e.preventDefault();nl.querySelector('form').hidden=true;nl.querySelector('.nl-ok').hidden=false;});}
-  function sb(path){return fetch('https://cmbxrmtncrfhdcpbjxtx.supabase.co/rest/v1/'+path,{headers:{apikey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNtYnhybXRuY3JmaGRjcGJqeHR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODA1MjksImV4cCI6MjA5NTA1NjUyOX0.uzPevwziHY2ilNdP-ZnN6C9K7hq1Xs7u88_FTG3Awi8',Authorization:'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNtYnhybXRuY3JmaGRjcGJqeHR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODA1MjksImV4cCI6MjA5NTA1NjUyOX0.uzPevwziHY2ilNdP-ZnN6C9K7hq1Xs7u88_FTG3Awi8'}}).then(function(r){if(!r.ok)throw new Error(r.status);return r.json();});}
-  var skel=document.getElementById('sk');function skOff(){if(skel)skel.remove();}
   function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
-  var CAL='<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>';
-  var CLK='<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>';
-  
+  var TOOLS=[{"slug":"checklist-seo-on-page","title":"Checklist de SEO On-Page","desc":"Um checklist completo para garantir que suas páginas estejam otimizadas para os mecanismos de busca.","img":"https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=600&h=400&fit=crop","cat":"SEO","benefits":["Otimize cada página do seu site","Melhore seu ranking no Google","Checklist prático e acionável"]},{"slug":"template-calendario-editorial","title":"Template de Calendário Editorial","desc":"Organize sua produção de conteúdo com nosso template profissional de calendário editorial.","img":"https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=600&h=400&fit=crop","cat":"Conteúdo","benefits":["Planeje conteúdos para 3 meses","Organize por canal e formato","Acompanhe métricas de performance"]},{"slug":"ebook-guia-branding","title":"E-book: Guia de Branding","desc":"Tudo que você precisa saber para construir uma marca forte e memorável do zero.","img":"https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=600&h=400&fit=crop","cat":"Branding","benefits":["60+ páginas de conteúdo","Exemplos práticos e cases","Templates editáveis inclusos"]}];
+  var CK='<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+  var slug=new URLSearchParams(location.search).get('slug');
+  var tool=TOOLS.filter(function(x){return x.slug===slug;})[0];
+  var st=document.getElementById('state'),art=document.getElementById('tool-art');
+  if(!tool){st.hidden=false;}
+  else{
+    art.hidden=false;document.title=tool.title+' | Guará Media';
+    document.getElementById('tool-cat').textContent=tool.cat;
+    document.getElementById('tool-title').textContent=tool.title;
+    document.getElementById('tool-desc').textContent=tool.desc;
+    var img=document.getElementById('tool-cover');img.src=tool.img;img.alt=tool.title;
+    document.getElementById('tool-benefits').innerHTML=tool.benefits.map(function(b){return '<li><i class="ck">'+CK+'</i>'+esc(b)+'</li>';}).join('');
+    document.getElementById('more').innerHTML=TOOLS.filter(function(x){return x.slug!==slug;}).map(function(x){return '<a class="pcard" href="v13-adesivo-ferramenta.html?slug='+x.slug+'"><div class="pimg"><img src="'+x.img+'" alt="'+esc(x.title)+'" loading="lazy"></div><div class="pbody"><span class="chip">'+x.cat+'</span><h3 class="h3-s">'+esc(x.title)+'</h3><p class="muted sm clamp">'+esc(x.desc)+'</p></div></a>';}).join('');
+  }
+  var fm=document.getElementById('dl');
+  var fcheck=function(i){var bad=!i.checkValidity(),m=document.getElementById('e-'+i.name);i.classList.toggle('bad',bad);i.setAttribute('aria-invalid',bad);if(m){m.textContent=bad?i.dataset.msg:'';m.hidden=!bad;}return !bad;};
+  fm.querySelectorAll('input').forEach(function(i){i.addEventListener('blur',function(){if(i.value||i.required)fcheck(i);});i.addEventListener('input',function(){if(i.classList.contains('bad'))fcheck(i);});});
+  fm.addEventListener('submit',function(e){e.preventDefault();var ok=true;fm.querySelectorAll('input[required]').forEach(function(i){if(!fcheck(i))ok=false;});if(!ok){fm.querySelector('.bad').focus();return;}fm.hidden=true;document.getElementById('dl-ok').hidden=false;document.getElementById('dl-link').href='mailto:contato@guaramedia.com.br?subject='+encodeURIComponent('Material: '+(tool?tool.title:''));});
 })();</script>
 </body>
 </html>

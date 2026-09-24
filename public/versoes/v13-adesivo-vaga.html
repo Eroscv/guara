@@ -40,7 +40,7 @@ a{color:inherit}
 button,input,select,textarea{font:inherit;color:inherit}
 h1,h2,h3{margin:0;font-family:var(--display);font-weight:var(--displayW);text-transform:var(--displayTf);letter-spacing:var(--displayLs);line-height:1.02;text-wrap:balance}
 p{margin:0}
-.hidden{display:none!important}
+.hidden,[hidden]{display:none!important}
 .center{text-align:center}
 .center .lead,.center .sub{margin-left:auto;margin-right:auto}
 .up{text-transform:uppercase}
@@ -283,7 +283,17 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
 @media (min-width:900px){.ofertas{grid-template-columns:repeat(3,1fr)}}
 .fgrid .micro{justify-content:center}
 .lg{display:inline-flex;align-items:center;justify-content:center}
-.hl2{background:none;color:inherit}
+.hl2,.hl3{background:none;color:inherit}
+.stamp{display:none}
+.gal-cta{display:flex;flex-direction:column;align-items:center;gap:16px;margin-top:40px;text-align:center}
+.gal-hint{font-family:var(--ui);font-size:13px;color:var(--muted)}
+.sol-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.sol-chip{font-family:var(--ui);font-size:13px;font-weight:600;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:none;color:var(--ink);cursor:pointer;min-height:40px}
+.sol-chip.on{background:var(--accent);color:var(--accentInk);border-color:var(--accent)}
+.fprog{display:flex;flex-direction:column;gap:6px;margin:0 0 20px;font-family:var(--ui);font-size:12px;color:var(--muted)}
+.fprog-bar{display:block;height:6px;border-radius:999px;background:var(--line);overflow:hidden}
+.fprog-bar b{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.fprog.done{color:var(--ink)}
 .marcas-l{margin-top:56px;font-family:var(--ui);font-size:13px;font-weight:600;color:var(--muted)}
 /* sticky cta */
 .sticky{position:fixed;right:16px;bottom:16px;z-index:60;display:inline-flex;align-items:center;gap:8px;padding:14px 20px;border-radius:var(--rBtn);background:var(--accent);color:var(--accentInk);font-family:var(--ui);font-weight:700;font-size:14px;text-decoration:none;box-shadow:0 8px 24px rgba(0,0,0,.25);transition:transform .3s,opacity .3s}
@@ -444,6 +454,30 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
 .prose ul,.prose ol{padding-left:22px;margin:0 0 20px}
 .prose li{margin-bottom:8px}
 .mt-16{margin-top:16px}
+.dgrid{display:grid;gap:40px;align-items:start}
+@media (min-width:1024px){.dgrid{grid-template-columns:minmax(0,1fr) 340px;gap:64px}.dside{position:sticky;top:110px}}
+.dmain{position:relative;min-width:0}
+.dcard{display:flex;flex-direction:column;gap:14px;padding:28px;border-radius:var(--rL);background:var(--tcardBg);color:var(--tcardInk);border:var(--lineW) solid var(--tcardLine)}
+.dcard .d-apply{margin-top:4px;width:100%;justify-content:center}
+.dshare{width:100%;justify-content:center;gap:8px}
+.dfacts{margin:0;display:flex;flex-direction:column;gap:8px;font-family:var(--ui);font-size:14px}
+.dfacts div{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line)}
+.dfacts dt{color:var(--muted);font-weight:500}.dfacts dd{margin:0;font-weight:700;text-align:right}
+.dnote{margin-top:16px;padding:18px 20px;border-radius:var(--rL);background:var(--surface);font-family:var(--ui);font-size:14px;line-height:1.5}
+.dnote strong{display:block;margin-bottom:4px}.dnote p{margin:0}.dnote a{color:var(--accent);font-weight:700}
+.dauthor{display:flex;align-items:center;gap:12px}
+.dav{width:44px;height:44px;border-radius:999px;background:var(--accent);color:var(--accentInk);display:flex;align-items:center;justify-content:center;font-family:var(--ui);font-weight:800;font-size:15px;flex-shrink:0}
+.d-excerpt{margin-top:14px;max-width:none}
+.d-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:32px}
+.d-tags .tagb{text-decoration:none}
+.d-list li .ck{display:inline-flex;flex-shrink:0;margin-top:2px}
+.dform{display:flex;flex-direction:column;gap:12px}
+.dform label{display:flex;flex-direction:column;gap:6px;font-family:var(--ui);font-size:13px;font-weight:600}
+.dform input{width:100%;min-height:44px;padding:10px 12px;border-radius:var(--rBtn);border:1px solid var(--line);background:var(--fieldBg);color:inherit;font-size:15px;font-weight:400;font-family:var(--ui);outline:none}
+.dform input:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 20%,transparent)}
+.dform input.bad{border-color:#d33}
+.dok{padding:16px 0}
+.stk-open{display:inline-block;margin-bottom:14px}
 
 .btn{border:3px solid #0a0a0a;box-shadow:4px 4px 0 #0a0a0a;transition:transform .15s,box-shadow .15s}.btn:hover{opacity:1;transform:translate(2px,2px);box-shadow:2px 2px 0 #0a0a0a}.btn-ink{background:#0a0a0a;color:#FFF6E4}.s-dark .btn{border-color:#FFF6E4;box-shadow:4px 4px 0 #FFF6E4}.s-dark .btn:hover{box-shadow:2px 2px 0 #FFF6E4}.card{border:3px solid #0a0a0a;box-shadow:6px 6px 0 #0a0a0a}.s-dark .card{border-color:#FFF6E4;box-shadow:6px 6px 0 #C8E64A}.pcard,.oferta,.vcard,.job,.tcard,.fbox,.nl,.rcard{box-shadow:6px 6px 0 #0a0a0a}.s-dark .oferta,.s-dark .rcard{box-shadow:6px 6px 0 #C8E64A}.hl{background:#F26522;color:#0a0a0a;padding:0 .12em;box-decoration-break:clone;-webkit-box-decoration-break:clone}.stk{display:inline-block;font-family:var(--ui);font-weight:900;font-size:14px;text-transform:uppercase;letter-spacing:.04em;padding:8px 14px;border:3px solid #0a0a0a;border-radius:999px;background:#C8E64A;color:#0a0a0a;box-shadow:3px 3px 0 #0a0a0a}.stk-a{transform:rotate(-6deg);margin-bottom:20px}.stk-b{transform:rotate(4deg);background:#fff}.fig-adesivo{position:relative}.stk-c{position:absolute;right:-8px;top:-14px;transform:rotate(6deg);background:#F26522;z-index:2}.hdr{border-bottom:3px solid #0a0a0a}.hdr .btn{box-shadow:3px 3px 0 #0a0a0a}.s-light .num,.s-light .rmetric{color:#0a0a0a}.tab{border:3px solid #0a0a0a;color:#0a0a0a}.s-dark .tab{border-color:#FFF6E4;color:#FFF6E4}.tab.on{background:#F26522;color:#0a0a0a;border-color:#0a0a0a}.faixa::before{background-image:radial-gradient(circle,rgba(0,0,0,.18) 2px,transparent 2px);background-size:22px 22px}.faq details,.faq details:first-child{border-color:#0a0a0a;border-width:3px}.s-dark .faq details,.s-dark .faq details:first-child{border-color:#FFF6E4}.vcol{border-top-width:3px}.sticky{border:3px solid #0a0a0a;box-shadow:4px 4px 0 #0a0a0a}.tdots i{border:2px solid #0a0a0a}.strip .card,.gal .card,.origem-media .card{box-shadow:none}.gal .card,.origem-media .card{border-width:2px}
 /* hero: cards como adesivos colados */
@@ -563,6 +597,63 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
 .d-list svg{color:#F26522}
 .prose blockquote{border-left:4px solid #C8E64A;padding-left:16px;font-style:italic;color:#0a0a0a;margin:0 0 20px}
 @media (max-width:640px){.pcard,.job,.vcard,.art{transform:none!important;box-shadow:4px 4px 0 #0a0a0a}.d-cover{transform:none;box-shadow:5px 5px 0 #0a0a0a}.back-link{padding:7px 14px}}
+/* detalhe: cartão lateral, fitas e selos */
+.dcard{position:relative;background:#fff;border:3px solid #0a0a0a;box-shadow:8px 8px 0 #0a0a0a;border-radius:18px;padding:32px 28px 28px}
+.dcard::before{content:"";position:absolute;top:-14px;left:50%;width:110px;height:28px;transform:translateX(-50%) rotate(-3deg);background:#C8E64A;border:3px solid #0a0a0a;background-image:repeating-linear-gradient(135deg,transparent 0 10px,rgba(10,10,10,.14) 10px 12px)}
+.dcard .h3-s{font-size:22px}
+.dfacts div{border-bottom:2px dashed rgba(10,10,10,.25)}
+.dshare{border:3px solid #0a0a0a;box-shadow:3px 3px 0 #0a0a0a;background:#FFF6E4;color:#0a0a0a}
+.dshare:hover{background:#C8E64A}
+.dnote{background:#FFF6E4;border:3px solid #0a0a0a;box-shadow:4px 4px 0 #0a0a0a;transform:rotate(1deg)}
+.dav{border:3px solid #0a0a0a;background:#C8E64A;color:#0a0a0a;box-shadow:2px 2px 0 #0a0a0a}
+.d-list li .ck{width:24px;height:24px;border-radius:999px;background:#C8E64A;border:2px solid #0a0a0a;align-items:center;justify-content:center;color:#0a0a0a;margin-top:0}
+.d-list li .ck svg{width:12px;height:12px}
+.d-list li{align-items:center;color:#0a0a0a;font-size:15px}
+.d-cover::after{content:"";position:absolute;top:-12px;right:24px;width:90px;height:24px;transform:rotate(6deg);background:#F26522;border:3px solid #0a0a0a;background-image:repeating-linear-gradient(135deg,transparent 0 10px,rgba(10,10,10,.14) 10px 12px)}
+.d-cover{position:relative;overflow:visible;border-radius:14px}
+.d-cover img{border-radius:10px}
+.stk-open{--rot:-4deg;transform:rotate(var(--rot));background:#F26522}
+.d-excerpt{color:#0a0a0a;font-weight:500}
+.dform input{border:2px solid #0a0a0a;background:#FFF6E4}
+.dform input:focus{box-shadow:3px 3px 0 #0a0a0a;border-color:#0a0a0a}
+.dok svg{color:#0a0a0a}
+.d-tags .tagb{border:2px solid #0a0a0a;box-shadow:2px 2px 0 #0a0a0a}
+.prose h2{position:relative;padding-left:0}
+.prose h2::before{content:"";display:inline-block;width:14px;height:14px;margin-right:10px;background:#C8E64A;border:2px solid #0a0a0a;transform:rotate(12deg);vertical-align:middle}
+@media (max-width:1023px){.dside{margin-top:8px}}
+/* Volume: cabeçalho como etiqueta + CTA */
+#criativos .gal-head .h2{display:inline-block;background:#FFF6E4;color:#0a0a0a;border:3px solid #0a0a0a;border-radius:16px;padding:14px 28px;box-shadow:6px 6px 0 #C8E64A;transform:rotate(-1deg);position:relative}
+#criativos .gal-head .h2::before{content:"";position:absolute;top:-14px;left:32px;width:90px;height:26px;transform:rotate(-6deg);background:#F26522;border:3px solid #0a0a0a;background-image:repeating-linear-gradient(135deg,transparent 0 10px,rgba(10,10,10,.14) 10px 12px)}
+#criativos .gal-head .sub{color:#FFF6E4;opacity:1;font-size:17px;margin-top:22px}
+#criativos .hl2{background:linear-gradient(transparent 58%,#C8E64A 58%);color:#FFF6E4;font-weight:700}
+#criativos .gal .card .snd{opacity:1;background:#FFF6E4;color:#0a0a0a;border:2px solid #0a0a0a;width:34px;height:34px}
+#criativos .gal .card.unmuted .snd{background:#C8E64A}
+#criativos .gal .card .ov{background:rgba(10,10,10,.72);font-weight:700;padding:14px}
+#criativos .gal .card .ov b{color:#C8E64A}
+#criativos .gal-cta{margin-top:48px}
+#criativos .gal-hint{color:#FFF6E4;opacity:.8;font-size:14px}
+#criativos .gal-cta .btn{background:#C8E64A;color:#0a0a0a;border:3px solid #0a0a0a;box-shadow:4px 4px 0 #FFF6E4}
+#criativos .gal-cta .btn:hover{box-shadow:2px 2px 0 #FFF6E4}
+/* Acelerar: carimbo IA + faixa animada */
+.hero-adesivo + .sec .narrow-2 .h2 .hl3{background:linear-gradient(transparent 62%,#F26522 62%);padding:0 .04em}
+.hero-adesivo + .sec .narrow-2 .stamp{display:flex;position:absolute;top:-26px;right:28px;width:88px;height:88px;border-radius:999px;background:#C8E64A;border:3px solid #0a0a0a;box-shadow:4px 4px 0 #0a0a0a;flex-direction:column;align-items:center;justify-content:center;font-family:var(--ui);font-weight:900;letter-spacing:-0.04em;transform:rotate(10deg);z-index:2}
+.hero-adesivo + .sec .narrow-2 .stamp b{font-size:32px;line-height:1}
+.hero-adesivo + .sec .narrow-2 .stamp small{font-size:9px;text-transform:uppercase;letter-spacing:.08em;font-weight:800}
+.hero-adesivo + .sec .narrow-2::after{background-size:40px 40px;animation:hazard 1.6s linear infinite}
+@keyframes hazard{to{background-position:40px 0}}
+@media (prefers-reduced-motion:reduce){.hero-adesivo + .sec .narrow-2::after{animation:none}}
+@media (max-width:640px){.hero-adesivo + .sec .narrow-2 .stamp{width:64px;height:64px;top:-20px;right:12px}.hero-adesivo + .sec .narrow-2 .stamp b{font-size:24px}}
+/* Contato: chips e progresso */
+#contato .sol-chips{margin-top:24px;gap:10px}
+#contato .sol-chip{border:2px solid #0a0a0a;background:#fff;color:#0a0a0a;box-shadow:3px 3px 0 #0a0a0a;font-weight:700;transition:transform .15s,box-shadow .15s}
+#contato .sol-chip:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 #0a0a0a}
+#contato .sol-chip.on{background:#C8E64A;border-color:#0a0a0a;color:#0a0a0a;transform:translate(-1px,-1px)}
+#contato .fprog{color:#0a0a0a;font-weight:600}
+#contato .fprog-bar{height:10px;border:2px solid #0a0a0a;background:#FFF6E4;border-radius:999px}
+#contato .fprog-bar b{background:#C8E64A}
+#contato .fprog.done .fprog-bar b{background:#F26522}
+@media (max-width:1023px){#contato .sol-chips{justify-content:center}}
+@media (max-width:640px){.dcard{padding:28px 20px 22px;box-shadow:5px 5px 0 #0a0a0a}.dnote{transform:none}}
 
 /* Acelerar a qualquer custo: bilhete de alerta com faixa zebrada */
 .hero-adesivo + .sec{padding-top:80px;padding-bottom:80px;background-image:radial-gradient(rgba(10,10,10,.10) 1.2px,transparent 1.2px);background-size:22px 22px}
@@ -797,17 +888,31 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
   </div>
 </header>
 <section class="s-light sec detail-top">
-  <div class="wrap narrow-2">
+  <div class="wrap">
     <a href="v13-adesivo-talentos.html" class="back-link"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg> Voltar às vagas</a>
     <p class="muted center pad" id="state">Carregando...</p>
-    <article id="job-art" hidden>
-      <div class="d-badges" id="job-badges"></div>
-      <h1 class="h1-p" id="job-title"></h1>
-      <div class="d-block"><h2>Descrição</h2><p class="d-desc" id="job-desc"></p></div>
-      <div class="d-block" id="job-resp-wrap" hidden><h2>Responsabilidades</h2><ul class="d-list" id="job-resp"></ul></div>
-      <div class="d-block" id="job-req-wrap" hidden><h2>Requisitos</h2><ul class="d-list" id="job-req"></ul></div>
-      <a class="btn btn-lg d-apply" id="job-apply">Quero me candidatar</a>
-    </article>
+    <div class="dgrid" id="job-art" hidden>
+      <article class="dmain">
+        <span class="stk stk-open" aria-hidden="true">Vaga aberta</span>
+        <div class="d-badges" id="job-badges"></div>
+        <h1 class="h1-p" id="job-title"></h1>
+        <div class="d-block"><h2>Descrição</h2><p class="d-desc" id="job-desc"></p></div>
+        <div class="d-block" id="job-resp-wrap" hidden><h2>Responsabilidades</h2><ul class="d-list" id="job-resp"></ul></div>
+        <div class="d-block" id="job-req-wrap" hidden><h2>Requisitos</h2><ul class="d-list" id="job-req"></ul></div>
+      </article>
+      <aside class="dside">
+        <div class="dcard">
+          <h2 class="h3-s">Se candidatar</h2>
+          <dl class="dfacts" id="job-facts"></dl>
+          <a class="btn btn-lg d-apply" id="job-apply">Quero me candidatar</a>
+          <button type="button" class="btn btn-ghost dshare" id="share"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg> Compartilhar vaga</button>
+          <p class="micro" id="share-ok" role="status" hidden>Link copiado!</p>
+          <p class="micro">Resposta em até 24h úteis.</p>
+        </div>
+        <div class="dnote"><strong>Como funciona</strong><p>Você manda um e-mail com o assunto já preenchido. A gente responde com os próximos passos.</p></div>
+      </aside>
+    </div>
+    <div class="mt-64" id="other-wrap" hidden><h2 class="h2 h2-s">Outras vagas abertas</h2><div class="jobs mt-32" id="other"></div></div>
   </div>
 </section>
 
@@ -890,30 +995,42 @@ address{font-style:normal;font-family:var(--ui);font-size:13px;opacity:.6;line-h
   var rot = document.querySelector('.rot');
   if (rot && !rm) { var words = rot.dataset.words.split('|'), wi = 0; setInterval(function(){ rot.classList.add('out'); setTimeout(function(){ wi = (wi + 1) % words.length; rot.textContent = words[wi]; rot.classList.remove('out'); }, 260); }, 2600); }
 
+  
+  var nl=document.getElementById('nl');
+  if(nl){nl.querySelector('form').addEventListener('submit',function(e){e.preventDefault();nl.querySelector('form').hidden=true;nl.querySelector('.nl-ok').hidden=false;});}
   function sb(path){return fetch('https://cmbxrmtncrfhdcpbjxtx.supabase.co/rest/v1/'+path,{headers:{apikey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNtYnhybXRuY3JmaGRjcGJqeHR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODA1MjksImV4cCI6MjA5NTA1NjUyOX0.uzPevwziHY2ilNdP-ZnN6C9K7hq1Xs7u88_FTG3Awi8',Authorization:'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNtYnhybXRuY3JmaGRjcGJqeHR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODA1MjksImV4cCI6MjA5NTA1NjUyOX0.uzPevwziHY2ilNdP-ZnN6C9K7hq1Xs7u88_FTG3Awi8'}}).then(function(r){if(!r.ok)throw new Error(r.status);return r.json();});}
+  var skel=document.getElementById('sk');function skOff(){if(skel)skel.remove();}
   function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
+  var CAL='<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>';
+  var CLK='<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>';
   var BR='<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>';
   var MP='<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>';
   var MO='<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8M12 17v4"/></svg>';
   var CK='<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
   var id=new URLSearchParams(location.search).get('id');
   var st=document.getElementById('state'),art=document.getElementById('job-art');
+  function wmCls(wm){return (wm||'').normalize('NFD').replace(/[^a-z]/g,'');}
+  document.getElementById('share').addEventListener('click',function(){var ok=document.getElementById('share-ok');function done(){ok.hidden=false;setTimeout(function(){ok.hidden=true;},2500);}if(navigator.share){navigator.share({title:document.title,url:location.href}).catch(function(){});}else if(navigator.clipboard){navigator.clipboard.writeText(location.href).then(done);}});
   if(!id){st.textContent='Vaga não encontrada.';}
   else sb('jobs?select=*&id=eq.'+encodeURIComponent(id)).then(function(d){
     var job=d&&d[0];
-    if(!job){st.textContent='Vaga não encontrada. Ela pode ter sido encerrada.';return;}
+    if(!job){st.textContent='Vaga não encontrada. Ela pode ter sido encerrada.';return null;}
     st.hidden=true;art.hidden=false;
     document.title='Vaga: '+job.title+' | Guará Media';
-    var wm=job.work_model||'';var cls=wm.normalize('NFD').replace(/[^a-z]/g,'');
-    document.getElementById('job-badges').innerHTML='<span class="badge '+cls+'">'+MO+' '+esc(wm)+'</span><span class="d-tag">'+BR+' '+esc(job.department)+'</span><span class="d-tag">'+MP+' '+esc(job.location)+'</span>';
+    var wm=job.work_model||'';
+    document.getElementById('job-badges').innerHTML='<span class="badge '+wmCls(wm)+'">'+MO+' '+esc(wm)+'</span><span class="d-tag">'+BR+' '+esc(job.department)+'</span><span class="d-tag">'+MP+' '+esc(job.location)+'</span>';
     document.getElementById('job-title').textContent=job.title;
     document.getElementById('job-desc').textContent=job.description||'';
+    document.getElementById('job-facts').innerHTML='<div><dt>Área</dt><dd>'+esc(job.department)+'</dd></div><div><dt>Local</dt><dd>'+esc(job.location)+'</dd></div><div><dt>Modelo</dt><dd>'+esc(wm)+'</dd></div>';
     var resp=job.responsibilities||[];
-    if(resp.length){document.getElementById('job-resp-wrap').hidden=false;document.getElementById('job-resp').innerHTML=resp.map(function(r){return '<li>'+CK+' '+esc(r)+'</li>';}).join('');}
+    if(resp.length){document.getElementById('job-resp-wrap').hidden=false;document.getElementById('job-resp').innerHTML=resp.map(function(r){return '<li><i class="ck">'+CK+'</i>'+esc(r)+'</li>';}).join('');}
     var req=job.requirements||[];
-    if(req.length){document.getElementById('job-req-wrap').hidden=false;document.getElementById('job-req').innerHTML=req.map(function(r){return '<li>'+CK+' '+esc(r)+'</li>';}).join('');}
+    if(req.length){document.getElementById('job-req-wrap').hidden=false;document.getElementById('job-req').innerHTML=req.map(function(r){return '<li><i class="ck">'+CK+'</i>'+esc(r)+'</li>';}).join('');}
     document.getElementById('job-apply').href='mailto:contato@guaramedia.com.br?subject='+encodeURIComponent('Candidatura: '+job.title);
-  }).catch(function(){st.textContent='Não foi possível carregar a vaga. Recarregue a página pra tentar de novo.';});
+    return sb('jobs?select=id,title,department,location,work_model&is_open=eq.true&id=neq.'+job.id+'&order=created_at.desc&limit=3');
+  }).then(function(o){
+    if(o&&o.length){document.getElementById('other-wrap').hidden=false;document.getElementById('other').innerHTML=o.map(function(j){var wm=j.work_model||'';return '<a class="job" href="v13-adesivo-vaga.html?id='+esc(j.id)+'"><div><h3 class="h3-s">'+esc(j.title)+'</h3><div class="meta"><span>'+BR+' '+esc(j.department)+'</span><span>'+MP+' '+esc(j.location)+'</span></div></div><span class="badge '+wmCls(wm)+'">'+esc(wm)+'</span></a>';}).join('');}
+  }).catch(function(){st.hidden=false;art.hidden=true;st.textContent='Não foi possível carregar a vaga. Recarregue a página pra tentar de novo.';});
 })();</script>
 </body>
 </html>
