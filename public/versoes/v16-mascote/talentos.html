@@ -52,7 +52,8 @@
         <div class="filters" style="padding-top:0">
           <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input type="search" id="q" placeholder="Buscar por cargo, área ou cidade" aria-label="Buscar vagas"></label>
         </div>
-        <p class="state" id="state">Carregando as vagas…</p>
+        <div class="sk rows" id="sk" aria-busy="true" aria-label="Carregando vagas"><div></div><div></div><div></div></div>
+        <p class="state" id="state" hidden></p>
         <div class="jobs" id="jobs"></div>
       </div>
     </div>
@@ -103,13 +104,15 @@
   let jobs=[],q='';
   const st=document.getElementById('state'),box=document.getElementById('jobs');
   const cls=wm=>(wm||'').normalize('NFD').replace(/[^a-z]/gi,'').toLowerCase();
+  const wmLabel=wm=>{const w=(wm||'').trim();return w?w[0].toUpperCase()+w.slice(1).toLowerCase():''};
+  const sk=document.getElementById('sk');
   function render(){
     const s=q.toLowerCase();
     const f=jobs.filter(j=>!s||j.title.toLowerCase().includes(s)||(j.department||'').toLowerCase().includes(s)||(j.location||'').toLowerCase().includes(s));
     st.hidden=f.length>0; st.textContent=jobs.length?'Nenhuma vaga com essa busca.':'Nenhuma vaga aberta agora. Deixa seu contato no banco de talentos aí embaixo.';
-    box.innerHTML=f.map(j=>{const wm=j.work_model||'';return `<a class="job" href="vaga.html?id=${esc(j.id)}"><div><h3>${esc(j.title)}</h3><div class="meta"><span>${I.brief} ${esc(j.department)}</span><span>${I.pin} ${esc(j.location)}</span></div></div><div class="job-side"><span class="badge ${cls(wm)}">${esc(wm)}</span><span class="arrow">${I.arrow}</span></div></a>`;}).join('');
+    box.innerHTML=f.map(j=>{const wm=j.work_model||'';return `<a class="job" href="vaga.html?id=${esc(j.id)}"><div><h3>${esc(j.title)}</h3><div class="meta"><span>${I.brief} ${esc(j.department)}</span><span>${I.pin} ${esc(j.location)}</span></div></div><div class="job-side"><span class="badge ${cls(wm)}">${esc(wmLabel(wm))}</span><span class="arrow">${I.arrow}</span></div></a>`;}).join('');
   }
-  sb('jobs?select=id,title,department,location,work_model&is_open=eq.true&order=created_at.desc').then(d=>{jobs=d;render();}).catch(()=>{st.hidden=false;st.textContent='Não deu pra carregar as vagas agora. Recarregue a página pra tentar de novo.';});
+  sb('jobs?select=id,title,department,location,work_model&is_open=eq.true&order=created_at.desc').then(d=>{sk.remove();jobs=d;render();}).catch(()=>{sk.remove();st.hidden=false;st.textContent='Não deu pra carregar as vagas agora. Recarregue a página pra tentar de novo.';});
   document.getElementById('q').addEventListener('input',e=>{q=e.target.value;render();});
 })();
 </script>

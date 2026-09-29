@@ -87,6 +87,7 @@
   const id=new URLSearchParams(location.search).get('id');
   const st=document.getElementById('state'),art=document.getElementById('art');
   const cls=wm=>(wm||'').normalize('NFD').replace(/[^a-z]/gi,'').toLowerCase();
+  const wmLabel=wm=>{const w=(wm||'').trim();return w?w[0].toUpperCase()+w.slice(1).toLowerCase():''};
   share(document.getElementById('share'),document.getElementById('share-ok'));
   if(!id){st.textContent='Vaga não encontrada.';return;}
   sb('jobs?select=*&id=eq.'+encodeURIComponent(id)).then(d=>{
@@ -96,9 +97,9 @@
     document.title=job.title+' | Vagas Guará Media';
     const wm=job.work_model||'';
     document.getElementById('j-title').textContent=job.title;
-    document.getElementById('j-badges').innerHTML=`<span class="badge ${cls(wm)}">${esc(wm)}</span><span class="tag">${I.brief} ${esc(job.department)}</span><span class="tag">${I.pin} ${esc(job.location)}</span>`;
+    document.getElementById('j-badges').innerHTML=`<span class="badge ${cls(wm)}">${esc(wmLabel(wm))}</span><span class="tag">${I.brief} ${esc(job.department)}</span><span class="tag">${I.pin} ${esc(job.location)}</span>`;
     document.getElementById('j-desc').textContent=job.description||'';
-    document.getElementById('j-facts').innerHTML=`<div><dt>Área</dt><dd>${esc(job.department)}</dd></div><div><dt>Local</dt><dd>${esc(job.location)}</dd></div><div><dt>Modelo</dt><dd>${esc(wm)}</dd></div>`;
+    document.getElementById('j-facts').innerHTML=`<div><dt>Área</dt><dd>${esc(job.department)}</dd></div><div><dt>Local</dt><dd>${esc(job.location)}</dd></div><div><dt>Modelo</dt><dd>${esc(wmLabel(wm))}</dd></div>`;
     const resp=job.responsibilities||[], req=job.requirements||[];
     if(resp.length){document.getElementById('j-resp-wrap').hidden=false;document.getElementById('j-resp').innerHTML=resp.map(r=>`<li><i>${I.check}</i><span>${esc(r)}</span></li>`).join('');}
     if(req.length){document.getElementById('j-req-wrap').hidden=false;document.getElementById('j-req').innerHTML=req.map(r=>`<li><i>${I.check}</i><span>${esc(r)}</span></li>`).join('');}
@@ -106,7 +107,7 @@
     G.navTheme();
     return sb('jobs?select=id,title,department,location,work_model&is_open=eq.true&id=neq.'+job.id+'&order=created_at.desc&limit=3');
   }).then(o=>{
-    if(o&&o.length){document.getElementById('other-wrap').hidden=false;document.getElementById('other').innerHTML=o.map(j=>{const wm=j.work_model||'';return `<a class="job" href="vaga.html?id=${esc(j.id)}"><div><h3>${esc(j.title)}</h3><div class="meta"><span>${I.brief} ${esc(j.department)}</span><span>${I.pin} ${esc(j.location)}</span></div></div><div class="job-side"><span class="badge ${cls(wm)}">${esc(wm)}</span><span class="arrow">${I.arrow}</span></div></a>`;}).join('');}
+    if(o&&o.length){document.getElementById('other-wrap').hidden=false;document.getElementById('other').innerHTML=o.map(j=>{const wm=j.work_model||'';return `<a class="job" href="vaga.html?id=${esc(j.id)}"><div><h3>${esc(j.title)}</h3><div class="meta"><span>${I.brief} ${esc(j.department)}</span><span>${I.pin} ${esc(j.location)}</span></div></div><div class="job-side"><span class="badge ${cls(wm)}">${esc(wmLabel(wm))}</span><span class="arrow">${I.arrow}</span></div></a>`;}).join('');}
   }).catch(()=>{st.hidden=false;art.hidden=true;st.textContent='Não deu pra carregar a vaga agora. Recarregue a página pra tentar de novo.';});
 })();
 </script>

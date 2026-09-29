@@ -216,7 +216,7 @@ p{margin:0}
 .field{display:flex;flex-direction:column;gap:8px;min-width:0}
 .field.full,.lead-form fieldset,.form-actions,.form-status{grid-column:1/-1}
 .lead-form label,.lead-form legend{font-weight:700;font-size:.98rem}
-.lead-form input[type=text],.lead-form input[type=tel]{font:inherit;font-size:1rem;color:var(--off);background:rgba(255,246,228,.06);border:2px solid rgba(255,246,228,.22);border-radius:14px;padding:13px 16px;transition:border-color .2s,background .2s}
+.lead-form input[type=text],.lead-form input[type=tel]{font:inherit;font-size:1rem;color:var(--off);background:rgba(255,246,228,.06);border:2px solid rgba(255,246,228,.36);border-radius:14px;padding:13px 16px;transition:border-color .2s,background .2s}
 .lead-form input::placeholder{color:rgba(255,246,228,.4)}
 .lead-form input:focus{outline:none;border-color:var(--lime);background:rgba(255,246,228,.1)}
 .lead-form input[aria-invalid="true"]{border-color:var(--orange)}
@@ -225,7 +225,7 @@ p{margin:0}
 .chips{display:flex;flex-wrap:wrap;gap:10px}
 .chip{position:relative}
 .chip input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
-.chip span{display:inline-block;font-size:.95rem;font-weight:600;padding:10px 16px;border-radius:999px;border:2px solid rgba(255,246,228,.28);transition:background .2s,border-color .2s,color .2s}
+.chip span{display:inline-block;font-size:.95rem;font-weight:600;padding:10px 16px;border-radius:999px;border:2px solid rgba(255,246,228,.4);transition:background .2s,border-color .2s,color .2s}
 .chip:hover span{border-color:rgba(255,246,228,.6)}
 .chip input:checked+span{background:var(--lime);border-color:var(--lime);color:var(--ink)}
 .chip input:focus-visible+span{outline:3px solid var(--lime);outline-offset:3px}
@@ -236,6 +236,7 @@ fieldset[aria-invalid="true"] .chip span{border-color:var(--orange)}
 .form-actions .cta-pill{--shadow:var(--off);font-size:1.05rem;cursor:pointer;font-family:inherit}
 .form-actions .cta-pill[disabled]{opacity:.6;cursor:progress}
 .form-status{font-weight:600}
+.form-hint{font-size:.9rem;color:rgba(255,246,228,.6)}
 .form-status.ok{color:var(--lime)}
 .form-status.bad{color:#ff9a6b}
 @media (max-width:900px){
@@ -572,12 +573,12 @@ body.case-mode main{display:none}
           <span class="err" id="e-site"></span>
         </div>
         <fieldset id="fs-fat">
-          <legend>Faturamento mensal</legend>
+          <legend>Faturamento mensal (R$)</legend>
           <div class="chips">
-            <label class="chip"><input type="radio" name="faturamento" value="Até R$ 100 mil"><span>Até R$ 100 mil</span></label>
-            <label class="chip"><input type="radio" name="faturamento" value="De R$ 100 mil a R$ 500 mil"><span>De R$ 100 mil a R$ 500 mil</span></label>
-            <label class="chip"><input type="radio" name="faturamento" value="De R$ 500 mil a R$ 1 milhão"><span>De R$ 500 mil a R$ 1 milhão</span></label>
-            <label class="chip"><input type="radio" name="faturamento" value="Acima de R$ 1 milhão"><span>Acima de R$ 1 milhão</span></label>
+            <label class="chip"><input type="radio" name="faturamento" value="Até R$ 100 mil"><span>Até 100 mil</span></label>
+            <label class="chip"><input type="radio" name="faturamento" value="De R$ 100 mil a R$ 500 mil"><span>100 a 500 mil</span></label>
+            <label class="chip"><input type="radio" name="faturamento" value="De R$ 500 mil a R$ 1 milhão"><span>500 mil a 1 mi</span></label>
+            <label class="chip"><input type="radio" name="faturamento" value="Acima de R$ 1 milhão"><span>Acima de 1 mi</span></label>
           </div>
           <span class="err" id="e-fat"></span>
         </fieldset>
@@ -593,6 +594,7 @@ body.case-mode main{display:none}
         </fieldset>
         <div class="form-actions">
           <button type="submit" class="cta-pill" id="formBtn">Enviar para a Guará</button>
+          <span class="form-hint">Todos os campos são obrigatórios.</span>
         </div>
         <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
       </form>
@@ -966,21 +968,29 @@ function jellyFrame(){
   wa.addEventListener('input',()=>{let d=wa.value.replace(/\D/g,'').slice(0,11);
     wa.value=d.length>10?`(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`:d.length>6?`(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`:d.length>2?`(${d.slice(0,2)}) ${d.slice(2)}`:d.length?`(${d}`:''});
   const setErr=(el,msgEl,msg)=>{el.setAttribute('aria-invalid',msg?'true':'false');document.getElementById(msgEl).textContent=msg||''; if(el.tagName==='INPUT')el.setAttribute('aria-describedby',msgEl)};
+  // Regras por campo: cada uma sabe validar sozinha, pra rodar no blur e no submit
+  const RULES={
+    nome:{el:()=>document.getElementById('f-nome'),err:'e-nome',ok:f=>(f.get('nome')||'').trim().length>1,msg:'Informe seu nome.'},
+    whatsapp:{el:()=>wa,err:'e-whats',ok:f=>(f.get('whatsapp')||'').replace(/\D/g,'').length>=10,msg:'Informe um WhatsApp com DDD.'},
+    site:{el:()=>document.getElementById('f-site'),err:'e-site',ok:f=>(f.get('site')||'').trim().length>2,msg:'Informe o site ou o @ da empresa.'},
+    faturamento:{el:()=>document.getElementById('fs-fat'),err:'e-fat',ok:f=>!!f.get('faturamento'),msg:'Escolha uma faixa de faturamento.'},
+    solucao:{el:()=>document.getElementById('fs-sol'),err:'e-sol',ok:f=>!!f.get('solucao'),msg:'Escolha a solução que te interessa.'},
+  };
+  function checkField(name){const r=RULES[name],ok=r.ok(new FormData(form));setErr(r.el(),r.err,ok?'':r.msg);return ok}
+  form.querySelectorAll('input[type=text],input[type=tel]').forEach(i=>{
+    i.addEventListener('blur',()=>{if(i.value)checkField(i.name)});
+    i.addEventListener('input',()=>{if(i.getAttribute('aria-invalid')==='true')checkField(i.name)});
+  });
   function validate(){
     const f=new FormData(form), errs=[];
-    const nome=(f.get('nome')||'').trim(), tel=(f.get('whatsapp')||'').replace(/\D/g,''), site=(f.get('site')||'').trim();
-    const chk=(cond,el,id,msg)=>{setErr(el,id,cond?'':msg);if(!cond)errs.push(el)};
-    chk(nome.length>1,document.getElementById('f-nome'),'e-nome','Informe seu nome.');
-    chk(tel.length>=10,wa,'e-whats','Informe um WhatsApp com DDD.');
-    chk(site.length>2,document.getElementById('f-site'),'e-site','Informe o site ou o @ da empresa.');
-    chk(!!f.get('faturamento'),document.getElementById('fs-fat'),'e-fat','Escolha uma faixa de faturamento.');
-    chk(!!f.get('solucao'),document.getElementById('fs-sol'),'e-sol','Escolha a solução que te interessa.');
-    return {ok:!errs.length,first:errs[0],data:{nome,whatsapp:tel,site,faturamento:f.get('faturamento'),solucao:f.get('solucao'),origem:'LP Guará Media',enviado_em:new Date().toISOString()}};
+    for(const name in RULES){if(!checkField(name))errs.push(RULES[name].el())}
+    const tel=(f.get('whatsapp')||'').replace(/\D/g,'');
+    return {ok:!errs.length,count:errs.length,first:errs[0],data:{nome:(f.get('nome')||'').trim(),whatsapp:tel,site:(f.get('site')||'').trim(),faturamento:f.get('faturamento'),solucao:f.get('solucao'),origem:'LP Guará Media',enviado_em:new Date().toISOString()}};
   }
   form.addEventListener('change',e=>{if(e.target.name==='faturamento')setErr(document.getElementById('fs-fat'),'e-fat','');if(e.target.name==='solucao')setErr(document.getElementById('fs-sol'),'e-sol','')});
   form.addEventListener('submit',async e=>{
     e.preventDefault(); status.className='form-status'; status.textContent='';
-    const v=validate(); if(!v.ok){(v.first.querySelector?.('input')||v.first).focus();return}
+    const v=validate(); if(!v.ok){status.classList.add('bad');status.textContent=v.count===1?'Falta 1 campo pra enviar.':`Faltam ${v.count} campos pra enviar.`;(v.first.querySelector?.('input')||v.first).focus();return}
     btn.disabled=true; btn.textContent='Enviando…';
     try{
       if(FORM_ENDPOINT){const r=await fetch(FORM_ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(v.data)}); if(!r.ok&&r.type!=='opaque')throw new Error(r.status)}
