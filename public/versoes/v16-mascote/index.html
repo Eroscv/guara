@@ -412,15 +412,8 @@ body.case-mode main{display:none}
 .lb-close{position:fixed;top:calc(16px + env(safe-area-inset-top,0px));right:16px;width:46px;height:46px;border-radius:50%;border:2px solid var(--off);background:var(--ink);color:var(--off);font-size:1.6rem;line-height:1;cursor:pointer}
 @media (prefers-reduced-motion:reduce){.js .piece{opacity:1;transform:none}}
 
-/* ===== v1.5: conteúdo do formulário centralizado (texto digitado continua à esquerda) ===== */
-.lead-form{text-align:center}
-.field>label,.lead-form legend{text-align:center;width:100%}
-.lead-form legend{margin-left:auto;margin-right:auto}
-.lead-form input[type=text],.lead-form input[type=tel]{text-align:left}
-.chips{justify-content:center}
-.form-actions{justify-content:center}
-.form-status,.err{text-align:center}
-.form-hint{width:100%;text-align:center}
+/* ===== v1.5: conteúdo do formulário alinhado à esquerda (padrão) ===== */
+.form-hint{width:auto;text-align:left}
 /* 13: respiro no topo do card */
 .form-box{padding-top:clamp(30px,4.4svh,56px)}
 /* 15: contraste do aviso */
