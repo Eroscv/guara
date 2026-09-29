@@ -469,3 +469,8 @@ main{padding-top:0}
 .modal-guara{position:absolute;right:56px;top:-2px;width:120px;height:auto;pointer-events:none;opacity:.95}
 .apply-intro{margin-bottom:6px}
 @media (max-width:480px){.modal-guara{width:90px;right:52px}}
+
+/* Lista com dois itens (detalhe da ferramenta): os dois lado a lado, imagem em cima */
+.tools.pair .tool{grid-column:auto;grid-template-columns:1fr;align-content:start}
+.tools.pair .tool figure{order:-1;aspect-ratio:16/9}
+.tools.pair .tool h2{font-size:clamp(1.6rem,1.2rem + 1.4vw,2.4rem)}
