@@ -421,6 +421,17 @@ body.case-mode main{display:none}
 .form-actions{justify-content:center}
 .form-status,.err{text-align:center}
 .form-hint{width:100%;text-align:center}
+/* 13: respiro no topo do card */
+.form-box{padding-top:clamp(30px,4.4svh,56px)}
+/* 15: contraste do aviso */
+.form-hint{color:rgba(255,246,228,.78)}
+/* 14: no mobile o guará sai do card e fica em pé sobre ele, à direita */
+@media (max-width:900px){
+  .contato-form>.sub{margin-bottom:0}
+  .form-box{margin-top:112px;padding:28px clamp(18px,5vw,36px) 28px;overflow:visible}
+  .form-guara{left:auto;right:clamp(10px,4vw,28px);top:auto;bottom:calc(100% - 6px);width:132px}
+}
+@media (max-width:480px){.form-box{margin-top:100px}.form-guara{width:118px}}
 .nav-guara{display:none}
 @media (max-width:880px){.nav-guara{display:block;position:absolute;right:var(--pad);bottom:12px;width:96px;height:auto;pointer-events:none;opacity:.95}}
 </style>
