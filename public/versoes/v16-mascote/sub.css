@@ -461,13 +461,30 @@ main{padding-top:0}
 @media (max-width:640px){.place{grid-template-columns:1fr}}
 
 /* Modal do banco de talentos */
-.modal{border:0;padding:0;background:transparent;max-width:min(94vw,560px);width:100%;max-height:92svh}
-.modal::backdrop{background:rgba(34,34,33,.82);backdrop-filter:blur(3px)}
-.modal-card{position:relative;max-height:92svh;overflow:auto;padding-top:clamp(28px,4vw,40px)}
-.modal-card h2{padding-right:44px}
-.modal-x{position:absolute;top:14px;right:14px;width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,246,228,.4);background:var(--ink);color:var(--off);font-size:1.5rem;line-height:1;cursor:pointer;z-index:2}
-.modal-x:hover{border-color:var(--lime);color:var(--lime)}
-.modal-guara{position:absolute;right:56px;top:-2px;width:120px;height:auto;pointer-events:none;opacity:.95}
+.modal{border:0;padding:0;background:transparent;max-width:min(94vw,680px);width:100%;max-height:92svh;overflow:visible}
+.modal::backdrop{background:rgba(34,34,33,.84);backdrop-filter:blur(4px)}
+.modal-card{position:relative;max-height:92svh;overflow:auto;padding:0;border:2.5px solid var(--lime);box-shadow:8px 8px 0 var(--orange)}
+.modal-head{display:grid;grid-template-columns:minmax(0,1fr) clamp(130px,24vw,170px);gap:12px 20px;align-items:end;padding:clamp(24px,3.6vw,36px) clamp(22px,3.6vw,36px) 0;border-bottom:2px solid rgba(255,246,228,.14);margin-bottom:clamp(18px,2.6vw,26px)}
+.modal-head>div{padding-bottom:clamp(18px,2.6vw,26px)}
+.modal-kicker{display:inline-block;font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.04em;font-stretch:85%;color:var(--orange);margin-bottom:8px}
+.modal-head h2{font-size:clamp(1.7rem,1.2rem + 1.8vw,2.6rem);line-height:.98;margin-bottom:.4em;padding-right:0}
+.modal-head p{color:rgba(255,246,228,.78);font-size:.98rem;max-width:30em}
+.modal-guara{width:100%;height:auto;margin-bottom:-2px;pointer-events:none;justify-self:end}
+.modal-card #bankBox{padding:0 clamp(22px,3.6vw,36px) clamp(24px,3.6vw,36px)}
+.modal-x{position:absolute;top:12px;right:12px;width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,246,228,.4);background:var(--ink);color:var(--off);font-size:1.5rem;line-height:1;cursor:pointer;z-index:2;transition:background .2s,color .2s,border-color .2s,transform .25s var(--ease)}
+.modal-x:hover{background:var(--lime);border-color:var(--lime);color:var(--ink);transform:rotate(90deg)}
+/* formulário em duas colunas dentro do modal */
+.modal .apply{grid-template-columns:1fr 1fr;gap:14px 16px}
+.modal .apply>.file-field,.modal .apply>label:has(textarea),.modal .apply>button,.modal .apply>.err{grid-column:1/-1}
+.modal .apply .drop{padding:22px 14px}
+.modal .apply>button{margin-top:4px;font-size:1.05rem}
+@media (max-width:560px){.modal .apply{grid-template-columns:1fr}.modal-head{grid-template-columns:1fr}.modal-guara{width:120px;justify-self:end;margin-top:-8px}.modal-x{top:10px;right:10px}}
+/* entrada */
+@keyframes modal-in{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes backdrop-in{from{opacity:0}to{opacity:1}}
+.modal[open]{animation:modal-in .4s var(--ease)}
+.modal[open]::backdrop{animation:backdrop-in .3s ease}
+@media (prefers-reduced-motion:reduce){.modal[open],.modal[open]::backdrop{animation:none}}
 .apply-intro{margin-bottom:6px}
 @media (max-width:480px){.modal-guara{width:90px;right:52px}}
 

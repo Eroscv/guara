@@ -104,8 +104,14 @@
 <dialog class="modal" id="bankModal" aria-labelledby="bankTitle">
   <div class="dcard modal-card">
     <button type="button" class="modal-x" id="bankClose" aria-label="Fechar">×</button>
-    <img class="modal-guara" src="assets/guara-olhando-tras.webp" alt="" width="1000" height="715" aria-hidden="true">
-    <h2 class="caps" id="bankTitle">Banco de talentos</h2>
+    <div class="modal-head">
+      <div>
+        <span class="modal-kicker">Sem vaga aberta na sua área?</span>
+        <h2 class="caps" id="bankTitle">Entra no banco de talentos</h2>
+        <p>Deixa seu contato e o currículo. Quando abrir algo que combine, a gente chama primeiro quem já está aqui.</p>
+      </div>
+      <img class="modal-guara" src="assets/guara-olhando-tras.webp" alt="" width="1000" height="715" aria-hidden="true">
+    </div>
     <div id="bankBox"></div>
   </div>
 </dialog>
@@ -143,7 +149,7 @@
   document.getElementById('q').addEventListener('input',e=>{q=e.target.value;render();});
   // Banco de talentos: modal com o mesmo formulário da vaga, apontando pra vaga fixa "Banco de talentos"
   const modal=document.getElementById('bankModal');
-  G.mountApply(document.getElementById('bankBox'),{job:()=>bank,area:true,intro:'Deixa seu contato e o currículo. Quando abrir algo na sua área, a gente chama.',placeholder:'O que você faz de melhor e onde quer chegar.',cta:'Entrar no banco',okTitle:'Você está no banco',okMsg:'Guardamos seu currículo. Quando abrir uma vaga que combine, a gente te chama pelo e-mail.',noJobMsg:'O banco de talentos está fechado no momento. Manda seu currículo pra contato@guaramedia.com.br.'});
+  G.mountApply(document.getElementById('bankBox'),{job:()=>bank,area:true,placeholder:'O que você faz de melhor e onde quer chegar.',cta:'Entrar no banco',okTitle:'Você está no banco',okMsg:'Guardamos seu currículo. Quando abrir uma vaga que combine, a gente te chama pelo e-mail.',noJobMsg:'O banco de talentos está fechado no momento. Manda seu currículo pra contato@guaramedia.com.br.'});
   document.getElementById('bankBtn').addEventListener('click',()=>{modal.showModal();modal.querySelector('input[name=name]').focus();});
   document.getElementById('bankClose').addEventListener('click',()=>modal.close());
   modal.addEventListener('click',e=>{if(e.target===modal)modal.close();});
