@@ -512,8 +512,7 @@ main{padding-top:0}
 .modal .apply .file-label{font-size:.9rem}
 .modal .apply>button{margin-top:2px;padding:11px 22px!important}
 /* área + mensagem lado a lado no desktop pra ganhar uma linha */
-.modal .apply>label:has(textarea){grid-column:auto}
-.modal .apply>label:has(input[name=area]){grid-column:auto}
+.modal .apply>label:has(input[name=area]){grid-column:1/-1}
 @media (max-width:560px){.modal .apply>label:has(textarea){grid-column:1/-1}}
 .modal,.modal-card{max-height:96svh}
 
