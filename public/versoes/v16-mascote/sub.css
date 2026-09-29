@@ -192,7 +192,8 @@ main{padding-top:0}
 
 /* ---------- TALENTOS ---------- */
 .values{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(12px,2vw,24px)}
-.value{border:2.5px solid var(--ink);border-radius:22px;padding:clamp(20px,2.6vw,32px);background:var(--off);box-shadow:5px 5px 0 var(--ink)}
+.value{border:2.5px solid var(--ink);border-radius:22px;padding:clamp(20px,2.6vw,32px);background:var(--off);box-shadow:5px 5px 0 var(--ink);transition:transform .3s var(--ease),box-shadow .3s var(--ease)}
+.value:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--orange)}
 .value h3{font-weight:700;font-size:1.2rem;letter-spacing:-.01em;margin-bottom:.4em}
 .value p{font-size:.95rem;color:var(--ink-soft)}
 .value svg{width:28px;height:28px;color:var(--orange);margin-bottom:14px}
