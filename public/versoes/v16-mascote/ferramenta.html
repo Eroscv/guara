@@ -38,7 +38,7 @@
           <span class="kicker" id="t-kicker"></span>
           <h1 id="t-title"></h1>
           <p class="excerpt" id="t-desc"></p>
-          <figure class="cover" id="t-cover-wrap"><img id="t-cover" alt=""></figure>
+          <figure class="cover art-cover" id="t-cover-wrap"><img id="t-cover" alt=""></figure>
           <div class="dblock"><h2>O que vem dentro</h2><ul class="dlist" id="t-benefits"></ul></div>
           <div class="dblock"><h2>Como a Guará usa</h2><p class="desc" id="t-how"></p></div>
         </article>
@@ -101,7 +101,7 @@
   const t=TOOLS.find(x=>x.slug===slug);
   const st=document.getElementById('state'),art=document.getElementById('art');
   const tones=['dark','orange','lime'];
-  document.getElementById('more').innerHTML=TOOLS.filter(x=>x.slug!==slug).map((x,i)=>`<a class="tool ${tones[i%3]} rv" href="ferramenta.html?slug=${x.slug}"><div><span class="k">${esc(x.cat)} · ${esc(x.kind)}</span><h2>${esc(x.title)}</h2><p>${esc(x.desc)}</p><span class="go">Baixar de graça ${I.arrow}</span></div><figure><img src="${esc(x.img)}" alt="" loading="lazy" width="600" height="400"></figure></a>`).join('');
+  document.getElementById('more').innerHTML=TOOLS.filter(x=>x.slug!==slug).map((x,i)=>`<a class="tool ${tones[i%3]} rv" href="ferramenta.html?slug=${x.slug}"><div><span class="k">${esc(x.cat)} · ${esc(x.kind)}</span><h2>${esc(x.title)}</h2><p>${esc(x.desc)}</p><span class="go">Baixar de graça ${I.arrow}</span></div><figure><img src="${esc(x.img)}" alt="" loading="lazy" width="${x.imgW}" height="${x.imgH}"></figure></a>`).join('');
   reveal();
   if(!t){st.hidden=false;return;}
   art.hidden=false;

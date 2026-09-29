@@ -411,6 +411,20 @@ body.case-mode main{display:none}
 .lb-media img,.lb-media video{max-width:min(92vw,1200px);max-height:88svh;display:block;border-radius:14px;margin:auto}
 .lb-close{position:fixed;top:calc(16px + env(safe-area-inset-top,0px));right:16px;width:46px;height:46px;border-radius:50%;border:2px solid var(--off);background:var(--ink);color:var(--off);font-size:1.6rem;line-height:1;cursor:pointer}
 @media (prefers-reduced-motion:reduce){.js .piece{opacity:1;transform:none}}
+
+/* ===== v1.5: guará fora do card do formulário (em pé sobre ele), formulário com a largura toda ===== */
+.contato-form>.form-head{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px clamp(24px,4vw,56px);align-items:end;padding:0 clamp(8px,2vw,24px)}
+.contato-form .form-head h2{text-align:left;font-size:clamp(1.8rem,min(3.4vw,5.2svh),3.6rem)}
+.contato-form .form-head .sub{text-align:left;margin:.4em 0 clamp(14px,2.6svh,28px)}
+.form-guara{position:static;width:clamp(150px,min(17vw,24svh),230px);margin:0 clamp(8px,3vw,40px) -6px 0;pointer-events:none}
+.form-guara img{width:100%;height:auto}
+.form-box{padding:clamp(24px,3.6svh,48px) clamp(22px,3.6vw,52px)}
+@media (max-width:900px){
+  .contato-form>.sub{margin-bottom:0}
+  .form-box{padding:clamp(22px,4vw,32px) clamp(18px,5vw,36px) 28px}
+  .form-guara{width:clamp(110px,26vw,150px);margin:0 4px -6px 0}
+}
+@media (max-width:480px){.contato-form .form-head h2{font-size:1.7rem}.form-guara{width:100px}}
 </style>
 </head>
 <body>
@@ -552,10 +566,14 @@ body.case-mode main{display:none}
   </section>
 
   <section class="contato-form" id="formulario" data-theme="light">
-    <h2>Tem interesse em saber mais?</h2>
-    <p class="sub">Preencha o formulário abaixo.</p>
-    <div class="form-box">
+    <div class="form-head">
+      <div>
+        <h2>Tem interesse em saber mais?</h2>
+        <p class="sub">Preencha o formulário abaixo.</p>
+      </div>
       <div class="form-guara" aria-hidden="true"><img src="assets/guara-uivando.webp" alt="" width="700" height="754" loading="lazy"></div>
+    </div>
+    <div class="form-box">
       <form class="lead-form" id="leadForm" novalidate>
         <div class="field">
           <label for="f-nome">Nome</label>

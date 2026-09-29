@@ -79,7 +79,7 @@
   const tones=['dark','orange','lime'];
   document.getElementById('tools').innerHTML=TOOLS.map((t,i)=>`<a class="tool ${tones[i%3]} rv" href="ferramenta.html?slug=${t.slug}">
     <div><span class="k">${esc(t.cat)} · ${esc(t.kind)}</span><h2>${esc(t.title)}</h2><p>${esc(t.desc)}</p><span class="go">Baixar de graça ${I.arrow}</span></div>
-    <figure><img src="${esc(t.img)}" alt="" loading="lazy" width="600" height="400"></figure>
+    <figure><img src="${esc(t.img)}" alt="" loading="lazy" width="${t.imgW}" height="${t.imgH}"></figure>
   </a>`).join('');
   reveal();
 })();

@@ -347,3 +347,30 @@ main{padding-top:var(--nav-h)}
   .js .rv,.js .pg-hero .art img,.js .pg-hero h1,.js .pg-hero .lead{opacity:1!important;transform:none!important;transition:none!important}
   .tool,.job,.post .media img,.tool figure img{transition:none!important}
 }
+
+/* ===== Ajustes de design ===== */
+/* 1. Destaque do blog: foto em largura total com o título por cima */
+.post.feat{display:block;padding:0;overflow:hidden;border-radius:26px}
+.post.feat .media{aspect-ratio:21/9;border-radius:0;margin:0}
+.post.feat>div:last-child{position:absolute;left:0;right:0;bottom:0;padding:clamp(80px,12vw,140px) clamp(20px,3vw,40px) clamp(22px,3vw,36px);background:linear-gradient(to top,rgba(34,34,33,.94) 0%,rgba(34,34,33,.72) 45%,rgba(34,34,33,0) 100%);color:var(--off)}
+.post.feat .cat{color:var(--lime)}
+.post.feat h3{color:var(--off);max-width:16em;font-size:clamp(1.6rem,1.1rem + 2vw,3rem)}
+.post.feat p{color:rgba(255,246,228,.82);max-width:36em}
+.post.feat .meta{color:rgba(255,246,228,.7)}
+.post.feat .media .ph{font-size:clamp(2rem,6vw,4rem)}
+@media (max-width:760px){.post.feat .media{aspect-ratio:4/5}.post.feat>div:last-child{padding-top:60px}}
+/* 7. Ferramentas: a primeira em largura total, as outras duas lado a lado com o guará em cima */
+.tools{grid-template-columns:1fr 1fr}
+.tool:first-child{grid-column:1/-1}
+.tool:not(:first-child){grid-template-columns:1fr;align-content:start}
+.tool:not(:first-child) figure{order:-1;aspect-ratio:16/9}
+.tool:not(:first-child) h2{font-size:clamp(1.6rem,1.2rem + 1.4vw,2.4rem)}
+@media (max-width:760px){.tools{grid-template-columns:1fr}}
+/* 9. Guará no lugar de foto: fundo cream, ilustração inteira visível */
+.tool figure{background:var(--off);display:grid;place-items:end center;padding:clamp(14px,2vw,28px) clamp(14px,2vw,28px) 0}
+.tool figure img{width:auto;max-width:100%;height:100%;max-height:100%;object-fit:contain;object-position:bottom}
+.tool.lime figure{background:#fffbea}
+.cover.art-cover{background:var(--orange);display:grid;place-items:end center;padding:clamp(20px,3vw,40px) clamp(20px,3vw,40px) 0}
+.cover.art-cover img{width:auto;max-width:82%;height:100%;object-fit:contain;object-position:bottom}
+/* 14. Valores com o guará em miniatura */
+.value .mini{height:72px;width:auto;max-width:100%;margin-bottom:14px;object-fit:contain;object-position:left bottom}
