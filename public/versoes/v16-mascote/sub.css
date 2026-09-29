@@ -553,8 +553,10 @@ main{padding-top:0}
 /* ===== Gate de leitura no post ===== */
 .prose.gated{max-height:var(--cut,40vh);overflow:hidden;-webkit-mask-image:linear-gradient(to bottom,#000 55%,transparent 100%);mask-image:linear-gradient(to bottom,#000 55%,transparent 100%)}
 body.has-gate .dtags,body.has-gate #rel-wrap,body.has-gate .next{opacity:.25;pointer-events:none}
-.gate{position:fixed;left:0;right:0;bottom:0;z-index:45;padding:0 var(--pad) calc(16px + env(safe-area-inset-bottom,0px));pointer-events:none}
-.gate-card{pointer-events:auto;max-width:1080px;margin:0 auto;background:var(--ink);color:var(--off);border:2.5px solid var(--lime);border-radius:26px;box-shadow:8px 8px 0 var(--orange);padding:clamp(20px,2.6vw,30px) clamp(20px,2.6vw,32px);display:grid;grid-template-columns:auto minmax(0,1fr) minmax(280px,38%);gap:16px clamp(18px,2.6vw,32px);align-items:center;transform:translateY(24px);opacity:0;transition:transform .5s var(--ease),opacity .4s ease}
+.gate{position:fixed;inset:0;z-index:45;display:grid;place-items:center;padding:16px var(--pad) calc(16px + env(safe-area-inset-bottom,0px));background:rgba(34,34,33,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;transition:opacity .35s ease}
+.gate.in{opacity:1}
+.gate[hidden]{display:none}
+.gate-card{pointer-events:auto;width:100%;max-width:820px;margin:0 auto;max-height:92svh;overflow:auto;background:var(--ink);color:var(--off);border:2.5px solid var(--lime);border-radius:26px;box-shadow:8px 8px 0 var(--orange);padding:clamp(20px,2.6vw,30px) clamp(20px,2.6vw,32px);display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px clamp(18px,2.6vw,32px);align-items:center;transform:translateY(24px);opacity:0;transition:transform .5s var(--ease),opacity .4s ease}
 .gate.in .gate-card{transform:none;opacity:1}
 .gate-guara{width:clamp(72px,8vw,110px);height:auto;align-self:end;margin-bottom:-4px}
 .gate-copy h2{color:var(--lime);font-size:clamp(1.3rem,1.05rem + 1vw,1.9rem);line-height:1;margin:.2em 0 .4em}
@@ -571,3 +573,11 @@ body.has-gate .dtags,body.has-gate #rel-wrap,body.has-gate .next{opacity:.25;poi
 @media (max-width:900px){.gate-card{grid-template-columns:auto minmax(0,1fr)}.gate-form{grid-column:1/-1}}
 @media (max-width:560px){.gate{padding-left:10px;padding-right:10px}.gate-card{grid-template-columns:1fr;padding:18px}.gate-guara{width:64px;justify-self:end;margin:-6px 0 -34px}.gate-copy h2{font-size:1.25rem}.gate-copy p{font-size:.88rem}}
 @media (prefers-reduced-motion:reduce){.gate-card{transition:none}}
+
+/* gate centralizado: formulário abaixo do texto, em duas colunas */
+.gate-form{grid-column:1/-1;grid-template-columns:1fr 1fr}
+.gate-form .cta-pill,.gate-form .err,.gate-skip{grid-column:1/-1}
+.gate-guara{width:clamp(80px,9vw,120px)}
+.gate-copy h2{font-size:clamp(1.4rem,1.1rem + 1.2vw,2.1rem)}
+@media (max-width:560px){.gate-form{grid-template-columns:1fr}.gate-guara{margin:-6px 0 -30px}}
+@media (prefers-reduced-motion:reduce){.gate{transition:none}}
