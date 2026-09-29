@@ -374,3 +374,17 @@ main{padding-top:var(--nav-h)}
 .cover.art-cover img{width:auto;max-width:82%;height:100%;object-fit:contain;object-position:bottom}
 /* 14. Valores com o guará em miniatura */
 .value .mini{height:72px;width:auto;max-width:100%;margin-bottom:14px;object-fit:contain;object-position:left bottom}
+
+/* Tags escondidas atrás de "+ tags" */
+.tags-wrap{margin-bottom:clamp(20px,3vh,32px)}
+.tag-toggle{font-weight:700;background:transparent;border:2px dashed rgba(34,34,33,.35);color:var(--ink)}
+.tag-toggle:hover{background:transparent;border-color:var(--ink);color:var(--ink)}
+.tags-wrap .tags{margin:10px 0 0}
+/* Estado vazio com o guará e uma ação */
+.empty{display:grid;justify-items:center;text-align:center;gap:16px;padding:clamp(28px,5vh,56px) 0}
+.empty img{width:min(46vw,180px);height:auto}
+.empty p{font-weight:600;color:var(--ink-soft);max-width:28em}
+.empty.dark p{color:rgba(255,246,228,.75)}
+/* Guará no menu mobile */
+.nav-guara{display:none}
+@media (max-width:880px){.nav-guara{display:block;position:absolute;right:var(--pad);bottom:12px;width:96px;height:auto;pointer-events:none;opacity:.95}}

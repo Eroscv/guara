@@ -25,6 +25,7 @@
     <a class="link" href="talentos.html">Talentos</a>
     <a class="link" href="artigos.html">Artigos</a>
     <a class="cta-pill" href="index.html#formulario">Fale com a Guará</a>
+    <img class="nav-guara" src="assets/guara-tilt-head.webp" alt="" width="937" height="1000" loading="lazy" aria-hidden="true">
   </nav>
 </header>
 
@@ -45,10 +46,10 @@
         <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input type="search" id="q" placeholder="Buscar no blog" aria-label="Buscar posts"></label>
         <div class="chips" id="cats" role="group" aria-label="Filtrar por categoria"><button type="button" class="chip on" data-cat="" aria-pressed="true">Todos</button></div>
       </div>
-      <div class="tags" id="tags"></div>
+      <div class="tags-wrap"><button type="button" class="tag tag-toggle" id="tagsToggle" aria-expanded="false" aria-controls="tags" hidden>+ tags</button><div class="tags" id="tags" hidden></div></div>
 
       <div class="sk blog" id="sk" aria-busy="true" aria-label="Carregando posts"><div></div><div></div><div></div><div></div></div>
-      <p class="state center" id="state" hidden></p>
+      <div class="empty" id="state" hidden><img src="assets/guara-tilt-head.webp" alt="" width="937" height="1000"><p>Nenhum post com esse filtro.<br>Tenta outra palavra ou limpa os filtros.</p><button type="button" class="cta-pill ghost" id="clear">Limpar filtros</button></div>
       <div class="grid" id="grid-a"></div>
 
       <div class="mt" id="nl-slot" hidden>
@@ -103,7 +104,7 @@
     const s=q.toLowerCase();
     const f=posts.filter(p=>{ if(s&&!p.title.toLowerCase().includes(s)&&!(p.excerpt||'').toLowerCase().includes(s))return false; if(cat&&p.category!==cat)return false; if(tag&&!(p.tags||[]).includes(tag))return false; return true; });
     const sh=f.slice(0,vis);
-    st.hidden=f.length>0; st.textContent='Nenhum post com esse filtro. Tenta outra palavra.';
+    st.hidden=f.length>0;
     const noFilter=!s&&!cat&&!tag;
     ga.innerHTML=sh.slice(0,4).map((p,i)=>card(p,i,noFilter&&i===0)).join('');
     gb.innerHTML=sh.slice(4).map((p,i)=>card(p,i+4,false)).join('');
@@ -118,11 +119,13 @@
     cats.addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;cat=b.dataset.cat===cat?'':b.dataset.cat;cats.querySelectorAll('.chip').forEach(x=>{const on=x.dataset.cat===cat;x.classList.toggle('on',on);x.setAttribute('aria-pressed',on);});vis=PAGE;render();});
     const tags=document.getElementById('tags');
     [...new Set(posts.flatMap(p=>p.tags||[]))].slice(0,12).forEach(t=>{const b=document.createElement('button');b.type='button';b.className='tag';b.dataset.tag=t;b.textContent='#'+t;tags.appendChild(b);});
+    if(tags.children.length){const tg=document.getElementById('tagsToggle');tg.hidden=false;tg.addEventListener('click',()=>{const o=tags.hidden;tags.hidden=!o;tg.setAttribute('aria-expanded',o);tg.textContent=o?'– tags':'+ tags';});}
     tags.addEventListener('click',e=>{const b=e.target.closest('.tag');if(!b)return;tag=b.dataset.tag===tag?'':b.dataset.tag;tags.querySelectorAll('.tag').forEach(x=>x.classList.toggle('on',x.dataset.tag===tag));vis=PAGE;render();});
     render();
   }).catch(()=>{sk.remove();st.hidden=false;st.textContent='Não deu pra carregar os posts agora. Recarregue a página pra tentar de novo.';});
   document.getElementById('q').addEventListener('input',e=>{q=e.target.value;vis=PAGE;render();});
   more.addEventListener('click',()=>{vis+=PAGE;render();});
+  document.getElementById('clear').addEventListener('click',()=>{q='';cat='';tag='';vis=PAGE;document.getElementById('q').value='';document.querySelectorAll('#cats .chip').forEach(x=>{const on=!x.dataset.cat;x.classList.toggle('on',on);x.setAttribute('aria-pressed',on);});document.querySelectorAll('#tags .tag').forEach(x=>x.classList.remove('on'));render();document.getElementById('q').focus();});
   const nl=document.getElementById('nlForm');
   nl.addEventListener('submit',e=>{e.preventDefault();const i=nl.querySelector('input');if(!i.checkValidity()){i.focus();i.setAttribute('aria-invalid','true');return;}nl.hidden=true;document.getElementById('nlOk').hidden=false;});
 })();

@@ -25,6 +25,7 @@
     <a class="link" href="talentos.html">Talentos</a>
     <a class="link" href="artigos.html">Artigos</a>
     <a class="cta-pill" href="index.html#formulario">Fale com a Guará</a>
+    <img class="nav-guara" src="assets/guara-tilt-head.webp" alt="" width="937" height="1000" loading="lazy" aria-hidden="true">
   </nav>
 </header>
 
@@ -106,7 +107,7 @@
   if(!t){st.hidden=false;return;}
   art.hidden=false;
   document.title=t.title+' | Guará Media';
-  document.getElementById('t-kicker').textContent=t.cat+' · '+t.kind+' · grátis';
+  document.getElementById('t-kicker').textContent=t.cat+' · '+t.kind+' · '+(t.format||'')+' grátis';
   document.getElementById('t-title').textContent=t.title;
   document.getElementById('t-desc').textContent=t.desc;
   const c=document.getElementById('t-cover');c.src=t.img;c.alt=t.title;
@@ -124,7 +125,7 @@
     const btn=document.getElementById('dlBtn');btn.disabled=true;btn.textContent='Liberando…';
     const data={};new FormData(f).forEach((v,k)=>data[k]=v);
     data.site=data.empresa||'';data.whatsapp='';data.faturamento='';data.investimentoMidia='';data.desafio='Download de ferramenta: '+t.title;
-    const done=()=>{f.hidden=true;document.getElementById('dlLink').href=t.file||'#';document.getElementById('dlOk').hidden=false;};
+    const done=()=>{f.hidden=true;const l=document.getElementById('dlLink');l.href=t.file||'#';l.textContent='Baixar '+(t.format||'arquivo')+(t.size?' · '+t.size:'');document.getElementById('dlOk').hidden=false;};
     lead(data).then(done).catch(done); // o material é liberado mesmo se o registro do lead falhar
   });
 })();
