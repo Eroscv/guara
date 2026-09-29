@@ -159,6 +159,7 @@
     document.getElementById('p-tags').innerHTML=(post.tags||[]).map(t=>`<a class="tag" href="blog.html">#${esc(t)}</a>`).join('');
     G.navTheme();
     setupGate(post);
+    if(LOCAL_POSTS[slug]) return null; // post local: sem relacionados
     const sel='id,title,slug,cover_image,category,published_at,reading_time';
     return sb(`posts?select=${sel}&order=published_at.desc&id=neq.${post.id}&limit=30`).then(all=>{
       const sameCat=all.filter(p=>p.category===post.category);
