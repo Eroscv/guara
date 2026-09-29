@@ -34,15 +34,22 @@
     <div class="wrap">
       <a class="back" href="talentos.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg> Todas as vagas</a>
       <p class="state center" id="state">Carregando a vaga…</p>
-      <div class="dgrid" id="art" hidden>
-        <article class="dmain">
-          <span class="kicker">Vaga aberta</span>
+      <div id="art" hidden>
+      <header class="job-head">
+        <div>
+          <span class="kicker" id="j-kicker">Vaga aberta</span>
           <h1 id="j-title"></h1>
-          <div class="dbadges" id="j-badges" style="margin-top:20px"></div>
-          <p class="dmeta" id="j-meta"></p>
-          <div class="dblock"><h2>O que você vai fazer</h2><p class="desc" id="j-desc"></p></div>
-          <div class="dblock" id="j-resp-wrap" hidden><h2>Responsabilidades</h2><ul class="dlist" id="j-resp"></ul></div>
-          <div class="dblock" id="j-req-wrap" hidden><h2>O que a gente espera</h2><ul class="dlist" id="j-req"></ul></div>
+          <ul class="facts" id="j-facts-row"></ul>
+        </div>
+        <div class="job-guara" aria-hidden="true"><img src="assets/guara-em-pe.webp" alt="" width="1000" height="935"></div>
+      </header>
+      <div class="dgrid">
+        <article class="dmain">
+          <p class="job-lead" id="j-desc"></p>
+          <div class="job-cols">
+            <div class="jcard" id="j-resp-wrap" hidden><h2>O que você vai fazer</h2><ul class="dlist" id="j-resp"></ul></div>
+            <div class="jcard" id="j-req-wrap" hidden><h2>O que a gente espera</h2><ul class="dlist" id="j-req"></ul></div>
+          </div>
           <div class="dblock"><h2>Como funciona o processo</h2><ol class="steps compact">
         <li><span class="n">1</span><h3>Candidatura</h3><p>Formulário com currículo, direto na vaga. Respondemos em até 24h úteis.</p></li>
         <li><span class="n">2</span><h3>Conversa</h3><p>Trinta minutos com quem vai trabalhar com você no dia a dia. Sem roteiro de RH.</p></li>
@@ -54,19 +61,19 @@
             <div><h2>Onde você vai trabalhar</h2><p class="desc">A Guará fica dentro da Unicamp, no Parque Científico e Tecnológico, no prédio Vértice. Pesquisa e mercado na mesma mesa: é comum um problema de cliente virar tema de estudo, e vice-versa. Vagas remotas seguem o horário de Brasília e passam por aqui de vez em quando.</p></div>
           </div>
         </article>
-        <aside class="dside">
+        <aside class="dside" id="candidatar">
           <div class="dcard">
             <h2 class="caps">Se candidatar</h2>
             <p>Preenche, anexa o currículo e manda. A gente responde com os próximos passos em até 24h úteis.</p>
-            <dl class="dfacts" id="j-facts"></dl>
             <div id="applyBox" style="margin-top:18px"></div>
             <button type="button" class="share" id="share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg> Compartilhar vaga</button>
             <p class="micro" id="share-ok" role="status" hidden>Link copiado.</p>
           </div>
           <div class="dnote"><strong>Onde fica</strong><p>Parque Científico e Tecnológico da Unicamp, Campinas. Vagas remotas seguem o fuso de Brasília.</p></div>
-          <div class="guara" aria-hidden="true"><img src="assets/guara-em-pe.webp" alt="" width="1000" height="935" loading="lazy"></div>
         </aside>
       </div>
+      </div>
+      <div class="apply-bar" id="applyBar" hidden><a class="cta-pill" href="#candidatar">Quero me candidatar</a></div>
     </div>
   </section>
 
@@ -110,15 +117,16 @@
     document.title=job.title+' | Vagas Guará Media';
     const wm=job.work_model||'';
     document.getElementById('j-title').textContent=job.title;
-    document.getElementById('j-badges').innerHTML=`<span class="badge ${cls(wm)}">${esc(wmLabel(wm))}</span><span class="tag">${I.brief} ${esc(job.department)}</span><span class="tag">${I.pin} ${esc(job.location)}</span>`;
+    document.getElementById('j-kicker').textContent='Vaga aberta · '+(job.department||'');
     document.getElementById('j-desc').textContent=job.description||'';
-    document.getElementById('j-meta').innerHTML=job.created_at?`<span>${I.cal} Publicada em ${G.fmtDate(job.created_at)}</span>`:'';
-    document.getElementById('j-facts').innerHTML=`<div><dt>Área</dt><dd>${esc(job.department)}</dd></div><div><dt>Local</dt><dd>${esc(job.location)}</dd></div><div><dt>Modelo</dt><dd>${esc(wmLabel(wm))}</dd></div>`;
+    document.getElementById('j-facts-row').innerHTML=`<li class="badge ${cls(wm)}">${I.monitor} ${esc(wmLabel(wm))}</li><li>${I.brief} ${esc(job.department)}</li><li>${I.pin} ${esc(job.location)}</li>${job.created_at?`<li>${I.cal} Publicada em ${G.fmtDate(job.created_at)}</li>`:''}`;
     const resp=job.responsibilities||[], req=job.requirements||[];
     if(resp.length){document.getElementById('j-resp-wrap').hidden=false;document.getElementById('j-resp').innerHTML=resp.map(r=>`<li><i>${I.check}</i><span>${esc(r)}</span></li>`).join('');}
     if(req.length){document.getElementById('j-req-wrap').hidden=false;document.getElementById('j-req').innerHTML=req.map(r=>`<li><i>${I.check}</i><span>${esc(r)}</span></li>`).join('');}
     setupApply(job);
     G.navTheme();
+    const bar=document.getElementById('applyBar'),side=document.getElementById('candidatar'); // barra fixa no celular: some quando o formulário está na tela
+    new IntersectionObserver(es=>{bar.hidden=es[0].isIntersecting;},{threshold:.05}).observe(side);
     return sb('jobs?select=id,title,department,location,work_model&is_open=eq.true&id=neq.'+job.id+'&order=created_at.desc&limit=3');
   }).then(o=>{
     if(o&&o.length){document.getElementById('other-wrap').hidden=false;document.getElementById('other').innerHTML=o.map(j=>{const wm=j.work_model||'';return `<a class="job" href="vaga.html?id=${esc(j.id)}"><div><h3>${esc(j.title)}</h3><div class="meta"><span>${I.brief} ${esc(j.department)}</span><span>${I.pin} ${esc(j.location)}</span></div></div><div class="job-side"><span class="badge ${cls(wm)}">${esc(wmLabel(wm))}</span><span class="arrow">${I.arrow}</span></div></a>`;}).join('');}

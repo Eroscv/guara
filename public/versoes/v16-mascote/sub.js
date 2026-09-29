@@ -26,6 +26,13 @@
       .then(r => { if (!r.ok) throw new Error('insert ' + r.status); return r; });
   }
 
+  /* Máscaras: telefone BR (aceita +55, 0 inicial, fixo de 8 ou celular de 9 dígitos), e-mail (minúsculas, sem espaços), site (sem protocolo/barra) */
+  function phoneDigits(v) { let d = String(v || '').replace(/\D/g, ''); d = d.replace(/^0+/, ''); if (d.length > 11 && d.startsWith('55')) d = d.slice(2); return d.slice(0, 11); }
+  function phoneFormat(d) { if (!d) return ''; if (d.length <= 2) return '(' + d; if (d.length <= 6) return `(${d.slice(0, 2)}) ${d.slice(2)}`; if (d.length <= 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`; return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`; }
+  function maskPhone(input) { if (!input) return; const f = () => { input.value = phoneFormat(phoneDigits(input.value)); }; input.addEventListener('input', f); input.addEventListener('paste', () => setTimeout(f, 0)); input.addEventListener('blur', f); }
+  function maskEmail(input) { if (!input) return; input.addEventListener('input', () => { const v = input.value.replace(/\s+/g, '').toLowerCase(); if (v !== input.value) input.value = v; }); input.addEventListener('blur', () => { input.value = input.value.trim().toLowerCase(); }); }
+  function cleanSite(v) { return String(v || '').trim().replace(/^https?:\/\//i, '').replace(/^www\./i, '').replace(/\/+$/, ''); }
+
   const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   const fmtDate = d => d ? new Date(d).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }) : '';
   const svg = (p, s = 16) => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
@@ -113,6 +120,7 @@
       if (!(APPLY_TYPES.includes(x.type) || /\.(pdf|docx?)$/i.test(x.name))) { err('cv').textContent = 'Formato inválido. Envie PDF ou DOC/DOCX.'; cv.value = ''; return; }
       if (x.size > APPLY_MAX) { err('cv').textContent = 'Arquivo muito grande. O máximo é 5 MB.'; cv.value = ''; return; }
       file = x; chip.querySelector('.file-name').textContent = x.name; chip.querySelector('.file-size').textContent = (x.size / 1024 / 1024).toFixed(2) + ' MB'; chip.hidden = false; drop.hidden = true; };
+    maskPhone(f.querySelector('input[name=phone]')); maskEmail(f.querySelector('input[name=email]'));
     cv.addEventListener('change', () => setFile(cv.files[0]));
     chip.querySelector('.file-x').addEventListener('click', () => setFile(null));
     ['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
@@ -142,5 +150,5 @@
     return f;
   }
 
-  window.G = { sb, lead, upload, insert, mountApply, isTalentBank, esc, fmtDate, I, svg, share, reveal, reduce, navTheme };
+  window.G = { sb, lead, upload, insert, mountApply, isTalentBank, maskPhone, maskEmail, phoneDigits, cleanSite, esc, fmtDate, I, svg, share, reveal, reduce, navTheme };
 })();

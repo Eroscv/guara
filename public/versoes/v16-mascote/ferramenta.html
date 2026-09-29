@@ -115,6 +115,7 @@
   document.getElementById('t-how').textContent=HOW[t.slug]||'';
   const f=document.getElementById('dl');
   function check(i){const bad=!i.checkValidity();i.setAttribute('aria-invalid',bad);const m=document.getElementById('e-'+i.name);if(m)m.textContent=bad?(i.name==='email'?'Informe um e-mail válido.':'Informe seu nome.'):'';return !bad;}
+  G.maskEmail(f.querySelector('input[name=email]'));
   f.querySelectorAll('input[required]').forEach(i=>{i.addEventListener('blur',()=>check(i));i.addEventListener('input',()=>{if(i.getAttribute('aria-invalid')==='true')check(i);});});
   f.addEventListener('submit',e=>{
     e.preventDefault();

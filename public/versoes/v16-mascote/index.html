@@ -993,13 +993,17 @@ function jellyFrame(){
   // A função create-lead-card ainda não está publicada no projeto (404). Quando publicar, troque pra true:
   const USE_EDGE_FUNCTION=false;
   const form=document.getElementById('leadForm'), wa=document.getElementById('f-whats'), status=document.getElementById('formStatus'), btn=document.getElementById('formBtn');
-  wa.addEventListener('input',()=>{let d=wa.value.replace(/\D/g,'').slice(0,11);
-    wa.value=d.length>10?`(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`:d.length>6?`(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`:d.length>2?`(${d.slice(0,2)}) ${d.slice(2)}`:d.length?`(${d}`:''});
+  const phoneDigits=v=>{let d=String(v||'').replace(/\D/g,'');d=d.replace(/^0+/,'');if(d.length>11&&d.startsWith('55'))d=d.slice(2);return d.slice(0,11)};
+  const phoneFormat=d=>!d?'':d.length<=2?'('+d:d.length<=6?`(${d.slice(0,2)}) ${d.slice(2)}`:d.length<=10?`(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`:`(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`;
+  const maskWa=()=>{wa.value=phoneFormat(phoneDigits(wa.value))};
+  wa.addEventListener('input',maskWa); wa.addEventListener('paste',()=>setTimeout(maskWa,0)); wa.addEventListener('blur',maskWa);
+  const em=document.getElementById('f-email'); em.addEventListener('input',()=>{const v=em.value.replace(/\s+/g,'').toLowerCase();if(v!==em.value)em.value=v}); em.addEventListener('blur',()=>{em.value=em.value.trim().toLowerCase()});
+  const st=document.getElementById('f-site'); st.addEventListener('blur',()=>{st.value=st.value.trim().replace(/^https?:\/\//i,'').replace(/^www\./i,'').replace(/\/+$/,'')});
   const setErr=(el,msgEl,msg)=>{el.setAttribute('aria-invalid',msg?'true':'false');document.getElementById(msgEl).textContent=msg||''; if(el.tagName==='INPUT')el.setAttribute('aria-describedby',msgEl)};
   // Regras por campo: cada uma sabe validar sozinha, pra rodar no blur e no submit
   const RULES={
     nome:{el:()=>document.getElementById('f-nome'),err:'e-nome',ok:f=>(f.get('nome')||'').trim().length>1,msg:'Informe seu nome.'},
-    whatsapp:{el:()=>wa,err:'e-whats',ok:f=>(f.get('whatsapp')||'').replace(/\D/g,'').length>=10,msg:'Informe um WhatsApp com DDD.'},
+    whatsapp:{el:()=>wa,err:'e-whats',ok:f=>phoneDigits(f.get('whatsapp')).length>=10,msg:'Informe um WhatsApp com DDD.'},
     email:{el:()=>document.getElementById('f-email'),err:'e-email',ok:f=>/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test((f.get('email')||'').trim()),msg:'Informe um e-mail válido.'},
     site:{el:()=>document.getElementById('f-site'),err:'e-site',ok:f=>(f.get('site')||'').trim().length>2,msg:'Informe o site ou o @ da empresa.'},
     faturamento:{el:()=>document.getElementById('fs-fat'),err:'e-fat',ok:f=>!!f.get('faturamento'),msg:'Escolha uma faixa de faturamento.'},
@@ -1013,8 +1017,8 @@ function jellyFrame(){
   function validate(){
     const f=new FormData(form), errs=[];
     for(const name in RULES){if(!checkField(name))errs.push(RULES[name].el())}
-    const tel=(f.get('whatsapp')||'').replace(/\D/g,'');
-    return {ok:!errs.length,count:errs.length,first:errs[0],data:{nome:(f.get('nome')||'').trim(),email:(f.get('email')||'').trim(),whatsapp:tel,site:(f.get('site')||'').trim(),faturamento:f.get('faturamento'),solucao:f.get('solucao'),origem:'LP Guará Media',enviado_em:new Date().toISOString()}};
+    const tel=phoneDigits(f.get('whatsapp'));
+    return {ok:!errs.length,count:errs.length,first:errs[0],data:{nome:(f.get('nome')||'').trim(),email:(f.get('email')||'').trim().toLowerCase(),whatsapp:tel,site:(f.get('site')||'').trim().replace(/^https?:\/\//i,'').replace(/^www\./i,'').replace(/\/+$/,''),faturamento:f.get('faturamento'),solucao:f.get('solucao'),origem:'LP Guará Media',enviado_em:new Date().toISOString()}};
   }
   form.addEventListener('change',e=>{if(e.target.name==='faturamento')setErr(document.getElementById('fs-fat'),'e-fat','');if(e.target.name==='solucao')setErr(document.getElementById('fs-sol'),'e-sol','')});
   form.addEventListener('submit',async e=>{
