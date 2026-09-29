@@ -39,9 +39,20 @@
           <span class="kicker">Vaga aberta</span>
           <h1 id="j-title"></h1>
           <div class="dbadges" id="j-badges" style="margin-top:20px"></div>
+          <p class="dmeta" id="j-meta"></p>
           <div class="dblock"><h2>O que você vai fazer</h2><p class="desc" id="j-desc"></p></div>
           <div class="dblock" id="j-resp-wrap" hidden><h2>Responsabilidades</h2><ul class="dlist" id="j-resp"></ul></div>
           <div class="dblock" id="j-req-wrap" hidden><h2>O que a gente espera</h2><ul class="dlist" id="j-req"></ul></div>
+          <div class="dblock"><h2>Como funciona o processo</h2><ol class="steps compact">
+        <li><span class="n">1</span><h3>Candidatura</h3><p>Formulário com currículo, direto na vaga. Respondemos em até 24h úteis.</p></li>
+        <li><span class="n">2</span><h3>Conversa</h3><p>Trinta minutos com quem vai trabalhar com você no dia a dia. Sem roteiro de RH.</p></li>
+        <li><span class="n">3</span><h3>Case</h3><p>Um problema real da Guará pra resolver em 7 dias e apresentar ao vivo em 15 minutos.</p></li>
+        <li><span class="n">4</span><h3>Proposta</h3><p>Se fizer sentido pros dois lados, chega a proposta com data de início.</p></li>
+      </ol></div>
+          <div class="dblock place">
+            <figure><img src="assets/vertice.jpg" alt="Fachada do prédio Vértice no Parque Científico e Tecnológico da Unicamp, com o guará ilustrado na porta" width="1400" height="781" loading="lazy"></figure>
+            <div><h2>Onde você vai trabalhar</h2><p class="desc">A Guará fica dentro da Unicamp, no Parque Científico e Tecnológico, no prédio Vértice. Pesquisa e mercado na mesma mesa: é comum um problema de cliente virar tema de estudo, e vice-versa. Vagas remotas seguem o horário de Brasília e passam por aqui de vez em quando.</p></div>
+          </div>
         </article>
         <aside class="dside">
           <div class="dcard">
@@ -154,6 +165,7 @@
     document.getElementById('j-title').textContent=job.title;
     document.getElementById('j-badges').innerHTML=`<span class="badge ${cls(wm)}">${esc(wmLabel(wm))}</span><span class="tag">${I.brief} ${esc(job.department)}</span><span class="tag">${I.pin} ${esc(job.location)}</span>`;
     document.getElementById('j-desc').textContent=job.description||'';
+    document.getElementById('j-meta').innerHTML=job.created_at?`<span>${I.cal} Publicada em ${G.fmtDate(job.created_at)}</span>`:'';
     document.getElementById('j-facts').innerHTML=`<div><dt>Área</dt><dd>${esc(job.department)}</dd></div><div><dt>Local</dt><dd>${esc(job.location)}</dd></div><div><dt>Modelo</dt><dd>${esc(wmLabel(wm))}</dd></div>`;
     const resp=job.responsibilities||[], req=job.requirements||[];
     if(resp.length){document.getElementById('j-resp-wrap').hidden=false;document.getElementById('j-resp').innerHTML=resp.map(r=>`<li><i>${I.check}</i><span>${esc(r)}</span></li>`).join('');}
