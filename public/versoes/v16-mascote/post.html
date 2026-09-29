@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Post | Guará Media</title>
+<meta name="description" content="Artigo do blog da Guará Media.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#fff6e4">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="sub.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
+</head>
+<body>
+<script>document.documentElement.classList.add('js')</script>
+
+<header class="nav on-light" id="nav">
+  <a class="brand" href="index.html" aria-label="Guará Media, início"><img src="assets/logo-guara.png" alt="Guará Media" width="145" height="34"></a>
+  <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Abrir menu"><span></span><span></span><span></span></button>
+  <nav class="nav-links" id="navLinks" aria-label="Principal">
+    <a class="link" href="index.html">Home</a>
+    <a class="link" href="blog.html" aria-current="page">Blog</a>
+    <a class="link" href="ferramentas.html">Ferramentas</a>
+    <a class="link" href="talentos.html">Talentos</a>
+    <a class="link" href="#">Artigos</a>
+    <a class="cta-pill" href="index.html#formulario">Fale com a Guará</a>
+  </nav>
+</header>
+
+<main>
+  <section class="detail-top" data-theme="light">
+    <div class="wrap">
+      <a class="back" href="blog.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg> Todos os posts</a>
+      <p class="state center" id="state">Carregando o post…</p>
+      <div class="dgrid" id="art" hidden>
+        <article class="dmain">
+          <span class="kicker" id="p-cat"></span>
+          <h1 id="p-title"></h1>
+          <p class="excerpt" id="p-excerpt"></p>
+          <div class="dmeta" id="p-meta"></div>
+          <figure class="cover" id="p-cover-wrap" hidden><img id="p-cover" alt=""></figure>
+          <div class="prose" id="p-content"></div>
+          <div class="dtags" id="p-tags"></div>
+        </article>
+        <aside class="dside">
+          <div class="dcard">
+            <h2 class="caps">Quer isso rodando na sua conta?</h2>
+            <p>A Guará faz estratégia e produção em escala. Conta pra gente onde sua mídia está travando.</p>
+            <a class="cta-pill" href="index.html#formulario">Fale com a Guará</a>
+            <dl class="dfacts" id="p-facts"></dl>
+            <button type="button" class="share" id="share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg> Compartilhar post</button>
+            <p class="micro" id="share-ok" role="status" hidden>Link copiado.</p>
+          </div>
+          <div class="guara" aria-hidden="true"><img src="assets/guara-sentado.webp" alt="" width="760" height="1121" loading="lazy"></div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="rel-wrap" data-theme="light" hidden>
+    <div class="wrap">
+      <h2 class="caps sec-title">Continue lendo</h2>
+      <div class="grid" id="rel"></div>
+    </div>
+  </section>
+
+  <a class="next" id="next" href="blog.html" data-theme="light"><span>Próximo post</span><strong id="next-title">Ver todos os posts</strong></a>
+</main>
+
+<footer class="contato" id="contato" data-theme="dark">
+  <div class="contato-inner">
+    <h2>Pronto pra acelerar sem bater na parede?</h2>
+    <a class="cta-pill" href="index.html#formulario">Fale com a Guará</a>
+  </div>
+  <div class="foot">
+    <img src="assets/logo-guara.png" alt="Guará Media" width="128" height="30">
+    <nav aria-label="Rodapé"><a href="index.html">Home</a><a href="blog.html">Blog</a><a href="ferramentas.html">Ferramentas</a><a href="talentos.html">Talentos</a><a href="#">Artigos</a></nav>
+    <p>Parque Científico e Tecnológico da Unicamp<br>Campinas, SP<small>© 2026 Guará Media</small></p>
+  </div>
+</footer>
+
+<script src="sub.js"></script>
+<script>
+(function(){
+  const {sb,esc,fmtDate,I,share,reveal}=G;
+  const slug=new URLSearchParams(location.search).get('slug');
+  const st=document.getElementById('state'),art=document.getElementById('art');
+  const fills=['#ff6319','#222221','#D3F629'];
+  share(document.getElementById('share'),document.getElementById('share-ok'));
+  function card(p,i){const fill=fills[i%3];return `<a class="post rv" href="post.html?slug=${encodeURIComponent(p.slug)}" style="--fill:${fill}"><div class="media">${p.cover_image?`<img src="${esc(p.cover_image)}" alt="" loading="lazy">`:`<span class="ph" style="color:${fill==='#D3F629'?'#222221':'#fff6e4'}">${esc(p.title)}</span>`}</div><div><span class="cat">${esc(p.category||'Blog')}</span><h3>${esc(p.title)}</h3><div class="meta"><span>${I.cal} ${fmtDate(p.published_at)}</span><span>${I.clock} ${p.reading_time||0} min</span></div></div></a>`;}
+  if(!slug){st.textContent='Post não encontrado.';return;}
+  sb('posts?select=*&slug=eq.'+encodeURIComponent(slug)).then(d=>{
+    const post=d&&d[0];
+    if(!post){st.textContent='Esse post não existe ou foi despublicado.';return null;}
+    st.hidden=true; art.hidden=false;
+    document.title=post.title+' | Guará Media';
+    document.getElementById('p-cat').textContent=post.category||'Blog';
+    document.getElementById('p-title').textContent=post.title;
+    document.getElementById('p-excerpt').textContent=post.excerpt||'';
+    document.getElementById('p-meta').innerHTML=`<span>${I.cal} ${fmtDate(post.published_at)}</span><span>${I.clock} ${post.reading_time||0} min de leitura</span>${post.author?`<span>por ${esc(post.author)}</span>`:''}`;
+    document.getElementById('p-facts').innerHTML=`<div><dt>Publicado</dt><dd>${fmtDate(post.published_at)}</dd></div><div><dt>Leitura</dt><dd>${post.reading_time||0} min</dd></div><div><dt>Categoria</dt><dd>${esc(post.category||'Blog')}</dd></div>`;
+    if(post.cover_image){const img=document.getElementById('p-cover');img.src=post.cover_image;img.alt=post.title;document.getElementById('p-cover-wrap').hidden=false;}
+    const raw=post.content||'';
+    document.getElementById('p-content').innerHTML=window.DOMPurify?DOMPurify.sanitize(raw,{ADD_TAGS:['iframe'],ADD_ATTR:['allow','allowfullscreen','frameborder','src','width','height','title','loading','referrerpolicy']}):raw.replace(/<script[\s\S]*?<\/script>/gi,'');
+    document.getElementById('p-tags').innerHTML=(post.tags||[]).map(t=>`<a class="tag" href="blog.html">#${esc(t)}</a>`).join('');
+    G.navTheme();
+    const sel='id,title,slug,cover_image,category,published_at,reading_time';
+    return sb(`posts?select=${sel}&order=published_at.desc&id=neq.${post.id}&limit=30`).then(all=>{
+      const sameCat=all.filter(p=>p.category===post.category);
+      const rel=(sameCat.length>=3?sameCat:all).slice(0,3);
+      const nx=all.find(p=>new Date(p.published_at)<new Date(post.published_at))||all[0];
+      if(nx){document.getElementById('next').href='post.html?slug='+encodeURIComponent(nx.slug);document.getElementById('next-title').textContent=nx.title;}
+      if(rel.length){document.getElementById('rel-wrap').hidden=false;document.getElementById('rel').innerHTML=rel.map(card).join('');reveal();}
+    });
+  }).catch(()=>{st.hidden=false;art.hidden=true;st.textContent='Não deu pra carregar o post agora. Recarregue a página pra tentar de novo.';});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vaga | Guará Media</title>
+<meta name="description" content="Detalhes de uma vaga aberta na Guará Media.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#fff6e4">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="sub.css">
+</head>
+<body>
+<script>document.documentElement.classList.add('js')</script>
+
+<header class="nav on-light" id="nav">
+  <a class="brand" href="index.html" aria-label="Guará Media, início"><img src="assets/logo-guara.png" alt="Guará Media" width="145" height="34"></a>
+  <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Abrir menu"><span></span><span></span><span></span></button>
+  <nav class="nav-links" id="navLinks" aria-label="Principal">
+    <a class="link" href="index.html">Home</a>
+    <a class="link" href="blog.html">Blog</a>
+    <a class="link" href="ferramentas.html">Ferramentas</a>
+    <a class="link" href="talentos.html" aria-current="page">Talentos</a>
+    <a class="link" href="#">Artigos</a>
+    <a class="cta-pill" href="index.html#formulario">Fale com a Guará</a>
+  </nav>
+</header>
+
+<main>
+  <section class="detail-top" data-theme="light">
+    <div class="wrap">
+      <a class="back" href="talentos.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg> Todas as vagas</a>
+      <p class="state center" id="state">Carregando a vaga…</p>
+      <div class="dgrid" id="art" hidden>
+        <article class="dmain">
+          <span class="kicker">Vaga aberta</span>
+          <h1 id="j-title"></h1>
+          <div class="dbadges" id="j-badges" style="margin-top:20px"></div>
+          <div class="dblock"><h2>O que você vai fazer</h2><p class="desc" id="j-desc"></p></div>
+          <div class="dblock" id="j-resp-wrap" hidden><h2>Responsabilidades</h2><ul class="dlist" id="j-resp"></ul></div>
+          <div class="dblock" id="j-req-wrap" hidden><h2>O que a gente espera</h2><ul class="dlist" id="j-req"></ul></div>
+        </article>
+        <aside class="dside">
+          <div class="dcard">
+            <h2 class="caps">Se candidatar</h2>
+            <p>Você manda um e-mail com o assunto já preenchido. A gente responde com os próximos passos em até 24h úteis.</p>
+            <dl class="dfacts" id="j-facts"></dl>
+            <a class="cta-pill" id="j-apply" href="#">Quero me candidatar</a>
+            <button type="button" class="share" id="share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg> Compartilhar vaga</button>
+            <p class="micro" id="share-ok" role="status" hidden>Link copiado.</p>
+          </div>
+          <div class="dnote"><strong>Onde fica</strong><p>Parque Científico e Tecnológico da Unicamp, Campinas. Vagas remotas seguem o fuso de Brasília.</p></div>
+          <div class="guara" aria-hidden="true"><img src="assets/guara-em-pe.webp" alt="" width="1000" height="935" loading="lazy"></div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="other-wrap" data-theme="light" hidden>
+    <div class="wrap">
+      <div class="panel dark jobs-panel" data-theme="dark">
+        <div class="head"><div><h2 class="caps">Outras vagas abertas</h2></div><div class="guara" aria-hidden="true"><img src="assets/guara-olhando-tras.webp" alt="" width="1000" height="715" loading="lazy"></div></div>
+        <div class="jobs" id="other"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="contato" id="contato" data-theme="dark">
+  <div class="contato-inner">
+    <h2>Pronto pra acelerar sem bater na parede?</h2>
+    <a class="cta-pill" href="index.html#formulario">Fale com a Guará</a>
+  </div>
+  <div class="foot">
+    <img src="assets/logo-guara.png" alt="Guará Media" width="128" height="30">
+    <nav aria-label="Rodapé"><a href="index.html">Home</a><a href="blog.html">Blog</a><a href="ferramentas.html">Ferramentas</a><a href="talentos.html">Talentos</a><a href="#">Artigos</a></nav>
+    <p>Parque Científico e Tecnológico da Unicamp<br>Campinas, SP<small>© 2026 Guará Media</small></p>
+  </div>
+</footer>
+
+<script src="sub.js"></script>
+<script>
+(function(){
+  const {sb,esc,I,share}=G;
+  const id=new URLSearchParams(location.search).get('id');
+  const st=document.getElementById('state'),art=document.getElementById('art');
+  const cls=wm=>(wm||'').normalize('NFD').replace(/[^a-z]/gi,'').toLowerCase();
+  share(document.getElementById('share'),document.getElementById('share-ok'));
+  if(!id){st.textContent='Vaga não encontrada.';return;}
+  sb('jobs?select=*&id=eq.'+encodeURIComponent(id)).then(d=>{
+    const job=d&&d[0];
+    if(!job){st.textContent='Essa vaga não existe ou já foi encerrada.';return null;}
+    st.hidden=true;art.hidden=false;
+    document.title=job.title+' | Vagas Guará Media';
+    const wm=job.work_model||'';
+    document.getElementById('j-title').textContent=job.title;
+    document.getElementById('j-badges').innerHTML=`<span class="badge ${cls(wm)}">${esc(wm)}</span><span class="tag">${I.brief} ${esc(job.department)}</span><span class="tag">${I.pin} ${esc(job.location)}</span>`;
+    document.getElementById('j-desc').textContent=job.description||'';
+    document.getElementById('j-facts').innerHTML=`<div><dt>Área</dt><dd>${esc(job.department)}</dd></div><div><dt>Local</dt><dd>${esc(job.location)}</dd></div><div><dt>Modelo</dt><dd>${esc(wm)}</dd></div>`;
+    const resp=job.responsibilities||[], req=job.requirements||[];
+    if(resp.length){document.getElementById('j-resp-wrap').hidden=false;document.getElementById('j-resp').innerHTML=resp.map(r=>`<li><i>${I.check}</i><span>${esc(r)}</span></li>`).join('');}
+    if(req.length){document.getElementById('j-req-wrap').hidden=false;document.getElementById('j-req').innerHTML=req.map(r=>`<li><i>${I.check}</i><span>${esc(r)}</span></li>`).join('');}
+    document.getElementById('j-apply').href='mailto:contato@guaramedia.com.br?subject='+encodeURIComponent('Candidatura: '+job.title);
+    G.navTheme();
+    return sb('jobs?select=id,title,department,location,work_model&is_open=eq.true&id=neq.'+job.id+'&order=created_at.desc&limit=3');
+  }).then(o=>{
+    if(o&&o.length){document.getElementById('other-wrap').hidden=false;document.getElementById('other').innerHTML=o.map(j=>{const wm=j.work_model||'';return `<a class="job" href="vaga.html?id=${esc(j.id)}"><div><h3>${esc(j.title)}</h3><div class="meta"><span>${I.brief} ${esc(j.department)}</span><span>${I.pin} ${esc(j.location)}</span></div></div><div class="job-side"><span class="badge ${cls(wm)}">${esc(wm)}</span><span class="arrow">${I.arrow}</span></div></a>`;}).join('');}
+  }).catch(()=>{st.hidden=false;art.hidden=true;st.textContent='Não deu pra carregar a vaga agora. Recarregue a página pra tentar de novo.';});
+})();
+</script>
+</body>
+</html>

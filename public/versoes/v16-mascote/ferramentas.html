@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ferramentas | Guará Media</title>
+<meta name="description" content="Checklists, templates e guias que a Guará usa no dia a dia, liberados de graça.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#fcf3e4">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="sub.css">
+</head>
+<body>
+<script>document.documentElement.classList.add('js')</script>
+
+<header class="nav on-light" id="nav">
+  <a class="brand" href="index.html" aria-label="Guará Media, início"><img src="assets/logo-guara.png" alt="Guará Media" width="145" height="34"></a>
+  <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Abrir menu"><span></span><span></span><span></span></button>
+  <nav class="nav-links" id="navLinks" aria-label="Principal">
+    <a class="link" href="index.html">Home</a>
+    <a class="link" href="blog.html">Blog</a>
+    <a class="link" href="ferramentas.html" aria-current="page">Ferramentas</a>
+    <a class="link" href="talentos.html">Talentos</a>
+    <a class="link" href="#">Artigos</a>
+    <a class="cta-pill" href="index.html#formulario">Fale com a Guará</a>
+  </nav>
+</header>
+
+<main>
+  <section class="pg-hero" data-theme="light">
+    <div class="wrap">
+      <div>
+        <h1>As ferramentas que a gente usa, <em>liberadas</em>.</h1>
+        <p class="lead">Checklists, templates e guias que rodam nos projetos da Guará. Baixa, usa, adapta. Se travar em algum ponto, chama a gente.</p>
+      </div>
+      <div class="art" aria-hidden="true"><img src="assets/guara-carro.webp" alt="" width="1000" height="564"></div>
+    </div>
+  </section>
+
+  <section class="sec" data-theme="light" style="padding-top:clamp(24px,4vh,40px)">
+    <div class="wrap">
+      <div class="tools" id="tools"></div>
+    </div>
+  </section>
+
+  <section class="sec" data-theme="light" style="padding-top:0">
+    <div class="wrap">
+      <div class="panel orange manifesto rv" data-theme="light">
+        <div>
+          <h2 class="caps" style="margin-bottom:.6em">Faltou alguma?</h2>
+          <p>Se existe um processo que você repete toda semana e ainda não virou template, conta pra gente. Se for útil pra mais alguém, entra aqui.</p>
+          <a class="cta-pill" href="index.html#formulario" style="margin-top:1.4em">Pedir uma ferramenta</a>
+        </div>
+        <div class="guara" aria-hidden="true"><img src="assets/guara-em-pe.webp" alt="" width="1000" height="935" loading="lazy"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="contato" id="contato" data-theme="dark">
+  <div class="contato-inner">
+    <h2>Pronto pra acelerar sem bater na parede?</h2>
+    <a class="cta-pill" href="index.html#formulario">Fale com a Guará</a>
+  </div>
+  <div class="foot">
+    <img src="assets/logo-guara.png" alt="Guará Media" width="128" height="30">
+    <nav aria-label="Rodapé"><a href="index.html">Home</a><a href="blog.html">Blog</a><a href="ferramentas.html">Ferramentas</a><a href="talentos.html">Talentos</a><a href="#">Artigos</a></nav>
+    <p>Parque Científico e Tecnológico da Unicamp<br>Campinas, SP<small>© 2026 Guará Media</small></p>
+  </div>
+</footer>
+
+<script src="sub.js"></script>
+<script src="tools-data.js"></script>
+<script>
+(function(){
+  const {esc,I,reveal}=G;
+  const tones=['dark','orange','lime'];
+  document.getElementById('tools').innerHTML=TOOLS.map((t,i)=>`<a class="tool ${tones[i%3]} rv" href="ferramenta.html?slug=${t.slug}">
+    <div><span class="k">${esc(t.cat)} · ${esc(t.kind)}</span><h2>${esc(t.title)}</h2><p>${esc(t.desc)}</p><span class="go">Baixar de graça ${I.arrow}</span></div>
+    <figure><img src="${esc(t.img)}" alt="" loading="lazy" width="600" height="400"></figure>
+  </a>`).join('');
+  reveal();
+})();
+</script>
+</body>
+</html>

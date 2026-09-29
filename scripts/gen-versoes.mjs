@@ -2387,8 +2387,8 @@ for (const [key, t] of Object.entries(THEMES)) {
 const rows = Object.entries(THEMES).map(([key, t], i) =>
   `<li><a class="v" href="${key}.html"><span class="n">V${i + 1}</span><span><span class="t">${t.name}</span><span class="d">${t.desc}</span></span><span class="tag">site completo</span></a><p class="subs">${["blog", "ferramentas", "talentos", "artigos"].map((k) => `<a href="${key}-${k}.html">${k[0].toUpperCase() + k.slice(1)}</a>`).join("")}</p></li>`).join("\n")
   // V16 "Mascote": página avulsa entregue pronta (fora do gerador de temas), com hero em vídeo,
-  // animação de "bater na parede" e portfólio com case detalhado. Não tem Blog/Ferramentas/Talentos/Artigos.
-  + `\n<li><a class="v" href="v16-mascote/"><span class="n">V16</span><span><span class="t">Mascote</span><span class="d">Página avulsa entregue pronta: hero em vídeo do guará saltando obstáculos, animação de "bater na parede", portfólio com case detalhado e carrossel de planos.</span></span><span class="tag">página única</span></a></li>`;
+  // animação de "bater na parede" e portfólio com case detalhado. Tem Blog, Ferramentas e Talentos (com páginas de post, ferramenta e vaga) em arquivos próprios na pasta.
+  + `\n<li><a class="v" href="v16-mascote/"><span class="n">V16</span><span><span class="t">Mascote</span><span class="d">Página avulsa entregue pronta: hero em vídeo do guará saltando obstáculos, animação de "bater na parede", portfólio com case detalhado, carrossel de planos e páginas de Blog, Ferramentas e Talentos com o mesmo visual.</span></span><span class="tag">6 páginas + detalhes</span></a></li>`;
 writeFileSync(`${OUT}/index.html`, `<!doctype html>
 <html lang="pt-BR">
 <head>
