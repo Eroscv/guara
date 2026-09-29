@@ -452,7 +452,7 @@ body.case-mode main{display:none}
   <section class="hero" id="top" data-theme="hero">
     <h1 class="sr-only">Guará Media: estratégia e execução humano-máquina</h1>
     <div class="hero-frame">
-    <iframe id="heroVideo" src="https://player.vimeo.com/video/1231360656?background=1&amp;autoplay=1&amp;loop=1&amp;muted=1&amp;autopause=0&amp;dnt=1&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" title="Animação do guará saltando obstáculos: se a pressa é inimiga da perfeição, a perfeição é inimiga do lucro"></iframe>
+    <iframe id="heroVideo" src="https://player.vimeo.com/video/1231360656?background=1&amp;autoplay=1&amp;loop=1&amp;muted=1&amp;autopause=0&amp;quality=1080p&amp;dnt=1&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" title="Animação do guará saltando obstáculos: se a pressa é inimiga da perfeição, a perfeição é inimiga do lucro"></iframe>
     </div>
     <button class="video-toggle" id="videoToggle" aria-label="Pausar vídeo" aria-pressed="false">
       <svg viewBox="0 0 14 14" aria-hidden="true"><g id="icPause"><rect x="2" y="1" width="3.4" height="12" rx="1" fill="currentColor"/><rect x="8.6" y="1" width="3.4" height="12" rx="1" fill="currentColor"/></g><path id="icPlay" d="M3 1.2v11.6L12.6 7z" fill="currentColor" style="display:none"/></svg>
@@ -660,6 +660,7 @@ function navTheme(){
 const vt=document.getElementById('videoToggle');
 const vid=window.Vimeo?new Vimeo.Player(document.getElementById('heroVideo')):null; // player do Vimeo (background=1: autoplay, mudo, loop)
 let vidPaused=false;
+if(vid){vid.ready().then(()=>vid.setQuality('1080p')).catch(()=>{});} // sempre na maior qualidade (o Auto escolhe pelo tamanho do iframe)
 function setPlaying(p){ vidPaused=!p; if(vid){ if(p)vid.play().catch(()=>{}); else vid.pause().catch(()=>{}); }
   vt.setAttribute('aria-label',p?'Pausar vídeo':'Tocar vídeo'); vt.setAttribute('aria-pressed',String(!p));
   document.getElementById('icPause').style.display=p?'':'none'; document.getElementById('icPlay').style.display=p?'none':''; }
