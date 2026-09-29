@@ -556,7 +556,7 @@ body.has-gate .dtags,body.has-gate #rel-wrap,body.has-gate .next{opacity:.25;poi
 .gate{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:16px var(--pad) calc(16px + env(safe-area-inset-bottom,0px));background:rgba(34,34,33,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;transition:opacity .35s ease}
 .gate.in{opacity:1}
 .gate[hidden]{display:none}
-.gate-card{pointer-events:auto;width:100%;max-width:820px;margin:0 auto;max-height:92svh;overflow:auto;background:var(--ink);color:var(--off);border:2.5px solid var(--off);border-radius:26px;padding:clamp(20px,2.6vw,30px) clamp(20px,2.6vw,32px);display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px clamp(18px,2.6vw,32px);align-items:center;transform:translateY(24px);opacity:0;transition:transform .5s var(--ease),opacity .4s ease}
+.gate-card{pointer-events:auto;width:100%;max-width:820px;margin:0 auto;max-height:92svh;overflow:auto;background:var(--ink);color:var(--off);border:2.5px solid var(--lime);border-radius:26px;padding:clamp(20px,2.6vw,30px) clamp(20px,2.6vw,32px);display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px clamp(18px,2.6vw,32px);align-items:center;transform:translateY(24px);opacity:0;transition:transform .5s var(--ease),opacity .4s ease}
 .gate.in .gate-card{transform:none;opacity:1}
 .gate-guara{width:clamp(72px,8vw,110px);height:auto;align-self:end;margin-bottom:-4px}
 .gate-copy h2{color:var(--lime);font-size:clamp(1.3rem,1.05rem + 1vw,1.9rem);line-height:1;margin:.2em 0 .4em}
