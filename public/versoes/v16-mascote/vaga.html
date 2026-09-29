@@ -46,10 +46,28 @@
         <aside class="dside">
           <div class="dcard">
             <h2 class="caps">Se candidatar</h2>
-            <p>Você manda um e-mail com o assunto já preenchido. A gente responde com os próximos passos em até 24h úteis.</p>
+            <p>Preenche, anexa o currículo e manda. A gente responde com os próximos passos em até 24h úteis.</p>
             <dl class="dfacts" id="j-facts"></dl>
-            <a class="cta-pill" id="j-apply" href="#">Quero me candidatar</a>
-            <p class="micro">Abre seu e-mail com o assunto já preenchido. Anexa o currículo ou o portfólio e manda.</p>
+            <form class="dform" id="apply" novalidate style="margin-top:18px">
+              <label>Nome completo<input name="name" required minlength="2" maxlength="120" placeholder="Maria Souza" autocomplete="name" aria-describedby="e-name"><span class="err" id="e-name"></span></label>
+              <label>E-mail<input name="email" type="email" required maxlength="255" placeholder="maria@email.com" autocomplete="email" aria-describedby="e-email"><span class="err" id="e-email"></span></label>
+              <label>WhatsApp<input name="phone" type="tel" maxlength="40" placeholder="(19) 99999-9999" autocomplete="tel-national" inputmode="numeric"></label>
+              <label>LinkedIn<input name="linkedin" type="url" maxlength="300" placeholder="linkedin.com/in/seu-perfil" autocomplete="url"></label>
+              <div class="file-field">
+                <span class="file-label">Currículo <small>PDF ou DOC, até 5 MB</small></span>
+                <label class="drop" id="drop"><input type="file" id="cv" name="cv" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" aria-describedby="e-cv"><span class="drop-txt">Toque pra anexar ou arraste o arquivo aqui</span></label>
+                <div class="file-chip" id="fileChip" hidden><span class="file-name" id="fileName"></span><span class="file-size" id="fileSize"></span><button type="button" class="file-x" id="fileX" aria-label="Remover arquivo">×</button></div>
+                <span class="err" id="e-cv"></span>
+              </div>
+              <label>Mensagem <small>opcional</small><textarea name="message" rows="3" maxlength="2000" placeholder="Conta em duas linhas por que essa vaga faz sentido pra você."></textarea></label>
+              <button type="submit" class="cta-pill" id="applyBtn">Enviar candidatura</button>
+              <span class="err" id="e-form" role="alert"></span>
+            </form>
+            <div class="dok" id="applyOk" hidden>
+              <div class="big" aria-hidden="true">✓</div>
+              <h2 class="caps">Candidatura enviada</h2>
+              <p id="okMsg">Recebemos seu currículo. A gente responde em até 24h úteis pelo e-mail que você deixou.</p>
+            </div>
             <button type="button" class="share" id="share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg> Compartilhar vaga</button>
             <p class="micro" id="share-ok" role="status" hidden>Link copiado.</p>
           </div>
@@ -91,6 +109,41 @@
   const cls=wm=>(wm||'').normalize('NFD').replace(/[^a-z]/gi,'').toLowerCase();
   const wmLabel=wm=>{const w=(wm||'').trim();return w?w[0].toUpperCase()+w.slice(1).toLowerCase():''};
   share(document.getElementById('share'),document.getElementById('share-ok'));
+  const MAX=5*1024*1024, TYPES=['application/pdf','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+  function setupApply(job){
+    const f=document.getElementById('apply'),cv=document.getElementById('cv'),drop=document.getElementById('drop'),chip=document.getElementById('fileChip');
+    let file=null;
+    const setFile=x=>{const e=document.getElementById('e-cv');e.textContent='';
+      if(!x){file=null;cv.value='';chip.hidden=true;drop.hidden=false;return;}
+      const okType=TYPES.includes(x.type)||/\.(pdf|docx?)$/i.test(x.name);
+      if(!okType){e.textContent='Formato inválido. Envie PDF ou DOC/DOCX.';cv.value='';return;}
+      if(x.size>MAX){e.textContent='Arquivo muito grande. O máximo é 5 MB.';cv.value='';return;}
+      file=x;document.getElementById('fileName').textContent=x.name;document.getElementById('fileSize').textContent=(x.size/1024/1024).toFixed(2)+' MB';chip.hidden=false;drop.hidden=true;};
+    cv.addEventListener('change',()=>setFile(cv.files[0]));
+    document.getElementById('fileX').addEventListener('click',()=>setFile(null));
+    ['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('over');}));
+    ['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('over');}));
+    drop.addEventListener('drop',e=>{const x=e.dataTransfer.files&&e.dataTransfer.files[0];if(x)setFile(x);});
+    const check=i=>{const bad=!i.checkValidity();i.setAttribute('aria-invalid',bad);const m=document.getElementById('e-'+i.name);if(m)m.textContent=bad?(i.name==='email'?'Informe um e-mail válido.':'Informe seu nome completo.'):'';return !bad;};
+    f.querySelectorAll('input[required]').forEach(i=>{i.addEventListener('blur',()=>{if(i.value)check(i);});i.addEventListener('input',()=>{if(i.getAttribute('aria-invalid')==='true')check(i);});});
+    f.addEventListener('submit',async e=>{
+      e.preventDefault();
+      const ef=document.getElementById('e-form');ef.textContent='';
+      const bad=[...f.querySelectorAll('input[required]')].filter(i=>!check(i));
+      if(!file){document.getElementById('e-cv').textContent='Anexe seu currículo (PDF ou DOC).';bad.push(cv);}
+      if(bad.length){ef.textContent=bad.length===1?'Falta 1 item pra enviar.':'Faltam '+bad.length+' itens pra enviar.';(bad[0]===cv?drop:bad[0]).focus();return;}
+      const btn=document.getElementById('applyBtn');btn.disabled=true;btn.textContent='Enviando…';
+      try{
+        const ext=(file.name.split('.').pop()||'pdf').toLowerCase();
+        const path=job.id+'/'+crypto.randomUUID()+'.'+ext;
+        const url=await G.upload('resumes',path,file);
+        const d=new FormData(f), v=k=>(d.get(k)||'').toString().trim();
+        let li=v('linkedin'); if(li&&!/^https?:\/\//i.test(li)) li='https://'+li;
+        await G.insert('applications',{job_id:job.id,name:v('name'),email:v('email'),phone:v('phone')||null,linkedin:li||null,message:v('message')||null,resume_url:url});
+        f.hidden=true;document.getElementById('applyOk').hidden=false;
+      }catch(err){ef.textContent='Não deu pra enviar agora. Tenta de novo em instantes.';btn.disabled=false;btn.textContent='Enviar candidatura';}
+    });
+  }
   if(!id){st.textContent='Vaga não encontrada.';return;}
   sb('jobs?select=*&id=eq.'+encodeURIComponent(id)).then(d=>{
     const job=d&&d[0];
@@ -105,7 +158,7 @@
     const resp=job.responsibilities||[], req=job.requirements||[];
     if(resp.length){document.getElementById('j-resp-wrap').hidden=false;document.getElementById('j-resp').innerHTML=resp.map(r=>`<li><i>${I.check}</i><span>${esc(r)}</span></li>`).join('');}
     if(req.length){document.getElementById('j-req-wrap').hidden=false;document.getElementById('j-req').innerHTML=req.map(r=>`<li><i>${I.check}</i><span>${esc(r)}</span></li>`).join('');}
-    document.getElementById('j-apply').href='mailto:contato@guaramedia.com.br?subject='+encodeURIComponent('Candidatura: '+job.title);
+    setupApply(job);
     G.navTheme();
     return sb('jobs?select=id,title,department,location,work_model&is_open=eq.true&id=neq.'+job.id+'&order=created_at.desc&limit=3');
   }).then(o=>{

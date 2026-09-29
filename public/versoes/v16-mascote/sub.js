@@ -16,6 +16,16 @@
       .then(r => { if (!r.ok) throw new Error(r.status); return r; });
   }
 
+  // Storage (bucket público) e insert via REST, mesmas rotas que o SDK usa no site React
+  function upload(bucket, path, file) {
+    return fetch(`${SUPA_URL}/storage/v1/object/${bucket}/${path}`, { method: 'POST', headers: { apikey: SUPA_KEY, Authorization: 'Bearer ' + SUPA_KEY, 'Content-Type': file.type || 'application/octet-stream', 'x-upsert': 'false', 'cache-control': '3600' }, body: file })
+      .then(r => { if (!r.ok) throw new Error('upload ' + r.status); return `${SUPA_URL}/storage/v1/object/public/${bucket}/${path}`; });
+  }
+  function insert(table, row) {
+    return fetch(`${SUPA_URL}/rest/v1/${table}`, { method: 'POST', headers: { apikey: SUPA_KEY, Authorization: 'Bearer ' + SUPA_KEY, 'Content-Type': 'application/json', Prefer: 'return=minimal' }, body: JSON.stringify(row) })
+      .then(r => { if (!r.ok) throw new Error('insert ' + r.status); return r; });
+  }
+
   const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   const fmtDate = d => d ? new Date(d).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }) : '';
   const svg = (p, s = 16) => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
@@ -68,5 +78,5 @@
     });
   }
 
-  window.G = { sb, lead, esc, fmtDate, I, svg, share, reveal, reduce, navTheme };
+  window.G = { sb, lead, upload, insert, esc, fmtDate, I, svg, share, reveal, reduce, navTheme };
 })();
