@@ -78,5 +78,68 @@
     });
   }
 
-  window.G = { sb, lead, upload, insert, esc, fmtDate, I, svg, share, reveal, reduce, navTheme };
+  /* Formulário de candidatura (vaga ou banco de talentos). mount(container,{job,intro,okMsg}) */
+  const TALENT_RE = /banco\s+de\s+talentos/i;
+  const isTalentBank = j => TALENT_RE.test(j && j.title || '');
+  const APPLY_MAX = 5 * 1024 * 1024, APPLY_TYPES = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+  function applyMarkup(o) {
+    return `<form class="dform apply" novalidate>
+      ${o.intro ? `<p class="apply-intro">${o.intro}</p>` : ''}
+      <label>Nome completo<input name="name" required minlength="2" maxlength="120" placeholder="Maria Souza" autocomplete="name"><span class="err" data-for="name"></span></label>
+      <label>E-mail<input name="email" type="email" required maxlength="255" placeholder="maria@email.com" autocomplete="email"><span class="err" data-for="email"></span></label>
+      <label>WhatsApp<input name="phone" type="tel" maxlength="40" placeholder="(19) 99999-9999" autocomplete="tel-national" inputmode="numeric"></label>
+      <label>LinkedIn<input name="linkedin" type="url" maxlength="300" placeholder="linkedin.com/in/seu-perfil" autocomplete="url"></label>
+      ${o.area ? `<label>Área que você quer atuar<input name="area" maxlength="120" placeholder="Mídia paga, design, dados, conteúdo…"></label>` : ''}
+      <div class="file-field">
+        <span class="file-label">Currículo <small>PDF ou DOC, até 5 MB</small></span>
+        <label class="drop"><input type="file" name="cv" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"><span class="drop-txt">Toque pra anexar ou arraste o arquivo aqui</span></label>
+        <div class="file-chip" hidden><span class="file-name"></span><span class="file-size"></span><button type="button" class="file-x" aria-label="Remover arquivo">×</button></div>
+        <span class="err" data-for="cv"></span>
+      </div>
+      <label><span>Mensagem <small>opcional</small></span><textarea name="message" rows="3" maxlength="2000" placeholder="${o.placeholder || 'Conta em duas linhas por que essa vaga faz sentido pra você.'}"></textarea></label>
+      <button type="submit" class="cta-pill">${o.cta || 'Enviar candidatura'}</button>
+      <span class="err" data-for="form" role="alert"></span>
+    </form>
+    <div class="dok" hidden><div class="big" aria-hidden="true">✓</div><h2 class="caps">${o.okTitle || 'Candidatura enviada'}</h2><p>${o.okMsg || 'Recebemos seu currículo. A gente responde em até 24h úteis pelo e-mail que você deixou.'}</p></div>`;
+  }
+  function mountApply(box, o) {
+    box.innerHTML = applyMarkup(o);
+    const f = box.querySelector('form'), cv = f.querySelector('input[name=cv]'), drop = f.querySelector('.drop'), chip = f.querySelector('.file-chip');
+    const err = k => f.querySelector(`.err[data-for="${k}"]`);
+    let file = null;
+    const setFile = x => { err('cv').textContent = '';
+      if (!x) { file = null; cv.value = ''; chip.hidden = true; drop.hidden = false; return; }
+      if (!(APPLY_TYPES.includes(x.type) || /\.(pdf|docx?)$/i.test(x.name))) { err('cv').textContent = 'Formato inválido. Envie PDF ou DOC/DOCX.'; cv.value = ''; return; }
+      if (x.size > APPLY_MAX) { err('cv').textContent = 'Arquivo muito grande. O máximo é 5 MB.'; cv.value = ''; return; }
+      file = x; chip.querySelector('.file-name').textContent = x.name; chip.querySelector('.file-size').textContent = (x.size / 1024 / 1024).toFixed(2) + ' MB'; chip.hidden = false; drop.hidden = true; };
+    cv.addEventListener('change', () => setFile(cv.files[0]));
+    chip.querySelector('.file-x').addEventListener('click', () => setFile(null));
+    ['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+    ['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('over'); }));
+    drop.addEventListener('drop', e => { const x = e.dataTransfer.files && e.dataTransfer.files[0]; if (x) setFile(x); });
+    const check = i => { const bad = !i.checkValidity(); i.setAttribute('aria-invalid', bad); const m = err(i.name); if (m) m.textContent = bad ? (i.name === 'email' ? 'Informe um e-mail válido.' : 'Informe seu nome completo.') : ''; return !bad; };
+    f.querySelectorAll('input[required]').forEach(i => { i.addEventListener('blur', () => { if (i.value) check(i); }); i.addEventListener('input', () => { if (i.getAttribute('aria-invalid') === 'true') check(i); }); });
+    f.addEventListener('submit', async e => {
+      e.preventDefault();
+      const ef = err('form'); ef.textContent = '';
+      const job = typeof o.job === 'function' ? o.job() : o.job;
+      if (!job) { ef.textContent = o.noJobMsg || 'Não deu pra enviar agora. Tenta de novo em instantes.'; return; }
+      const bad = [...f.querySelectorAll('input[required]')].filter(i => !check(i));
+      if (!file) { err('cv').textContent = 'Anexe seu currículo (PDF ou DOC).'; bad.push(cv); }
+      if (bad.length) { ef.textContent = bad.length === 1 ? 'Falta 1 item pra enviar.' : 'Faltam ' + bad.length + ' itens pra enviar.'; (bad[0] === cv ? drop : bad[0]).focus(); return; }
+      const btn = f.querySelector('button[type=submit]'); btn.disabled = true; btn.textContent = 'Enviando…';
+      try {
+        const ext = (file.name.split('.').pop() || 'pdf').toLowerCase();
+        const url = await upload('resumes', job.id + '/' + crypto.randomUUID() + '.' + ext, file);
+        const d = new FormData(f), v = k => (d.get(k) || '').toString().trim();
+        let li = v('linkedin'); if (li && !/^https?:\/\//i.test(li)) li = 'https://' + li;
+        let msg = v('message'); if (v('area')) msg = '[Área: ' + v('area') + '] ' + msg;
+        await insert('applications', { job_id: job.id, name: v('name'), email: v('email'), phone: v('phone') || null, linkedin: li || null, message: msg.trim() || null, resume_url: url });
+        f.hidden = true; box.querySelector('.dok').hidden = false; if (o.onDone) o.onDone();
+      } catch (e2) { ef.textContent = 'Não deu pra enviar agora. Tenta de novo em instantes.'; btn.disabled = false; btn.textContent = o.cta || 'Enviar candidatura'; }
+    });
+    return f;
+  }
+
+  window.G = { sb, lead, upload, insert, mountApply, isTalentBank, esc, fmtDate, I, svg, share, reveal, reduce, navTheme };
 })();

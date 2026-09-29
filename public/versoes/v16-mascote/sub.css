@@ -457,3 +457,14 @@ main{padding-top:var(--nav-h)}
 .place h2{color:var(--lime);margin-bottom:.5em}
 .place .desc{color:rgba(255,246,228,.85);font-size:1rem}
 @media (max-width:640px){.place{grid-template-columns:1fr}}
+
+/* Modal do banco de talentos */
+.modal{border:0;padding:0;background:transparent;max-width:min(94vw,560px);width:100%;max-height:92svh}
+.modal::backdrop{background:rgba(34,34,33,.82);backdrop-filter:blur(3px)}
+.modal-card{position:relative;max-height:92svh;overflow:auto;padding-top:clamp(28px,4vw,40px)}
+.modal-card h2{padding-right:44px}
+.modal-x{position:absolute;top:14px;right:14px;width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,246,228,.4);background:var(--ink);color:var(--off);font-size:1.5rem;line-height:1;cursor:pointer;z-index:2}
+.modal-x:hover{border-color:var(--lime);color:var(--lime)}
+.modal-guara{position:absolute;right:56px;top:-2px;width:120px;height:auto;pointer-events:none;opacity:.95}
+.apply-intro{margin-bottom:6px}
+@media (max-width:480px){.modal-guara{width:90px;right:52px}}

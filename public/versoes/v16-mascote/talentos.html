@@ -93,13 +93,22 @@
         <div>
           <h2 class="caps" style="margin-bottom:.6em">Não achou a sua vaga?</h2>
           <p>Manda o que você faz de melhor e onde quer chegar. A gente guarda e chama quando abrir algo que faça sentido.</p>
-          <a class="cta-pill" href="mailto:contato@guaramedia.com.br?subject=Banco%20de%20talentos%20Guar%C3%A1" style="margin-top:1.4em">Entrar no banco de talentos</a>
+          <button type="button" class="cta-pill" id="bankBtn" style="margin-top:1.4em">Entrar no banco de talentos</button>
         </div>
         <div class="guara" aria-hidden="true"><img src="assets/guara-olhando-tras.webp" alt="" width="1000" height="715" loading="lazy"></div>
       </div>
     </div>
   </section>
 </main>
+
+<dialog class="modal" id="bankModal" aria-labelledby="bankTitle">
+  <div class="dcard modal-card">
+    <button type="button" class="modal-x" id="bankClose" aria-label="Fechar">×</button>
+    <img class="modal-guara" src="assets/guara-olhando-tras.webp" alt="" width="1000" height="715" aria-hidden="true">
+    <h2 class="caps" id="bankTitle">Banco de talentos</h2>
+    <div id="bankBox"></div>
+  </div>
+</dialog>
 
 <footer class="contato" id="contato" data-theme="dark">
   <div class="contato-inner">
@@ -129,8 +138,15 @@
     st.hidden=f.length>0; document.getElementById('stateMsg').textContent=jobs.length?'Nenhuma vaga com essa busca.':'Nenhuma vaga aberta agora. Deixa seu contato no banco de talentos aí embaixo.';
     box.innerHTML=f.map(j=>{const wm=j.work_model||'';return `<a class="job" href="vaga.html?id=${esc(j.id)}"><div><h3>${esc(j.title)}</h3><div class="meta"><span>${I.brief} ${esc(j.department)}</span><span>${I.pin} ${esc(j.location)}</span></div></div><div class="job-side"><span class="badge ${cls(wm)}">${esc(wmLabel(wm))}</span><span class="arrow">${I.arrow}</span></div></a>`;}).join('');
   }
-  sb('jobs?select=id,title,department,location,work_model&is_open=eq.true&order=created_at.desc').then(d=>{sk.remove();jobs=d;render();}).catch(()=>{sk.remove();st.hidden=false;document.getElementById('stateMsg').textContent='Não deu pra carregar as vagas agora. Recarregue a página pra tentar de novo.';});
+  let bank=null;
+  sb('jobs?select=id,title,department,location,work_model&is_open=eq.true&order=created_at.desc').then(d=>{sk.remove();bank=d.find(G.isTalentBank)||null;jobs=d.filter(j=>!G.isTalentBank(j));render();}).catch(()=>{sk.remove();st.hidden=false;document.getElementById('stateMsg').textContent='Não deu pra carregar as vagas agora. Recarregue a página pra tentar de novo.';});
   document.getElementById('q').addEventListener('input',e=>{q=e.target.value;render();});
+  // Banco de talentos: modal com o mesmo formulário da vaga, apontando pra vaga fixa "Banco de talentos"
+  const modal=document.getElementById('bankModal');
+  G.mountApply(document.getElementById('bankBox'),{job:()=>bank,area:true,intro:'Deixa seu contato e o currículo. Quando abrir algo na sua área, a gente chama.',placeholder:'O que você faz de melhor e onde quer chegar.',cta:'Entrar no banco',okTitle:'Você está no banco',okMsg:'Guardamos seu currículo. Quando abrir uma vaga que combine, a gente te chama pelo e-mail.',noJobMsg:'O banco de talentos está fechado no momento. Manda seu currículo pra contato@guaramedia.com.br.'});
+  document.getElementById('bankBtn').addEventListener('click',()=>{modal.showModal();modal.querySelector('input[name=name]').focus();});
+  document.getElementById('bankClose').addEventListener('click',()=>modal.close());
+  modal.addEventListener('click',e=>{if(e.target===modal)modal.close();});
 })();
 </script>
 </body>
