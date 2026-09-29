@@ -33,7 +33,7 @@ button{font:inherit}
 [hidden]{display:none!important}
 
 /* ---------- NAV (igual à home) ---------- */
-.nav{position:fixed;inset:0 0 auto 0;z-index:50;height:var(--nav-h);padding:0 var(--pad);display:flex;align-items:center;justify-content:space-between;gap:24px;transition:background-color .35s ease,box-shadow .35s ease,color .35s ease;color:var(--ink)}
+.nav{position:fixed;inset:0 0 auto 0;z-index:50;height:calc(var(--nav-h) + env(safe-area-inset-top,0px));padding:env(safe-area-inset-top,0px) var(--pad) 0;display:flex;align-items:center;justify-content:space-between;gap:24px;transition:background-color .35s ease,box-shadow .35s ease,color .35s ease;color:var(--ink)}
 .nav.on-light{background:rgba(255,246,228,.88);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 1px 0 rgba(34,34,33,.08)}
 .nav.on-dark{background:rgba(34,34,33,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:var(--off)}
 .brand img{height:34px;width:auto}
@@ -52,7 +52,7 @@ button{font:inherit}
 .nav-toggle span{display:block;width:26px;height:3px;border-radius:3px;background:currentColor;margin:5px 0;transition:transform .3s var(--ease),opacity .2s}
 @media (max-width:880px){
   .nav-toggle{display:block}
-  .nav-links{position:fixed;top:var(--nav-h);left:0;right:0;flex-direction:column;align-items:flex-start;gap:6px;padding:18px var(--pad) 28px;background:var(--off);color:var(--ink);box-shadow:0 18px 30px rgba(34,34,33,.12);transform:translateY(-8px);opacity:0;visibility:hidden;transition:opacity .25s,transform .35s var(--ease),visibility .25s}
+  .nav-links{position:fixed;top:calc(var(--nav-h) + env(safe-area-inset-top,0px));left:0;right:0;flex-direction:column;align-items:flex-start;gap:6px;padding:18px var(--pad) 28px;background:var(--off);color:var(--ink);box-shadow:0 18px 30px rgba(34,34,33,.12);transform:translateY(-8px);opacity:0;visibility:hidden;transition:opacity .25s,transform .35s var(--ease),visibility .25s}
   .nav.open .nav-links{opacity:1;transform:none;visibility:visible}
   .nav-links a{font-size:1.35rem;padding:8px 0}
   .nav-links .cta-pill{margin-top:12px}
@@ -63,12 +63,13 @@ button{font:inherit}
 }
 
 /* ---------- LAYOUT ---------- */
-main{padding-top:var(--nav-h)}
+main{padding-top:0}
+.pg-hero,.detail-top{--nav-space:calc(var(--nav-h) + env(safe-area-inset-top,0px))}
 .wrap{max-width:1180px;margin:0 auto;padding-left:var(--pad);padding-right:var(--pad)}
 .wrap.narrow{max-width:860px}
 
 /* Abertura de página: título grande à esquerda, guará entrando pela direita */
-.pg-hero{position:relative;background:var(--hero-bg);overflow:hidden;padding:clamp(56px,9vh,110px) 0 clamp(40px,6vh,72px)}
+.pg-hero{position:relative;background:var(--hero-bg);overflow:hidden;padding:calc(var(--nav-space) + clamp(56px,9vh,110px)) 0 clamp(40px,6vh,72px)}
 .pg-hero .wrap{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(24px,4vw,64px);align-items:end}
 .pg-hero h1{font-weight:800;font-size:clamp(2.6rem,1.4rem + 4.6vw,5.8rem);letter-spacing:-.03em;line-height:.95;max-width:11em}
 .pg-hero h1 em{font-style:normal;color:var(--orange)}
@@ -233,7 +234,7 @@ main{padding-top:var(--nav-h)}
 @media (max-width:760px){.manifesto{grid-template-columns:1fr}.manifesto .guara img{max-width:240px;margin:0 auto}}
 
 /* ---------- DETALHE (post, vaga, ferramenta) ---------- */
-.detail-top{padding:clamp(28px,5vh,48px) 0 0}
+.detail-top{padding:calc(var(--nav-space) + clamp(28px,5vh,48px)) 0 0}
 .back{display:inline-flex;align-items:center;gap:8px;font-weight:700;text-decoration:none;padding:6px 0;margin-bottom:clamp(24px,4vh,40px)}
 .back:hover{color:var(--orange)}
 .back svg{width:16px;height:16px}

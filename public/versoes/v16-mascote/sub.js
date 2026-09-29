@@ -53,6 +53,7 @@
     if (!nav) return;
     const y = nav.offsetHeight / 2; let t = 'light';
     for (const el of document.querySelectorAll('[data-theme]')) { const r = el.getBoundingClientRect(); if (r.top <= y && r.bottom >= y) t = el.dataset.theme; }
+    if (scrollY < 8 && t === 'light') t = 'hero'; // no topo absoluto o header fica transparente, como na home
     nav.classList.toggle('on-light', t === 'light'); nav.classList.toggle('on-dark', t === 'dark');
   }
   let ticking = false;
