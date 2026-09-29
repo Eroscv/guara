@@ -70,6 +70,27 @@
   <a class="next" id="next" href="blog.html" data-theme="light"><span>Próximo post</span><strong id="next-title">Ver todos os posts</strong></a>
 </main>
 
+<!-- Gate de leitura: aparece ao rolar 30% do texto -->
+<aside class="gate" id="gate" hidden aria-labelledby="gateTitle" role="dialog" aria-modal="false">
+  <div class="gate-card">
+    <img class="gate-guara" src="assets/guara-tilt-head.webp" alt="" width="937" height="1000" aria-hidden="true">
+    <div class="gate-copy">
+      <span class="modal-kicker">Curtiu até aqui?</span>
+      <h2 class="caps" id="gateTitle">O resto é de graça. Só deixa seu e&#8209;mail.</h2>
+      <p>Você continua lendo agora e recebe um resumo por semana do que a Guará testa nas contas dos clientes. Sem spam, e dá pra sair quando quiser.</p>
+    </div>
+    <form class="gate-form" id="gateForm" novalidate>
+      <label class="sr-only" for="g-nome">Nome</label>
+      <input id="g-nome" name="nome" type="text" required minlength="2" maxlength="120" placeholder="Seu nome" autocomplete="name">
+      <label class="sr-only" for="g-email">E-mail</label>
+      <input id="g-email" name="email" type="email" required maxlength="254" placeholder="seu@email.com" autocomplete="email">
+      <button type="submit" class="cta-pill" id="gateBtn">Continuar lendo</button>
+      <span class="err" id="gateErr" role="alert"></span>
+      <button type="button" class="gate-skip" id="gateSkip" hidden>Continuar sem cadastrar</button>
+    </form>
+  </div>
+</aside>
+
 <footer class="contato" id="contato" data-theme="dark">
   <div class="contato-inner">
     <h2>Pronto pra acelerar sem bater na parede?</h2>
@@ -91,6 +112,34 @@
   const fills=['#ff6319','#222221','#D3F629'];
   share(document.getElementById('share'),document.getElementById('share-ok'));
   function card(p,i){const fill=fills[i%3];return `<a class="post rv" href="post.html?slug=${encodeURIComponent(p.slug)}" style="--fill:${fill}"><div class="media">${p.cover_image?`<img src="${esc(p.cover_image)}" alt="" loading="lazy">`:`<span class="ph" style="color:${fill==='#D3F629'?'#222221':'#fff6e4'}">${esc(p.title)}</span>`}</div><div><span class="cat">${esc(p.category||'Blog')}</span><h3>${esc(p.title)}</h3><div class="meta"><span>${I.cal} ${fmtDate(p.published_at)}</span><span>${I.clock} ${p.reading_time||0} min</span></div></div></a>`;}
+  /* ---------- Gate de leitura (30% do texto) ---------- */
+  const GATE_KEY='guara_gate_ok';
+  function setupGate(post){
+    const gate=document.getElementById('gate'),prose=document.getElementById('p-content'),form=document.getElementById('gateForm');
+    let ok=false; try{ok=localStorage.getItem(GATE_KEY)==='1';}catch(e){}
+    if(ok||prose.scrollHeight<1200) return; // já cadastrou ou o post é curto
+    let armed=false, skipT=null;
+    const onScroll=()=>{ if(armed) return; const r=prose.getBoundingClientRect(); const read=(innerHeight*.7-r.top)/r.height; if(read<.3) return;
+      armed=true; removeEventListener('scroll',onScroll);
+      prose.style.setProperty('--cut',Math.round(r.height*.3)+'px'); prose.classList.add('gated'); gate.hidden=false; document.body.classList.add('has-gate');
+      skipT=setTimeout(()=>{document.getElementById('gateSkip').hidden=false;},8000);
+      requestAnimationFrame(()=>gate.classList.add('in')); };
+    addEventListener('scroll',onScroll,{passive:true}); onScroll();
+    const unlock=()=>{ clearTimeout(skipT); prose.classList.remove('gated'); gate.classList.remove('in'); document.body.classList.remove('has-gate'); setTimeout(()=>{gate.hidden=true;},400); };
+    document.getElementById('gateSkip').addEventListener('click',unlock);
+    G.maskEmail(document.getElementById('g-email'));
+    form.addEventListener('submit',async e=>{
+      e.preventDefault(); const err=document.getElementById('gateErr'); err.textContent='';
+      const nome=document.getElementById('g-nome'),email=document.getElementById('g-email');
+      if(nome.value.trim().length<2){err.textContent='Informe seu nome.';nome.focus();return;}
+      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value.trim())){err.textContent='Informe um e-mail válido.';email.focus();return;}
+      const btn=document.getElementById('gateBtn'); btn.disabled=true; btn.textContent='Liberando…';
+      try{ await G.insert('leads',{nome:nome.value.trim(),email:email.value.trim().toLowerCase(),mensagem:'Assinou pelo blog no post: '+post.title,source:'blog_gate'}); }
+      catch(e2){ /* não prende o leitor por falha de rede: libera mesmo assim */ }
+      try{localStorage.setItem(GATE_KEY,'1');}catch(e3){}
+      unlock();
+    });
+  }
   if(!slug){st.textContent='Post não encontrado.';return;}
   sb('posts?select=*&slug=eq.'+encodeURIComponent(slug)).then(d=>{
     const post=d&&d[0];
@@ -107,6 +156,7 @@
     document.getElementById('p-content').innerHTML=window.DOMPurify?DOMPurify.sanitize(raw,{ADD_TAGS:['iframe'],ADD_ATTR:['allow','allowfullscreen','frameborder','src','width','height','title','loading','referrerpolicy']}):raw.replace(/<script[\s\S]*?<\/script>/gi,'');
     document.getElementById('p-tags').innerHTML=(post.tags||[]).map(t=>`<a class="tag" href="blog.html">#${esc(t)}</a>`).join('');
     G.navTheme();
+    setupGate(post);
     const sel='id,title,slug,cover_image,category,published_at,reading_time';
     return sb(`posts?select=${sel}&order=published_at.desc&id=neq.${post.id}&limit=30`).then(all=>{
       const sameCat=all.filter(p=>p.category===post.category);

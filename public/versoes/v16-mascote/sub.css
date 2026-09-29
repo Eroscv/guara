@@ -549,3 +549,25 @@ main{padding-top:0}
   .apply-bar[hidden]{display:none}
   body:has(.apply-bar:not([hidden])) .contato{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
 }
+
+/* ===== Gate de leitura no post ===== */
+.prose.gated{max-height:var(--cut,40vh);overflow:hidden;-webkit-mask-image:linear-gradient(to bottom,#000 55%,transparent 100%);mask-image:linear-gradient(to bottom,#000 55%,transparent 100%)}
+body.has-gate .dtags,body.has-gate #rel-wrap,body.has-gate .next{opacity:.25;pointer-events:none}
+.gate{position:fixed;left:0;right:0;bottom:0;z-index:45;padding:0 var(--pad) calc(16px + env(safe-area-inset-bottom,0px));pointer-events:none}
+.gate-card{pointer-events:auto;max-width:1080px;margin:0 auto;background:var(--ink);color:var(--off);border:2.5px solid var(--lime);border-radius:26px;box-shadow:8px 8px 0 var(--orange);padding:clamp(20px,2.6vw,30px) clamp(20px,2.6vw,32px);display:grid;grid-template-columns:auto minmax(0,1fr) minmax(280px,38%);gap:16px clamp(18px,2.6vw,32px);align-items:center;transform:translateY(24px);opacity:0;transition:transform .5s var(--ease),opacity .4s ease}
+.gate.in .gate-card{transform:none;opacity:1}
+.gate-guara{width:clamp(72px,8vw,110px);height:auto;align-self:end;margin-bottom:-4px}
+.gate-copy h2{color:var(--lime);font-size:clamp(1.3rem,1.05rem + 1vw,1.9rem);line-height:1;margin:.2em 0 .4em}
+.gate-copy p{color:rgba(255,246,228,.78);font-size:.95rem;max-width:34em}
+.gate-form{display:grid;gap:10px}
+.gate-form input{font:inherit;font-size:1rem;color:var(--off);background:rgba(255,246,228,.06);border:2px solid rgba(255,246,228,.36);border-radius:14px;padding:12px 16px}
+.gate-form input::placeholder{color:rgba(255,246,228,.4)}
+.gate-form input:focus{outline:none;border-color:var(--lime);background:rgba(255,246,228,.1)}
+.gate-form .cta-pill{--shadow:var(--off);width:100%}
+.gate-form .err{color:#ff9a6b;font-size:.85rem}
+.gate-form .err:empty{display:none}
+.gate-skip{background:none;border:0;color:rgba(255,246,228,.6);font-size:.85rem;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:4px;justify-self:center}
+.gate-skip:hover{color:var(--off)}
+@media (max-width:900px){.gate-card{grid-template-columns:auto minmax(0,1fr)}.gate-form{grid-column:1/-1}}
+@media (max-width:560px){.gate{padding-left:10px;padding-right:10px}.gate-card{grid-template-columns:1fr;padding:18px}.gate-guara{width:64px;justify-self:end;margin:-6px 0 -34px}.gate-copy h2{font-size:1.25rem}.gate-copy p{font-size:.88rem}}
+@media (prefers-reduced-motion:reduce){.gate-card{transition:none}}
