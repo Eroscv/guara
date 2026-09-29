@@ -97,7 +97,7 @@
         <div class="file-chip" hidden><span class="file-name"></span><span class="file-size"></span><button type="button" class="file-x" aria-label="Remover arquivo">×</button></div>
         <span class="err" data-for="cv"></span>
       </div>
-      <label><span>Mensagem <small>opcional</small></span><textarea name="message" rows="3" maxlength="2000" placeholder="${o.placeholder || 'Conta em duas linhas por que essa vaga faz sentido pra você.'}"></textarea></label>
+      <label><span>Mensagem <small>opcional</small></span><textarea name="message" rows="2" maxlength="2000" placeholder="${o.placeholder || 'Conta em duas linhas por que essa vaga faz sentido pra você.'}"></textarea></label>
       <button type="submit" class="cta-pill">${o.cta || 'Enviar candidatura'}</button>
       <span class="err" data-for="form" role="alert"></span>
     </form>

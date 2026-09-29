@@ -492,3 +492,27 @@ main{padding-top:0}
 .tools.pair .tool{grid-column:auto;grid-template-columns:1fr;align-content:start}
 .tools.pair .tool figure{order:-1;aspect-ratio:16/9}
 .tools.pair .tool h2{font-size:clamp(1.6rem,1.2rem + 1.4vw,2.4rem)}
+
+/* Modal compacto: cabe sem rolar em alturas comuns; barra discreta quando precisar */
+.modal-card{scrollbar-width:thin;scrollbar-color:rgba(255,246,228,.35) transparent}
+.modal-card::-webkit-scrollbar{width:8px}
+.modal-card::-webkit-scrollbar-thumb{background:rgba(255,246,228,.35);border-radius:8px}
+.modal-head{padding-top:clamp(18px,2.6vw,26px);margin-bottom:14px}
+.modal-head>div{padding-bottom:14px}
+.modal-head h2{font-size:clamp(1.5rem,1.1rem + 1.4vw,2.1rem);margin-bottom:.3em}
+.modal-head p{font-size:.92rem}
+.modal-kicker{margin-bottom:4px;font-size:.8rem}
+.modal-guara{width:88%}
+.modal-card #bankBox{padding-bottom:clamp(18px,2.6vw,26px)}
+.modal .apply{gap:10px 14px}
+.modal .apply label{gap:4px;font-size:.9rem}
+.modal .apply input{padding:10px 14px}
+.modal .apply textarea{min-height:64px;padding:10px 14px}
+.modal .apply .drop{padding:14px 12px;font-size:.88rem}
+.modal .apply .file-label{font-size:.9rem}
+.modal .apply>button{margin-top:2px;padding:11px 22px!important}
+/* área + mensagem lado a lado no desktop pra ganhar uma linha */
+.modal .apply>label:has(textarea){grid-column:auto}
+.modal .apply>label:has(input[name=area]){grid-column:auto}
+@media (max-width:560px){.modal .apply>label:has(textarea){grid-column:1/-1}}
+.modal,.modal-card{max-height:96svh}
