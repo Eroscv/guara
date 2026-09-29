@@ -332,7 +332,7 @@ main{padding-top:0}
 @media (max-width:520px){.li-card iframe{height:520px}}
 
 /* ---------- RODAPÉ (igual à home) ---------- */
-.contato{background:var(--ink);color:var(--off);border-radius:var(--r-panel) var(--r-panel) 0 0;padding:clamp(80px,14vh,150px) var(--pad) 36px;margin-top:clamp(60px,10vh,120px)}
+.contato{background:var(--ink);color:var(--off);border-radius:var(--r-panel) var(--r-panel) 0 0;padding:clamp(80px,14vh,150px) var(--pad) calc(36px + env(safe-area-inset-bottom,0px))}
 .contato-inner{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;align-items:flex-start;gap:clamp(28px,5vh,48px)}
 .contato h2{font-weight:800;font-size:clamp(2.3rem,1.3rem + 4.2vw,5.4rem);letter-spacing:-.03em;line-height:1;max-width:12em}
 .contato .cta-pill{--shadow:var(--off);font-size:1.15rem;padding:16px 34px!important}
