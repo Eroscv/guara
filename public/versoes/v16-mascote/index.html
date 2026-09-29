@@ -8,6 +8,8 @@
 <meta name="theme-color" content="#fcf3e4">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://player.vimeo.com">
+<script src="https://player.vimeo.com/api/player.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -270,7 +272,7 @@ fieldset[aria-invalid="true"] .chip span{border-color:var(--orange)}
 .hero-frame{position:relative;width:min(100%,calc(var(--area) * 2.0645));aspect-ratio:1920/930;overflow:hidden;
   -webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent),linear-gradient(180deg,transparent,#000 5%,#000 95%,transparent);-webkit-mask-composite:source-in;
   mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent),linear-gradient(180deg,transparent,#000 5%,#000 95%,transparent);mask-composite:intersect}
-.hero .hero-frame video{position:absolute;left:0;top:-11.83%;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
+.hero .hero-frame video,.hero .hero-frame iframe{position:absolute;left:0;top:-11.83%;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border:0;background:var(--hero-bg)}
 .hero::after{height:10px}
 
 .planos{min-height:calc(100svh - var(--nav-h));display:flex;flex-direction:column;justify-content:center;padding:clamp(28px,5svh,72px) 0 clamp(28px,4svh,56px)}
@@ -450,9 +452,7 @@ body.case-mode main{display:none}
   <section class="hero" id="top" data-theme="hero">
     <h1 class="sr-only">Guará Media: estratégia e execução humano-máquina</h1>
     <div class="hero-frame">
-    <video id="heroVideo" autoplay muted loop playsinline preload="auto" poster="assets/hero-poster.jpg" aria-label="Animação do guará saltando obstáculos: se a pressa é inimiga da perfeição, a perfeição é inimiga do lucro">
-      <source src="assets/hero.mp4" type="video/mp4">
-    </video>
+    <iframe id="heroVideo" src="https://player.vimeo.com/video/1231360656?background=1&amp;autoplay=1&amp;loop=1&amp;muted=1&amp;autopause=0&amp;dnt=1&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" title="Animação do guará saltando obstáculos: se a pressa é inimiga da perfeição, a perfeição é inimiga do lucro"></iframe>
     </div>
     <button class="video-toggle" id="videoToggle" aria-label="Pausar vídeo" aria-pressed="false">
       <svg viewBox="0 0 14 14" aria-hidden="true"><g id="icPause"><rect x="2" y="1" width="3.4" height="12" rx="1" fill="currentColor"/><rect x="8.6" y="1" width="3.4" height="12" rx="1" fill="currentColor"/></g><path id="icPlay" d="M3 1.2v11.6L12.6 7z" fill="currentColor" style="display:none"/></svg>
@@ -657,11 +657,13 @@ function navTheme(){
 }
 
 /* ---------- VIDEO ---------- */
-const vid=document.getElementById('heroVideo'), vt=document.getElementById('videoToggle');
-function setPlaying(p){ if(p){vid.play().catch(()=>{})}else vid.pause();
+const vt=document.getElementById('videoToggle');
+const vid=window.Vimeo?new Vimeo.Player(document.getElementById('heroVideo')):null; // player do Vimeo (background=1: autoplay, mudo, loop)
+let vidPaused=false;
+function setPlaying(p){ vidPaused=!p; if(vid){ if(p)vid.play().catch(()=>{}); else vid.pause().catch(()=>{}); }
   vt.setAttribute('aria-label',p?'Pausar vídeo':'Tocar vídeo'); vt.setAttribute('aria-pressed',String(!p));
   document.getElementById('icPause').style.display=p?'':'none'; document.getElementById('icPlay').style.display=p?'none':''; }
-vt.addEventListener('click',()=>setPlaying(vid.paused));
+vt.addEventListener('click',()=>setPlaying(vidPaused));
 if(reduce) setPlaying(false);
 
 /* ---------- WALL ---------- */
