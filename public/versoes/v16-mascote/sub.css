@@ -553,7 +553,7 @@ main{padding-top:0}
 /* ===== Gate de leitura no post ===== */
 .prose.gated{max-height:var(--cut,40vh);overflow:hidden;-webkit-mask-image:linear-gradient(to bottom,#000 55%,transparent 100%);mask-image:linear-gradient(to bottom,#000 55%,transparent 100%)}
 body.has-gate .dtags,body.has-gate #rel-wrap,body.has-gate .next{opacity:.25;pointer-events:none}
-.gate{position:fixed;inset:0;z-index:45;display:grid;place-items:center;padding:16px var(--pad) calc(16px + env(safe-area-inset-bottom,0px));background:rgba(34,34,33,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;transition:opacity .35s ease}
+.gate{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:16px var(--pad) calc(16px + env(safe-area-inset-bottom,0px));background:rgba(34,34,33,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;transition:opacity .35s ease}
 .gate.in{opacity:1}
 .gate[hidden]{display:none}
 .gate-card{pointer-events:auto;width:100%;max-width:820px;margin:0 auto;max-height:92svh;overflow:auto;background:var(--ink);color:var(--off);border:2.5px solid var(--lime);border-radius:26px;box-shadow:8px 8px 0 var(--orange);padding:clamp(20px,2.6vw,30px) clamp(20px,2.6vw,32px);display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px clamp(18px,2.6vw,32px);align-items:center;transform:translateY(24px);opacity:0;transition:transform .5s var(--ease),opacity .4s ease}
