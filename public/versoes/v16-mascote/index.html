@@ -216,7 +216,7 @@ p{margin:0}
 .field{display:flex;flex-direction:column;gap:8px;min-width:0}
 .field.full,.lead-form fieldset,.form-actions,.form-status{grid-column:1/-1}
 .lead-form label,.lead-form legend{font-weight:700;font-size:.98rem}
-.lead-form input[type=text],.lead-form input[type=tel]{font:inherit;font-size:1rem;color:var(--off);background:rgba(255,246,228,.06);border:2px solid rgba(255,246,228,.36);border-radius:14px;padding:13px 16px;transition:border-color .2s,background .2s}
+.lead-form input[type=text],.lead-form input[type=tel],.lead-form input[type=email]{font:inherit;font-size:1rem;color:var(--off);background:rgba(255,246,228,.06);border:2px solid rgba(255,246,228,.36);border-radius:14px;padding:13px 16px;transition:border-color .2s,background .2s}
 .lead-form input::placeholder{color:rgba(255,246,228,.4)}
 .lead-form input:focus{outline:none;border-color:var(--lime);background:rgba(255,246,228,.1)}
 .lead-form input[aria-invalid="true"]{border-color:var(--orange)}
@@ -297,14 +297,14 @@ fieldset[aria-invalid="true"] .chip span{border-color:var(--orange)}
 .form-guara{left:clamp(-70px,-4vw,-16px);bottom:0;width:clamp(230px,30%,350px)}
 .lead-form{gap:clamp(10px,2svh,20px) 18px}
 .field{gap:6px}
-.lead-form input[type=text],.lead-form input[type=tel]{padding:clamp(9px,1.4svh,13px) 14px}
+.lead-form input[type=text],.lead-form input[type=tel],.lead-form input[type=email]{padding:clamp(9px,1.4svh,13px) 14px}
 .lead-form legend{margin-bottom:8px}
 .chips{gap:8px}
 .chip span{padding:clamp(6px,1svh,9px) 13px;font-size:.88rem}
 .form-box{padding-left:clamp(210px,27%,320px)}
 .form-guara{left:clamp(-80px,-5vw,-20px);width:clamp(220px,27%,320px)}
 .contato-form>.sub{margin-bottom:clamp(14px,3svh,40px)}
-@media (min-width:980px){.lead-form{grid-template-columns:1fr 1fr 1.25fr}.lead-form .field.full{grid-column:auto}}
+@media (min-width:980px){.lead-form{grid-template-columns:1fr 1fr}}
 @media (min-width:600px) and (max-width:900px){.lead-form{grid-template-columns:1fr 1fr}}
 @media (max-width:760px) and (max-height:800px){
   .planos{padding-top:22px}
@@ -584,7 +584,12 @@ body.case-mode main{display:none}
           <input type="tel" id="f-whats" name="whatsapp" autocomplete="tel-national" inputmode="numeric" placeholder="(19) 99999-9999" required>
           <span class="err" id="e-whats"></span>
         </div>
-        <div class="field full">
+        <div class="field">
+          <label for="f-email">E-mail</label>
+          <input type="email" id="f-email" name="email" autocomplete="email" placeholder="voce@empresa.com.br" required>
+          <span class="err" id="e-email"></span>
+        </div>
+        <div class="field">
           <label for="f-site">Site ou @ da empresa</label>
           <input type="text" id="f-site" name="site" autocomplete="url" placeholder="suaempresa.com.br ou @suaempresa" required>
           <span class="err" id="e-site"></span>
@@ -980,7 +985,10 @@ function jellyFrame(){
 /* ---------- FORMULÁRIO ---------- */
 (function(){
   // Cole aqui o endpoint que vai receber os leads (Google Apps Script, Formspree, webhook do CRM…).
-  const FORM_ENDPOINT='';
+  const SUPA_URL='https://cmbxrmtncrfhdcpbjxtx.supabase.co', SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNtYnhybXRuY3JmaGRjcGJqeHR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODA1MjksImV4cCI6MjA5NTA1NjUyOX0.uzPevwziHY2ilNdP-ZnN6C9K7hq1Xs7u88_FTG3Awi8';
+  const FORM_ENDPOINT=SUPA_URL+'/functions/v1/create-lead-card';
+  // A função create-lead-card ainda não está publicada no projeto (404). Quando publicar, troque pra true:
+  const USE_EDGE_FUNCTION=false;
   const form=document.getElementById('leadForm'), wa=document.getElementById('f-whats'), status=document.getElementById('formStatus'), btn=document.getElementById('formBtn');
   wa.addEventListener('input',()=>{let d=wa.value.replace(/\D/g,'').slice(0,11);
     wa.value=d.length>10?`(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`:d.length>6?`(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`:d.length>2?`(${d.slice(0,2)}) ${d.slice(2)}`:d.length?`(${d}`:''});
@@ -989,12 +997,13 @@ function jellyFrame(){
   const RULES={
     nome:{el:()=>document.getElementById('f-nome'),err:'e-nome',ok:f=>(f.get('nome')||'').trim().length>1,msg:'Informe seu nome.'},
     whatsapp:{el:()=>wa,err:'e-whats',ok:f=>(f.get('whatsapp')||'').replace(/\D/g,'').length>=10,msg:'Informe um WhatsApp com DDD.'},
+    email:{el:()=>document.getElementById('f-email'),err:'e-email',ok:f=>/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test((f.get('email')||'').trim()),msg:'Informe um e-mail válido.'},
     site:{el:()=>document.getElementById('f-site'),err:'e-site',ok:f=>(f.get('site')||'').trim().length>2,msg:'Informe o site ou o @ da empresa.'},
     faturamento:{el:()=>document.getElementById('fs-fat'),err:'e-fat',ok:f=>!!f.get('faturamento'),msg:'Escolha uma faixa de faturamento.'},
     solucao:{el:()=>document.getElementById('fs-sol'),err:'e-sol',ok:f=>!!f.get('solucao'),msg:'Escolha a solução que te interessa.'},
   };
   function checkField(name){const r=RULES[name],ok=r.ok(new FormData(form));setErr(r.el(),r.err,ok?'':r.msg);return ok}
-  form.querySelectorAll('input[type=text],input[type=tel]').forEach(i=>{
+  form.querySelectorAll('input[type=text],input[type=tel],input[type=email]').forEach(i=>{
     i.addEventListener('blur',()=>{if(i.value)checkField(i.name)});
     i.addEventListener('input',()=>{if(i.getAttribute('aria-invalid')==='true')checkField(i.name)});
   });
@@ -1002,7 +1011,7 @@ function jellyFrame(){
     const f=new FormData(form), errs=[];
     for(const name in RULES){if(!checkField(name))errs.push(RULES[name].el())}
     const tel=(f.get('whatsapp')||'').replace(/\D/g,'');
-    return {ok:!errs.length,count:errs.length,first:errs[0],data:{nome:(f.get('nome')||'').trim(),whatsapp:tel,site:(f.get('site')||'').trim(),faturamento:f.get('faturamento'),solucao:f.get('solucao'),origem:'LP Guará Media',enviado_em:new Date().toISOString()}};
+    return {ok:!errs.length,count:errs.length,first:errs[0],data:{nome:(f.get('nome')||'').trim(),email:(f.get('email')||'').trim(),whatsapp:tel,site:(f.get('site')||'').trim(),faturamento:f.get('faturamento'),solucao:f.get('solucao'),origem:'LP Guará Media',enviado_em:new Date().toISOString()}};
   }
   form.addEventListener('change',e=>{if(e.target.name==='faturamento')setErr(document.getElementById('fs-fat'),'e-fat','');if(e.target.name==='solucao')setErr(document.getElementById('fs-sol'),'e-sol','')});
   form.addEventListener('submit',async e=>{
@@ -1010,8 +1019,16 @@ function jellyFrame(){
     const v=validate(); if(!v.ok){status.classList.add('bad');status.textContent=v.count===1?'Falta 1 campo pra enviar.':`Faltam ${v.count} campos pra enviar.`;(v.first.querySelector?.('input')||v.first).focus();return}
     btn.disabled=true; btn.textContent='Enviando…';
     try{
-      if(FORM_ENDPOINT){const r=await fetch(FORM_ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(v.data)}); if(!r.ok&&r.type!=='opaque')throw new Error(r.status)}
-      else console.info('Lead (sem endpoint configurado):',v.data);
+      const d=v.data, H={'Content-Type':'application/json',apikey:SUPA_KEY,Authorization:'Bearer '+SUPA_KEY};
+      let r;
+      if(USE_EDGE_FUNCTION){ // create-lead-card: grava em leads e cria o card no CRM
+        r=await fetch(FORM_ENDPOINT,{method:'POST',headers:H,body:JSON.stringify({nome:d.nome,email:d.email,whatsapp:d.whatsapp,empresa:d.site,site:d.site,faturamento:d.faturamento||'',investimentoMidia:'',desafio:'Solução de interesse: '+(d.solucao||'')})});
+      }else{ // insert direto na tabela leads (política "Anyone can submit leads").
+        // A tabela em produção só tem nome/email/telefone/empresa/segmento/mensagem/source (a migração de
+        // site/faturamento/desafio não foi aplicada), então faturamento vai em segmento e o resto em mensagem.
+        r=await fetch(SUPA_URL+'/rest/v1/leads',{method:'POST',headers:{...H,Prefer:'return=minimal'},body:JSON.stringify({nome:d.nome,email:d.email,telefone:d.whatsapp,empresa:d.site,segmento:d.faturamento||null,mensagem:'Solução de interesse: '+(d.solucao||'')+' · Site: '+d.site,source:'v16_mascote'})});
+      }
+      if(!r.ok)throw new Error(r.status);
       form.reset(); status.classList.add('ok'); status.textContent='Recebemos seus dados. A Guará vai te chamar no WhatsApp.';
     }catch(err){status.classList.add('bad');status.textContent='Não conseguimos enviar agora. Tente de novo em instantes.'}
     finally{btn.disabled=false;btn.textContent='Enviar para a Guará'}
