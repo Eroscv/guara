@@ -16,8 +16,25 @@ export default {
       fontFamily: {
         heading: ['Inter', 'sans-serif'],
         body: ['"Noto Serif Display"', 'serif'],
+        display: ['"Bricolage Grotesque"', '"DM Sans"', 'sans-serif'],
+      },
+      // Sombra "adesivo" do painel (/admin) — a cor segue --foreground, então só
+      // aparece certa dentro de html.admin-theme (components/admin/admin-theme.css).
+      boxShadow: {
+        brut: "4px 4px 0 0 hsl(var(--foreground))",
+        "brut-sm": "2px 2px 0 0 hsl(var(--foreground))",
+        "brut-md": "6px 6px 0 0 hsl(var(--foreground))",
+        "brut-lg": "8px 8px 0 0 hsl(var(--foreground))",
+        "brut-orange": "3px 3px 0 0 hsl(var(--brand-orange))",
+        "brut-accent": "3px 3px 0 0 hsl(var(--accent))",
       },
       colors: {
+        "brand-orange": "hsl(var(--brand-orange))",
+        "method-patch": "hsl(var(--method-patch))",
+        code: {
+          DEFAULT: "hsl(var(--code))",
+          foreground: "hsl(var(--code-foreground))",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

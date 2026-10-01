@@ -3,6 +3,7 @@ import { getSupabaseAdmin } from "../../_lib/supabaseAdmin";
 import { requireApiKey } from "../../_lib/auth";
 import { ApiError, handleCaught, sendError } from "../../_lib/errors";
 import { parsePagination, parseQuery } from "../../_lib/pagination";
+import { getBody, siteHostFrom } from "../../_lib/http";
 import {
   SUPABASE_CADASTRO_RESOURCES,
   deleteCadastro,
@@ -41,24 +42,6 @@ function cors(res: VercelResponse) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Headers", "authorization, x-api-key, content-type");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
-}
-
-function getBody(req: VercelRequest): unknown {
-  if (req.body == null || req.body === "") return {};
-  if (typeof req.body === "string") {
-    try {
-      return JSON.parse(req.body);
-    } catch {
-      throw new ApiError(400, "Dados inválidos", { formErrors: ["JSON inválido."], fieldErrors: {} });
-    }
-  }
-  return req.body;
-}
-
-function siteHostFrom(req: VercelRequest): string | null {
-  const h = req.headers["x-forwarded-host"] || req.headers.host;
-  const v = Array.isArray(h) ? h[0] : h;
-  return v ? v.split(":")[0] : null;
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {

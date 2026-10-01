@@ -1,10 +1,9 @@
 import { Suspense, lazy } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import AdminLayout from "./components/admin/AdminLayout";
 import RequireAdmin from "./components/admin/RequireAdmin";
 import { ThemeProvider } from "./hooks/use-theme";
 import { AuthProvider } from "./hooks/use-auth";
@@ -25,17 +24,20 @@ const ArtigoDetalhe = lazy(() => import("./pages/ArtigoDetalhe"));
 const Contato = lazy(() => import("./pages/Contato"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+// O painel (shell + tema + fontes) só baixa quando alguém abre /admin.
+const AdminShell = lazy(() => import("./components/admin/AdminShell"));
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
 const ForgotPassword = lazy(() => import("./pages/admin/ForgotPassword"));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
 const PostsList = lazy(() => import("./pages/admin/PostsList"));
-const PostEditor = lazy(() => import("./pages/admin/PostEditor"));
 const JobsList = lazy(() => import("./pages/admin/JobsList"));
-const JobEditor = lazy(() => import("./pages/admin/JobEditor"));
 const ArticlesList = lazy(() => import("./pages/admin/ArticlesList"));
 const ArticleEditor = lazy(() => import("./pages/admin/ArticleEditor"));
 const AuditPage = lazy(() => import("./pages/admin/AuditPage"));
 const LeadsList = lazy(() => import("./pages/admin/LeadsList"));
+const NewsletterList = lazy(() => import("./pages/admin/NewsletterList"));
+const DownloadsList = lazy(() => import("./pages/admin/DownloadsList"));
+const ToolsList = lazy(() => import("./pages/admin/ToolsList"));
 const ApplicationsList = lazy(() => import("./pages/admin/ApplicationsList"));
 const AccountsList = lazy(() => import("./pages/admin/AccountsList"));
 const ApiKeys = lazy(() => import("./pages/admin/ApiKeys"));
@@ -82,22 +84,24 @@ const App = () => (
 
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin/forgot-password" element={<ForgotPassword />} />
-                <Route path="/admin" element={<RequireAdmin><AdminLayout /></RequireAdmin>}>
+                <Route path="/admin" element={<RequireAdmin><AdminShell /></RequireAdmin>}>
                   <Route index element={<AdminDashboard />} />
+                  <Route path="leads" element={<LeadsList />} />
+                  <Route path="newsletter" element={<NewsletterList />} />
+                  <Route path="downloads" element={<DownloadsList />} />
+                  <Route path="applications" element={<ApplicationsList />} />
                   <Route path="posts" element={<PostsList />} />
-                  <Route path="posts/new" element={<PostEditor />} />
-                  <Route path="posts/:id/edit" element={<PostEditor />} />
+                  {/* posts e vagas agora editam num painel lateral da própria lista */}
+                  <Route path="posts/*" element={<Navigate to="/admin/posts" replace />} />
                   <Route path="jobs" element={<JobsList />} />
-                  <Route path="jobs/new" element={<JobEditor />} />
-                  <Route path="jobs/:id/edit" element={<JobEditor />} />
+                  <Route path="jobs/*" element={<Navigate to="/admin/jobs" replace />} />
+                  <Route path="tools" element={<ToolsList />} />
                   <Route path="articles" element={<ArticlesList />} />
                   <Route path="articles/new" element={<ArticleEditor />} />
                   <Route path="articles/:id/edit" element={<ArticleEditor />} />
-                  <Route path="audit" element={<AuditPage />} />
-                  <Route path="leads" element={<LeadsList />} />
-                  <Route path="applications" element={<ApplicationsList />} />
-                  <Route path="accounts" element={<AccountsList />} />
                   <Route path="api-keys" element={<ApiKeys />} />
+                  <Route path="audit" element={<AuditPage />} />
+                  <Route path="accounts" element={<AccountsList />} />
                 </Route>
 
                 <Route path="*" element={<NotFound />} />

@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { AuthBadge, AuthFrame } from "@/components/admin/AuthFrame";
 import { toast } from "sonner";
 
 const AdminLogin = () => {
@@ -34,31 +35,30 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
-      <div className="w-full max-w-md bg-card rounded-2xl shadow-card p-8">
-        <Link to="/" className="text-sm text-muted-foreground hover:text-primary">← Voltar ao site</Link>
-        <h1 className="font-heading font-bold text-2xl mt-4">Login do Admin</h1>
-        <p className="text-sm text-muted-foreground mt-1">Acesso restrito a administradores.</p>
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-          <div className="space-y-1.5">
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
-          </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="password">Senha</Label>
-            <Input id="password" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
-          </div>
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Aguarde..." : "Entrar"}
-          </Button>
-        </form>
-        <div className="mt-4 text-center">
-          <Link to="/admin/forgot-password" className="text-sm text-muted-foreground hover:text-primary">
-            Esqueci minha senha
-          </Link>
-        </div>
+    <AuthFrame>
+      <AuthBadge />
+      <div>
+        <h1 className="text-3xl font-extrabold">Entrar no painel</h1>
+        <p className="mt-1 text-sm text-muted-foreground">Acesso restrito a administradores.</p>
       </div>
-    </div>
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="space-y-1.5">
+          <Label htmlFor="email">E-mail</Label>
+          <Input id="email" type="email" autoComplete="email" className="h-11" required value={email} onChange={(e) => setEmail(e.target.value)} />
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="password">Senha</Label>
+          <Input id="password" type="password" autoComplete="current-password" className="h-11" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
+        </div>
+        <Button type="submit" className="h-11 w-full text-base font-bold shadow-brut-orange" disabled={loading}>
+          {loading ? "Aguarde…" : "Entrar"}
+        </Button>
+      </form>
+      <div className="flex items-center justify-between text-sm">
+        <Link to="/admin/forgot-password" className="underline">Esqueci minha senha</Link>
+        <Link to="/" className="text-muted-foreground underline">Voltar ao site</Link>
+      </div>
+    </AuthFrame>
   );
 };
 

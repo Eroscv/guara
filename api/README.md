@@ -39,6 +39,15 @@ Responde sozinha: `leads`, `applications`, `posts`, `jobs` no **Supabase** (prec
 `tools`, `newsletter`, `tool_downloads`, `api_keys` no **Vercel Postgres** (`db/vercel-postgres-schema.sql`);
 arquivos de ferramenta no **Vercel Blob** (`BLOB_READ_WRITE_TOKEN`).
 
+## Painel (`/api/admin/v1`)
+
+Back-end do `/admin` para o que mora no Vercel Postgres: `newsletter` e `tool_downloads` (listar e apagar),
+`tools` (CRUD completo, incluindo arquivar), `counts` (totais e última semana) e `downloads-by-tool`.
+Não usa chave `gm_…`: exige a sessão de admin do Supabase (`Authorization: Bearer <access_token>`,
+conferido em `_lib/requireAdmin.ts`) e só responde no mesmo domínio. Funciona igual nos dois modos da API
+pública — ignora `GUARA_API_UPSTREAM`, porque o painel gerencia os dados do próprio site.
+Leads, candidaturas, posts e vagas o painel lê direto do Supabase, com a sessão do admin (RLS).
+
 ## Testes
 
 `npm test` roda os puros e os do proxy (com origem simulada). `integration.test.ts` fala com o
