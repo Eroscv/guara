@@ -38,6 +38,7 @@ const AuditPage = lazy(() => import("./pages/admin/AuditPage"));
 const LeadsList = lazy(() => import("./pages/admin/LeadsList"));
 const ApplicationsList = lazy(() => import("./pages/admin/ApplicationsList"));
 const AccountsList = lazy(() => import("./pages/admin/AccountsList"));
+const ApiKeys = lazy(() => import("./pages/admin/ApiKeys"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -96,6 +97,7 @@ const App = () => (
                   <Route path="leads" element={<LeadsList />} />
                   <Route path="applications" element={<ApplicationsList />} />
                   <Route path="accounts" element={<AccountsList />} />
+                  <Route path="api-keys" element={<ApiKeys />} />
                 </Route>
 
                 <Route path="*" element={<NotFound />} />

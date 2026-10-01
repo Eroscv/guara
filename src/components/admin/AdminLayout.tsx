@@ -1,5 +1,5 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { LayoutDashboard, FileText, Briefcase, BookOpen, LogOut, ShieldAlert, ExternalLink, Inbox, Users, UserCog } from "lucide-react";
+import { LayoutDashboard, FileText, Briefcase, BookOpen, LogOut, ShieldAlert, ExternalLink, Inbox, Users, UserCog, Key } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 
@@ -12,6 +12,7 @@ const navItems = [
   { to: "/admin/articles", icon: BookOpen, label: "Artigos" },
   { to: "/admin/audit", icon: ShieldAlert, label: "Auditoria" },
   { to: "/admin/accounts", icon: UserCog, label: "Contas", sysadminOnly: true },
+  { to: "/admin/api-keys", icon: Key, label: "API", sysadminOnly: true },
 ];
 
 const AdminLayout = () => {
