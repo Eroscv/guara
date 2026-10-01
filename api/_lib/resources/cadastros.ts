@@ -1,46 +1,34 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { ApiError } from "../errors";
-import { cadastroPatchSchemas, type CadastroResource } from "../schemas";
+import { cadastroPatchSchemas } from "../schemas";
 
-// Os 4 cadastros do manual (leads, newsletter, tool_downloads,
-// applications): listar, abrir, alterar e apagar. Nunca criar por aqui —
-// eles só nascem pelos formulários do site.
-const TABLE: Record<CadastroResource, string> = {
-  leads: "leads",
-  newsletter: "newsletter",
-  tool_downloads: "tool_downloads",
-  applications: "applications",
-};
+// leads e applications: formulários que já existem no site, dados que já
+// vivem no Supabase (o site e o admin continuam lendo/escrevendo aqui
+// direto) — por isso ficaram fora da migração pro Vercel Postgres.
+export type SupabaseCadastroResource = "leads" | "applications";
+export const SUPABASE_CADASTRO_RESOURCES: SupabaseCadastroResource[] = ["leads", "applications"];
 
-const SELECT_COLUMNS: Record<CadastroResource, string> = {
+const TABLE: Record<SupabaseCadastroResource, string> = { leads: "leads", applications: "applications" };
+
+const SELECT_COLUMNS: Record<SupabaseCadastroResource, string> = {
   leads: "id,created_at,nome,whatsapp,site,faturamento,solucao,extra",
-  newsletter: "id,created_at,email,pagina",
-  tool_downloads: "id,created_at,nome,email,empresa,cargo,tool_slug,tool_title",
   applications:
     "id,created_at,name,email,phone,linkedin,message,job_id,status,notes,resume_path,resume_url,jobs(title)",
 };
 
-export const CADASTRO_RESOURCES = Object.keys(TABLE) as CadastroResource[];
-
 function serializeApplication(row: any) {
   const { jobs, name, phone, message, ...rest } = row;
-  return {
-    ...rest,
-    nome: name,
-    telefone: phone,
-    mensagem: message,
-    job_title: jobs?.title ?? null,
-  };
+  return { ...rest, nome: name, telefone: phone, mensagem: message, job_title: jobs?.title ?? null };
 }
 
-export function serializeCadastro(resource: CadastroResource, row: any) {
+export function serializeCadastro(resource: SupabaseCadastroResource, row: any) {
   if (resource === "applications") return serializeApplication(row);
   return row;
 }
 
 // resume_url do manual é um link assinado, válido por 1h (o bucket "resumes"
 // é privado). Gera um novo a cada leitura a partir de resume_path.
-async function withSignedResume(db: SupabaseClient, resource: CadastroResource, rows: any[]) {
+async function withSignedResume(db: SupabaseClient, resource: SupabaseCadastroResource, rows: any[]) {
   if (resource !== "applications") return rows;
   await Promise.all(
     rows.map(async (r) => {
@@ -54,22 +42,16 @@ async function withSignedResume(db: SupabaseClient, resource: CadastroResource, 
 
 export async function listCadastro(
   db: SupabaseClient,
-  resource: CadastroResource,
+  resource: SupabaseCadastroResource,
   opts: { limit: number; offset: number; since: string | null; status: string | null }
 ) {
   if (opts.status && resource !== "applications") {
-    throw new ApiError(400, "Dados inválidos", {
-      formErrors: [],
-      fieldErrors: { status: ["O filtro status só existe para /applications."] },
-    });
+    throw new ApiError(400, "Dados inválidos", { formErrors: [], fieldErrors: { status: ["O filtro status só existe para /applications."] } });
   }
   if (opts.status) {
     const allowed = ["novo", "analise", "entrevista", "aprovado", "recusado"];
     if (!allowed.includes(opts.status)) {
-      throw new ApiError(400, "Dados inválidos", {
-        formErrors: [],
-        fieldErrors: { status: [`status deve ser um de: ${allowed.join(", ")}.`] },
-      });
+      throw new ApiError(400, "Dados inválidos", { formErrors: [], fieldErrors: { status: [`status deve ser um de: ${allowed.join(", ")}.`] } });
     }
   }
 
@@ -90,7 +72,7 @@ export async function listCadastro(
   return { data: rows, count: count ?? 0, limit: opts.limit, offset: opts.offset };
 }
 
-export async function getCadastro(db: SupabaseClient, resource: CadastroResource, id: string) {
+export async function getCadastro(db: SupabaseClient, resource: SupabaseCadastroResource, id: string) {
   const { data, error } = await db.from(TABLE[resource]).select(SELECT_COLUMNS[resource]).eq("id", id).maybeSingle();
   if (error) throw new ApiError(500, "Falha interna. Tente de novo.");
   if (!data) throw new ApiError(404, "Item não encontrado.");
@@ -99,10 +81,8 @@ export async function getCadastro(db: SupabaseClient, resource: CadastroResource
   return row;
 }
 
-const PATCH_MAP: Record<CadastroResource, (body: any) => Record<string, unknown>> = {
+const PATCH_MAP: Record<SupabaseCadastroResource, (body: any) => Record<string, unknown>> = {
   leads: (b) => b,
-  newsletter: (b) => b,
-  tool_downloads: (b) => b,
   applications: (b) => {
     const out: Record<string, unknown> = {};
     if ("status" in b) out.status = b.status;
@@ -115,22 +95,15 @@ const PATCH_MAP: Record<CadastroResource, (body: any) => Record<string, unknown>
   },
 };
 
-export async function patchCadastro(db: SupabaseClient, resource: CadastroResource, id: string, body: unknown) {
+export async function patchCadastro(db: SupabaseClient, resource: SupabaseCadastroResource, id: string, body: unknown) {
   const schema = cadastroPatchSchemas[resource];
   const parsed = schema.safeParse(body);
   if (!parsed.success) throw new ApiError(400, "Dados inválidos", parsed.error.flatten());
 
   const patch = PATCH_MAP[resource](parsed.data);
-  if (!Object.keys(patch).length) {
-    return getCadastro(db, resource, id);
-  }
+  if (!Object.keys(patch).length) return getCadastro(db, resource, id);
 
-  const { data, error } = await db
-    .from(TABLE[resource])
-    .update(patch)
-    .eq("id", id)
-    .select(SELECT_COLUMNS[resource])
-    .maybeSingle();
+  const { data, error } = await db.from(TABLE[resource]).update(patch).eq("id", id).select(SELECT_COLUMNS[resource]).maybeSingle();
   if (error) throw new ApiError(500, "Falha interna. Tente de novo.");
   if (!data) throw new ApiError(404, "Item não encontrado.");
   const row = serializeCadastro(resource, data);
@@ -138,12 +111,10 @@ export async function patchCadastro(db: SupabaseClient, resource: CadastroResour
   return row;
 }
 
-export async function deleteCadastro(db: SupabaseClient, resource: CadastroResource, id: string) {
+export async function deleteCadastro(db: SupabaseClient, resource: SupabaseCadastroResource, id: string) {
   if (resource === "applications") {
     const { data } = await db.from("applications").select("resume_path").eq("id", id).maybeSingle();
-    if (data?.resume_path) {
-      await db.storage.from("resumes").remove([data.resume_path as string]);
-    }
+    if (data?.resume_path) await db.storage.from("resumes").remove([data.resume_path as string]);
   }
   const { error, count } = await db.from(TABLE[resource]).delete({ count: "exact" }).eq("id", id);
   if (error) throw new ApiError(500, "Falha interna. Tente de novo.");

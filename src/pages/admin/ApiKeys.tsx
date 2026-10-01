@@ -24,20 +24,18 @@ type ApiKey = {
   revoked_at: string | null;
 };
 
-// gm_ + 40 caracteres hex, exatamente como o manual descreve. O navegador
-// gera a chave e calcula o hash (SHA-256) com a Web Crypto API; só o hash vai
-// pro banco — a chave em si nunca é salva em lugar nenhum, só mostrada uma vez.
-async function generateKey() {
-  const bytes = crypto.getRandomValues(new Uint8Array(20));
-  const hex = Array.from(bytes).map((b) => b.toString(16).padStart(2, "0")).join("");
-  const key = `gm_${hex}`;
-  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(key));
-  const hash = Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, "0")).join("");
-  return { key, hash, prefix: key.slice(0, 12) };
+// As chaves moram no Vercel Postgres (não no Supabase), então esta página
+// fala com /api/admin/api-keys em vez de supabase.from(...). O endpoint
+// confere a sessão do admin pelo token da própria sessão Supabase.
+async function authHeader() {
+  const { data } = await supabase.auth.getSession();
+  const token = data.session?.access_token;
+  if (!token) throw new Error("Sessão expirada. Entre de novo.");
+  return { Authorization: `Bearer ${token}` };
 }
 
 const ApiKeys = () => {
-  const { isSysadmin, user } = useAuth();
+  const { isSysadmin } = useAuth();
   const [rows, setRows] = useState<ApiKey[]>([]);
   const [loading, setLoading] = useState(true);
   const [hasLoaded, setHasLoaded] = useState(false);
@@ -50,12 +48,15 @@ const ApiKeys = () => {
   const load = async () => {
     if (!hasLoaded) setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from("api_keys" as any)
-        .select("id,name,key_prefix,created_at,last_used_at,revoked_at")
-        .order("created_at", { ascending: false });
-      if (error) toast.error(error.message);
-      setRows((data as unknown as ApiKey[]) ?? []);
+      const res = await fetch("/api/admin/api-keys", { headers: await authHeader() });
+      const json = await res.json();
+      if (!res.ok) {
+        toast.error(json.error || "Não deu pra carregar as chaves.");
+        return;
+      }
+      setRows(json.data ?? []);
+    } catch (e: any) {
+      toast.error(e.message || "Não deu pra carregar as chaves.");
     } finally {
       setHasLoaded(true);
       setLoading(false);
@@ -73,21 +74,22 @@ const ApiKeys = () => {
     }
     setCreating(true);
     try {
-      const { key, hash, prefix } = await generateKey();
-      const { error } = await supabase.from("api_keys" as any).insert({
-        name: newName.trim(),
-        key_prefix: prefix,
-        key_hash: hash,
-        created_by: user?.id ?? null,
-      } as any);
-      if (error) {
-        toast.error(error.message);
+      const res = await fetch("/api/admin/api-keys", {
+        method: "POST",
+        headers: { ...(await authHeader()), "Content-Type": "application/json" },
+        body: JSON.stringify({ name: newName.trim() }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        toast.error(json.error || "Não deu pra criar a chave.");
         return;
       }
       setCreateOpen(false);
       setNewName("");
-      setRevealKey(key);
+      setRevealKey(json.key);
       await load();
+    } catch (e: any) {
+      toast.error(e.message || "Não deu pra criar a chave.");
     } finally {
       setCreating(false);
     }
@@ -96,16 +98,20 @@ const ApiKeys = () => {
   const revoke = async (row: ApiKey) => {
     if (!confirm(`Desativar a chave "${row.name}"? Quem a usa perde o acesso na hora.`)) return;
     setBusyId(row.id);
-    const { error } = await supabase
-      .from("api_keys" as any)
-      .update({ revoked_at: new Date().toISOString() } as any)
-      .eq("id", row.id);
-    if (error) toast.error(error.message);
-    else {
+    try {
+      const res = await fetch(`/api/admin/api-keys?id=${row.id}`, { method: "PATCH", headers: await authHeader() });
+      const json = await res.json();
+      if (!res.ok) {
+        toast.error(json.error || "Não deu pra desativar a chave.");
+        return;
+      }
       toast.success("Chave desativada");
       await load();
+    } catch (e: any) {
+      toast.error(e.message || "Não deu pra desativar a chave.");
+    } finally {
+      setBusyId(null);
     }
-    setBusyId(null);
   };
 
   const copy = async (text: string) => {
@@ -177,12 +183,7 @@ const ApiKeys = () => {
                   </td>
                   <td className="p-3 text-right">
                     {!r.revoked_at && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        disabled={busyId === r.id}
-                        onClick={() => revoke(r)}
-                      >
+                      <Button variant="ghost" size="sm" disabled={busyId === r.id} onClick={() => revoke(r)}>
                         <Ban size={14} className="mr-1.5" /> Desativar
                       </Button>
                     )}

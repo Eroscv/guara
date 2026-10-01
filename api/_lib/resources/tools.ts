@@ -1,10 +1,13 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
+import { put, del } from "@vercel/blob";
+import { sql, assertPostgresConfigured } from "../db";
 import { ApiError } from "../errors";
 import { toolCreateSchema, toolPatchSchema } from "../schemas";
-import { resolveSlug } from "../slug";
+import { resolveToolSlug } from "../slug";
 import { validateImages } from "../images";
 
-const COLUMNS = "id,title,slug,description,category,image,benefits,published,file_name,file_path,file_url,file_content_type,archived,archived_at,created_at";
+const COLS =
+  "id,title,slug,description,category,image,benefits,published,file_name,file_url,file_content_type,archived,archived_at,created_at";
+
 const MAX_FILE_BYTES = 50 * 1024 * 1024;
 
 function base64Size(b64: string): number {
@@ -13,161 +16,172 @@ function base64Size(b64: string): number {
   return Math.floor((clean.length * 3) / 4) - padding;
 }
 
-async function uploadFile(db: SupabaseClient, slug: string, fileName: string, base64: string, contentType?: string) {
-  const size = base64Size(base64);
-  if (size > MAX_FILE_BYTES) {
-    throw new ApiError(422, "Arquivo maior que 50MB.", { field: "file_base64" });
+function assertBlobConfigured() {
+  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+    throw new ApiError(500, "Armazenamento de arquivos não configurado. Crie um Blob Store em Vercel → Storage e conecte ao projeto.");
   }
+}
+
+async function uploadFile(slug: string, fileName: string, base64: string, contentType?: string) {
+  assertBlobConfigured();
+  const size = base64Size(base64);
+  if (size > MAX_FILE_BYTES) throw new ApiError(422, "Arquivo maior que 50MB.", { field: "file_base64" });
   const clean = base64.replace(/^data:[^;]+;base64,/, "");
   const buffer = Buffer.from(clean, "base64");
-  const path = `${slug}/${Date.now()}-${fileName}`;
-  const { error } = await db.storage.from("tool-files").upload(path, buffer, {
+  const path = `tools/${slug}/${Date.now()}-${fileName}`;
+  const blob = await put(path, buffer, {
+    access: "public",
     contentType: contentType || "application/octet-stream",
-    upsert: false,
+    addRandomSuffix: false,
   });
-  if (error) throw new ApiError(500, "Falha ao salvar o arquivo. Tente de novo.");
-  return path;
+  return blob.url;
 }
 
-function publicFileUrl(db: SupabaseClient, path: string) {
-  const { data } = db.storage.from("tool-files").getPublicUrl(path);
-  return data.publicUrl;
-}
-
-function serialize(db: SupabaseClient, row: any) {
-  const { file_path, ...rest } = row;
-  return { ...rest, file_url: file_path ? publicFileUrl(db, file_path) : row.file_url };
-}
-
-export async function listTools(
-  db: SupabaseClient,
-  opts: { limit: number; offset: number; since: string | null; status: string | null; q: string | null; category: string | null }
-) {
-  let q = db.from("tools").select(COLUMNS, { count: "exact" }).order("created_at", { ascending: false }).range(opts.offset, opts.offset + opts.limit - 1);
-
-  if (opts.since) q = q.gte("created_at", opts.since);
-  if (opts.category) q = q.eq("category", opts.category);
-  if (opts.q) q = q.ilike("title", `%${opts.q}%`);
-
+export async function listTools(opts: {
+  limit: number;
+  offset: number;
+  since: string | null;
+  status: string | null;
+  q: string | null;
+  category: string | null;
+}) {
+  assertPostgresConfigured();
   if (opts.status) {
     const allowed = ["all", "active", "archived", "published", "draft"];
     if (!allowed.includes(opts.status)) {
       throw new ApiError(400, "Dados inválidos", { formErrors: [], fieldErrors: { status: [`status deve ser um de: ${allowed.join(", ")}.`] } });
     }
-    if (opts.status === "active") q = q.eq("archived", false);
-    else if (opts.status === "archived") q = q.eq("archived", true);
-    else if (opts.status === "published") q = q.eq("published", true).eq("archived", false);
-    else if (opts.status === "draft") q = q.eq("published", false).eq("archived", false);
   }
 
-  const { data, error, count } = await q;
-  if (error) throw new ApiError(500, "Falha interna. Tente de novo.");
-  return { data: (data || []).map((r) => serialize(db, r)), count: count ?? 0, limit: opts.limit, offset: opts.offset };
+  const conditions: string[] = [];
+  const params: unknown[] = [];
+  const push = (clause: string, val: unknown) => {
+    params.push(val);
+    conditions.push(clause.replace("$$", `$${params.length}`));
+  };
+  if (opts.since) push("created_at >= $$", opts.since);
+  if (opts.category) push("category = $$", opts.category);
+  if (opts.q) push("title ilike $$", `%${opts.q}%`);
+  if (opts.status === "active") conditions.push("archived = false");
+  else if (opts.status === "archived") conditions.push("archived = true");
+  else if (opts.status === "published") conditions.push("published = true and archived = false");
+  else if (opts.status === "draft") conditions.push("published = false and archived = false");
+
+  const where = conditions.length ? `where ${conditions.join(" and ")}` : "";
+  params.push(opts.limit, opts.offset);
+  const limitIdx = params.length - 1;
+  const offsetIdx = params.length;
+
+  const { rows } = await sql.query(
+    `select ${COLS} from tools ${where} order by created_at desc limit $${limitIdx} offset $${offsetIdx}`,
+    params
+  );
+  const { rows: countRows } = await sql.query(`select count(*)::int as n from tools ${where}`, params.slice(0, params.length - 2));
+
+  return { data: rows, count: countRows[0]?.n ?? 0, limit: opts.limit, offset: opts.offset };
 }
 
 function isUuid(v: string) {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v);
 }
 
-export async function getTool(db: SupabaseClient, idOrSlug: string) {
+export async function getTool(idOrSlug: string) {
+  assertPostgresConfigured();
   const col = isUuid(idOrSlug) ? "id" : "slug";
-  const { data, error } = await db.from("tools").select(COLUMNS).eq(col, idOrSlug).maybeSingle();
-  if (error) throw new ApiError(500, "Falha interna. Tente de novo.");
-  if (!data) throw new ApiError(404, "Ferramenta não encontrada.");
-  return serialize(db, data);
+  const { rows } = await sql.query(`select ${COLS} from tools where ${col} = $1 limit 1`, [idOrSlug]);
+  if (!rows[0]) throw new ApiError(404, "Ferramenta não encontrada.");
+  return rows[0];
 }
 
-export async function createTool(db: SupabaseClient, body: unknown, siteHost: string | null) {
+export async function createTool(body: unknown, siteHost: string | null) {
+  assertPostgresConfigured();
   const parsed = toolCreateSchema.safeParse(body);
   if (!parsed.success) throw new ApiError(400, "Dados inválidos", parsed.error.flatten());
   const b = parsed.data;
 
   if (b.image) await validateImages([{ field: "image", url: b.image }], siteHost);
 
-  const slug = await resolveSlug(db, "tools", b.title, b.slug);
+  const slug = await resolveToolSlug(b.title, b.slug);
 
-  let filePath: string | null = null;
+  let fileUrl = b.file_url ?? null;
   if (b.file_base64) {
     if (!b.file_name) {
       throw new ApiError(400, "Dados inválidos", { formErrors: [], fieldErrors: { file_name: ["Obrigatório junto com file_base64."] } });
     }
-    filePath = await uploadFile(db, slug, b.file_name, b.file_base64, b.file_content_type);
+    fileUrl = await uploadFile(slug, b.file_name, b.file_base64, b.file_content_type);
   }
 
-  const row: Record<string, unknown> = {
-    title: b.title,
-    slug,
-    description: b.description ?? "",
-    category: b.category ?? "",
-    image: b.image ?? null,
-    benefits: b.benefits ?? [],
-    published: b.published ?? false,
-    file_name: b.file_name ?? null,
-    file_path: filePath,
-    file_url: filePath ? null : b.file_url ?? null,
-    file_content_type: b.file_content_type ?? null,
-  };
-
-  const { data, error } = await db.from("tools").insert(row).select(COLUMNS).single();
-  if (error) throw new ApiError(500, "Falha interna. Tente de novo.");
-  return serialize(db, data);
+  const { rows } = await sql`
+    insert into tools (title, slug, description, category, image, benefits, published, file_name, file_url, file_content_type)
+    values (${b.title}, ${slug}, ${b.description ?? ""}, ${b.category ?? ""}, ${b.image ?? null},
+            ${(b.benefits ?? []) as any}, ${b.published ?? false}, ${b.file_name ?? null}, ${fileUrl}, ${b.file_content_type ?? null})
+    returning id,title,slug,description,category,image,benefits,published,file_name,file_url,file_content_type,archived,archived_at,created_at
+  `;
+  return rows[0];
 }
 
-export async function patchTool(db: SupabaseClient, id: string, body: unknown, siteHost: string | null) {
+export async function patchTool(id: string, body: unknown, siteHost: string | null) {
+  assertPostgresConfigured();
   const parsed = toolPatchSchema.safeParse(body);
   if (!parsed.success) throw new ApiError(400, "Dados inválidos", parsed.error.flatten());
   const b = parsed.data;
 
-  const { data: current, error: findErr } = await db.from("tools").select(COLUMNS).eq("id", id).maybeSingle();
-  if (findErr) throw new ApiError(500, "Falha interna. Tente de novo.");
+  const { rows: currentRows } = await sql`select * from tools where id = ${id} limit 1`;
+  const current = currentRows[0];
   if (!current) throw new ApiError(404, "Ferramenta não encontrada.");
 
   if (b.image) await validateImages([{ field: "image", url: b.image }], siteHost);
 
-  const patch: Record<string, unknown> = {};
-  if (b.title !== undefined) patch.title = b.title;
-  if (b.description !== undefined) patch.description = b.description;
-  if (b.category !== undefined) patch.category = b.category;
-  if (b.image !== undefined) patch.image = b.image;
-  if (b.benefits !== undefined) patch.benefits = b.benefits;
-  if (b.published !== undefined) patch.published = b.published;
-  if (b.archived !== undefined) {
-    patch.archived = b.archived;
-    patch.archived_at = b.archived ? new Date().toISOString() : null;
-  }
-  if (b.slug !== undefined) {
-    patch.slug = await resolveSlug(db, "tools", b.title ?? current.title, b.slug, id);
-  }
+  let slug = current.slug;
+  if (b.slug !== undefined) slug = await resolveToolSlug(b.title ?? current.title, b.slug, id);
+
+  let fileUrl = current.file_url;
+  let fileName = current.file_name;
   if (b.file_base64) {
-    const fileName = b.file_name ?? current.file_name;
+    fileName = b.file_name ?? current.file_name;
     if (!fileName) {
       throw new ApiError(400, "Dados inválidos", { formErrors: [], fieldErrors: { file_name: ["Obrigatório junto com file_base64."] } });
     }
-    patch.file_path = await uploadFile(db, (patch.slug as string) ?? current.slug, fileName, b.file_base64, b.file_content_type);
-    patch.file_name = fileName;
-    patch.file_url = null;
+    fileUrl = await uploadFile(slug, fileName, b.file_base64, b.file_content_type);
   } else if (b.file_url !== undefined) {
-    patch.file_url = b.file_url;
-    patch.file_path = null;
-    if (b.file_name !== undefined) patch.file_name = b.file_name;
+    fileUrl = b.file_url;
+    if (b.file_name !== undefined) fileName = b.file_name;
   } else if (b.file_name !== undefined) {
-    patch.file_name = b.file_name;
+    fileName = b.file_name;
   }
-  if (b.file_content_type !== undefined) patch.file_content_type = b.file_content_type;
 
-  if (!Object.keys(patch).length) return serialize(db, current);
+  const archived = b.archived ?? current.archived;
+  const archivedAt = b.archived !== undefined ? (b.archived ? new Date().toISOString() : null) : current.archived_at;
 
-  const { data, error } = await db.from("tools").update(patch).eq("id", id).select(COLUMNS).maybeSingle();
-  if (error) throw new ApiError(500, "Falha interna. Tente de novo.");
-  if (!data) throw new ApiError(404, "Ferramenta não encontrada.");
-  return serialize(db, data);
+  const { rows } = await sql`
+    update tools set
+      title = ${b.title ?? current.title},
+      slug = ${slug},
+      description = ${b.description ?? current.description},
+      category = ${b.category ?? current.category},
+      image = ${b.image ?? current.image},
+      benefits = ${(b.benefits ?? current.benefits) as any},
+      published = ${b.published ?? current.published},
+      file_name = ${fileName},
+      file_url = ${fileUrl},
+      file_content_type = ${b.file_content_type ?? current.file_content_type},
+      archived = ${archived},
+      archived_at = ${archivedAt},
+      updated_at = now()
+    where id = ${id}
+    returning id,title,slug,description,category,image,benefits,published,file_name,file_url,file_content_type,archived,archived_at,created_at
+  `;
+  return rows[0];
 }
 
-export async function deleteTool(db: SupabaseClient, id: string) {
-  const { data } = await db.from("tools").select("file_path").eq("id", id).maybeSingle();
-  if (data?.file_path) await db.storage.from("tool-files").remove([data.file_path as string]);
-  const { error, count } = await db.from("tools").delete({ count: "exact" }).eq("id", id);
-  if (error) throw new ApiError(500, "Falha interna. Tente de novo.");
-  if (!count) throw new ApiError(404, "Ferramenta não encontrada.");
+export async function deleteTool(id: string) {
+  assertPostgresConfigured();
+  const { rows } = await sql`select file_url from tools where id = ${id} limit 1`;
+  const fileUrl = rows[0]?.file_url as string | undefined;
+  if (fileUrl && fileUrl.includes(".public.blob.vercel-storage.com/")) {
+    await del(fileUrl).catch(() => {});
+  }
+  const { rowCount } = await sql`delete from tools where id = ${id}`;
+  if (!rowCount) throw new ApiError(404, "Ferramenta não encontrada.");
   return { deleted: id };
 }

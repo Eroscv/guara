@@ -1,6 +1,6 @@
 import type { VercelRequest } from "@vercel/node";
 import { createHash } from "node:crypto";
-import { getSupabaseAdmin } from "./supabaseAdmin";
+import { sql, assertPostgresConfigured } from "./db";
 import { ApiError } from "./errors";
 
 function hashKey(key: string) {
@@ -17,30 +17,26 @@ export function extractBearer(req: VercelRequest): string | null {
   return null;
 }
 
-// Confere a chave Bearer/x-api-key contra api_keys (hash, não revogada) e
-// atualiza last_used_at. Lança ApiError(401) se faltar, for inválida ou tiver
-// sido desativada.
+// Confere a chave Bearer/x-api-key contra api_keys no Vercel Postgres
+// (hash, não revogada) e atualiza last_used_at. Lança ApiError(401) se
+// faltar, for inválida ou tiver sido desativada.
 export async function requireApiKey(req: VercelRequest): Promise<{ id: string; name: string }> {
   const key = extractBearer(req);
   if (!key || !key.startsWith("gm_")) {
     throw new ApiError(401, "Chave ausente, inválida ou desativada.");
   }
-  const admin = getSupabaseAdmin();
+  assertPostgresConfigured();
   const hash = hashKey(key);
-  const { data, error } = (await admin
-    .from("api_keys")
-    .select("id,name,revoked_at")
-    .eq("key_hash", hash)
-    .maybeSingle()) as { data: { id: string; name: string; revoked_at: string | null } | null; error: unknown };
 
-  if (error || !data || data.revoked_at) {
+  const { rows } = await sql<{ id: string; name: string; revoked_at: string | null }>`
+    select id, name, revoked_at from api_keys where key_hash = ${hash} limit 1
+  `;
+  const row = rows[0];
+  if (!row || row.revoked_at) {
     throw new ApiError(401, "Chave ausente, inválida ou desativada.");
   }
 
-  (admin.from("api_keys") as any)
-    .update({ last_used_at: new Date().toISOString() })
-    .eq("id", data.id)
-    .then(() => {});
+  sql`update api_keys set last_used_at = now() where id = ${row.id}`.catch(() => {});
 
-  return { id: data.id, name: data.name };
+  return { id: row.id, name: row.name };
 }

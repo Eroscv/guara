@@ -1,7 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { ApiError } from "../errors";
 import { postCreateSchema, postPatchSchema } from "../schemas";
-import { resolveSlug } from "../slug";
+import { resolvePostSlug } from "../slug";
 import { estimateReadingTime } from "../readingTime";
 import { extractContentImages, validateImages } from "../images";
 
@@ -76,7 +76,7 @@ export async function createPost(db: SupabaseClient, body: unknown, siteHost: st
     siteHost
   );
 
-  const slug = await resolveSlug(db, "posts", b.title, b.slug);
+  const slug = await resolvePostSlug(db, b.title, b.slug);
   const scheduledAt = b.published_at ? new Date(b.published_at).toISOString() : null;
   const publishedDate = b.published_at ? b.published_at.slice(0, 10) : undefined;
 
@@ -139,7 +139,7 @@ export async function patchPost(db: SupabaseClient, id: string, body: unknown, s
     patch.archived_at = b.archived ? new Date().toISOString() : null;
   }
   if (b.slug !== undefined) {
-    patch.slug = await resolveSlug(db, "posts", b.title ?? current.title, b.slug, id);
+    patch.slug = await resolvePostSlug(db, b.title ?? current.title, b.slug, id);
   }
 
   if (!Object.keys(patch).length) return serialize(current);
