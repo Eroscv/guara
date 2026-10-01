@@ -17,6 +17,10 @@ import { createPost, deletePost, getPost, listPosts, patchPost } from "../../_li
 import { createJob, deleteJob, getJob, listJobs, patchJob } from "../../_lib/resources/jobs";
 import { createTool, deleteTool, getTool, listTools, patchTool } from "../../_lib/resources/tools";
 import { getSummary } from "../../_lib/resources/summary";
+import { proxyRequest, upstreamConfig } from "../../_lib/upstream";
+
+// A API de origem fica atrás de um túnel e pode demorar; o padrão de 10s é curto.
+export const config = { maxDuration: 30 };
 
 // Manual: Guara-API-manual.pdf.
 // leads/applications/posts/jobs continuam no Supabase (é onde o site e o
@@ -76,6 +80,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const siteHost = siteHostFrom(req);
 
     if (!first) throw new ApiError(404, "Endereço ou item não encontrado.");
+
+    // Modo upstream: com GUARA_API_UPSTREAM definida, a API oficial é o servidor
+    // externo da Guará e esta função só autentica a chave gm_..., repassa e
+    // traduz pro formato do manual (api/_lib/upstream.ts). Sem a variável,
+    // segue a implementação nativa abaixo (Supabase + Vercel Postgres).
+    const upstream = upstreamConfig();
+    if (upstream) {
+      await proxyRequest(res, upstream, { method, segments, qs, getBody: () => getBody(req) });
+      return;
+    }
 
     // ---- /summary ----
     if (first === "summary" && method === "GET") {
