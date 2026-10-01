@@ -1,9 +1,9 @@
 import { put, del } from "@vercel/blob";
-import { sql, assertPostgresConfigured } from "../db";
-import { ApiError } from "../errors";
-import { toolCreateSchema, toolPatchSchema } from "../schemas";
-import { resolveToolSlug } from "../slug";
-import { validateImages } from "../images";
+import { sql, assertPostgresConfigured } from "../db.js";
+import { ApiError } from "../errors.js";
+import { toolCreateSchema, toolPatchSchema } from "../schemas.js";
+import { resolveToolSlug } from "../slug.js";
+import { validateImages } from "../images.js";
 
 const COLS =
   "id,title,slug,description,category,image,benefits,published,file_name,file_url,file_content_type,archived,archived_at,created_at";

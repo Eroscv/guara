@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { ApiError } from "../errors";
-import { cadastroPatchSchemas } from "../schemas";
+import { ApiError } from "../errors.js";
+import { cadastroPatchSchemas } from "../schemas.js";
 
 // leads e applications: formulários que já existem no site, dados que já
 // vivem no Supabase (o site e o admin continuam lendo/escrevendo aqui

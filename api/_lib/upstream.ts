@@ -1,5 +1,5 @@
 import type { VercelResponse } from "@vercel/node";
-import { ApiError } from "./errors";
+import { ApiError } from "./errors.js";
 
 // ===================================================================
 // Modo "upstream": /api/public/v1 repassa as chamadas pra API externa da

@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { ApiError } from "../errors";
-import { jobCreateSchema, jobPatchSchema } from "../schemas";
+import { ApiError } from "../errors.js";
+import { jobCreateSchema, jobPatchSchema } from "../schemas.js";
 
 const COLUMNS = "id,title,department,location,work_model,description,responsibilities,requirements,status,is_open,scheduled_at,archived,archived_at,created_at";
 

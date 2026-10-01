@@ -6,8 +6,8 @@ import type { AddressInfo } from "node:net";
 // A chave do cliente é conferida no Postgres; aqui ela é simulada pra o teste rodar sem banco.
 vi.mock("../auth", () => ({ requireApiKey: async () => ({ id: "teste", name: "teste" }) }));
 
-import { mapRoute, validateListQuery, normalizeError, normalizeItem, normalizeSummary, upstreamConfig } from "../upstream";
-import handler from "../../public/v1/[...route]";
+import { mapRoute, validateListQuery, normalizeError, normalizeItem, normalizeSummary, upstreamConfig } from "../upstream.js";
+import handler from "../../public/v1/[...route].js";
 
 const ok = (fn: () => unknown) => fn();
 const err = (fn: () => unknown) => {

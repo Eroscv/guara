@@ -1,9 +1,9 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { getSupabaseAdmin } from "../../_lib/supabaseAdmin";
-import { requireApiKey } from "../../_lib/auth";
-import { ApiError, handleCaught, sendError } from "../../_lib/errors";
-import { parsePagination, parseQuery } from "../../_lib/pagination";
-import { getBody, siteHostFrom } from "../../_lib/http";
+import { getSupabaseAdmin } from "../../_lib/supabaseAdmin.js";
+import { requireApiKey } from "../../_lib/auth.js";
+import { ApiError, handleCaught, sendError } from "../../_lib/errors.js";
+import { parsePagination, parseQuery } from "../../_lib/pagination.js";
+import { getBody, siteHostFrom } from "../../_lib/http.js";
 import {
   SUPABASE_CADASTRO_RESOURCES,
   deleteCadastro,
@@ -11,14 +11,14 @@ import {
   listCadastro,
   patchCadastro,
   type SupabaseCadastroResource,
-} from "../../_lib/resources/cadastros";
-import { deleteNewsletter, getNewsletter, listNewsletter, patchNewsletter } from "../../_lib/resources/newsletter";
-import { deleteToolDownload, getToolDownload, listToolDownloads, patchToolDownload } from "../../_lib/resources/toolDownloads";
-import { createPost, deletePost, getPost, listPosts, patchPost } from "../../_lib/resources/posts";
-import { createJob, deleteJob, getJob, listJobs, patchJob } from "../../_lib/resources/jobs";
-import { createTool, deleteTool, getTool, listTools, patchTool } from "../../_lib/resources/tools";
-import { getSummary } from "../../_lib/resources/summary";
-import { proxyRequest, upstreamConfig } from "../../_lib/upstream";
+} from "../../_lib/resources/cadastros.js";
+import { deleteNewsletter, getNewsletter, listNewsletter, patchNewsletter } from "../../_lib/resources/newsletter.js";
+import { deleteToolDownload, getToolDownload, listToolDownloads, patchToolDownload } from "../../_lib/resources/toolDownloads.js";
+import { createPost, deletePost, getPost, listPosts, patchPost } from "../../_lib/resources/posts.js";
+import { createJob, deleteJob, getJob, listJobs, patchJob } from "../../_lib/resources/jobs.js";
+import { createTool, deleteTool, getTool, listTools, patchTool } from "../../_lib/resources/tools.js";
+import { getSummary } from "../../_lib/resources/summary.js";
+import { proxyRequest, upstreamConfig } from "../../_lib/upstream.js";
 
 // A API de origem fica atrás de um túnel e pode demorar; o padrão de 10s é curto.
 export const config = { maxDuration: 30 };

@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { sql } from "./db";
-import { ApiError } from "./errors";
+import { sql } from "./db.js";
+import { ApiError } from "./errors.js";
 
 export function slugify(input: string): string {
   return (

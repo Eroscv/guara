@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { randomBytes, createHash } from "node:crypto";
-import { sql, assertPostgresConfigured } from "../_lib/db";
-import { requireAdmin } from "../_lib/requireAdmin";
-import { ApiError, handleCaught } from "../_lib/errors";
+import { sql, assertPostgresConfigured } from "../_lib/db.js";
+import { requireAdmin } from "../_lib/requireAdmin.js";
+import { ApiError, handleCaught } from "../_lib/errors.js";
 
 function cors(res: VercelResponse) {
   res.setHeader("Access-Control-Allow-Origin", "*");

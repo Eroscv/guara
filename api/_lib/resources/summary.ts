@@ -1,5 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { sql } from "../db";
+import { sql } from "../db.js";
 
 async function countSinceSupabase(db: SupabaseClient, table: string, sinceIso: string) {
   const { count } = await db.from(table).select("id", { count: "exact", head: true });

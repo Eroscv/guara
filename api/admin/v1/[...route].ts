@@ -1,12 +1,12 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { sql, assertPostgresConfigured } from "../../_lib/db";
-import { requireAdmin } from "../../_lib/requireAdmin";
-import { ApiError, handleCaught } from "../../_lib/errors";
-import { parsePagination, parseQuery } from "../../_lib/pagination";
-import { getBody, siteHostFrom } from "../../_lib/http";
-import { deleteNewsletter, listNewsletter } from "../../_lib/resources/newsletter";
-import { deleteToolDownload, listToolDownloads } from "../../_lib/resources/toolDownloads";
-import { createTool, deleteTool, getTool, listTools, patchTool } from "../../_lib/resources/tools";
+import { sql, assertPostgresConfigured } from "../../_lib/db.js";
+import { requireAdmin } from "../../_lib/requireAdmin.js";
+import { ApiError, handleCaught } from "../../_lib/errors.js";
+import { parsePagination, parseQuery } from "../../_lib/pagination.js";
+import { getBody, siteHostFrom } from "../../_lib/http.js";
+import { deleteNewsletter, listNewsletter } from "../../_lib/resources/newsletter.js";
+import { deleteToolDownload, listToolDownloads } from "../../_lib/resources/toolDownloads.js";
+import { createTool, deleteTool, getTool, listTools, patchTool } from "../../_lib/resources/tools.js";
 
 export const config = { maxDuration: 30 };
 

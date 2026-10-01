@@ -1,9 +1,9 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { ApiError } from "../errors";
-import { postCreateSchema, postPatchSchema } from "../schemas";
-import { resolvePostSlug } from "../slug";
-import { estimateReadingTime } from "../readingTime";
-import { extractContentImages, validateImages } from "../images";
+import { ApiError } from "../errors.js";
+import { postCreateSchema, postPatchSchema } from "../schemas.js";
+import { resolvePostSlug } from "../slug.js";
+import { estimateReadingTime } from "../readingTime.js";
+import { extractContentImages, validateImages } from "../images.js";
 
 const COLUMNS = "id,title,slug,excerpt,content,cover_image,category,tags,author,status,published_at,scheduled_at,reading_time,images,archived,archived_at,created_at";
 

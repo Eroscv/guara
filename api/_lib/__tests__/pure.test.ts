@@ -1,8 +1,8 @@
 // @vitest-environment node
 import { describe, it, expect } from "vitest";
-import { slugify } from "../slug";
-import { estimateReadingTime } from "../readingTime";
-import { extractContentImages } from "../images";
+import { slugify } from "../slug.js";
+import { estimateReadingTime } from "../readingTime.js";
+import { extractContentImages } from "../images.js";
 
 describe("slugify", () => {
   it("remove acentos e vira kebab-case", () => {

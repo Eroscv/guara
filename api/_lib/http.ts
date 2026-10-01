@@ -1,5 +1,5 @@
 import type { VercelRequest } from "@vercel/node";
-import { ApiError } from "./errors";
+import { ApiError } from "./errors.js";
 
 // Corpo JSON da requisição: a Vercel já entrega parseado, mas aceita string
 // (e devolve 400 no formato do manual se vier JSON quebrado).

@@ -1,6 +1,6 @@
-import { sql, assertPostgresConfigured } from "../db";
-import { ApiError } from "../errors";
-import { cadastroPatchSchemas } from "../schemas";
+import { sql, assertPostgresConfigured } from "../db.js";
+import { ApiError } from "../errors.js";
+import { cadastroPatchSchemas } from "../schemas.js";
 
 export async function listNewsletter(opts: { limit: number; offset: number; since: string | null }) {
   assertPostgresConfigured();

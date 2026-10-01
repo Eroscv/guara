@@ -1,8 +1,8 @@
 // @vitest-environment node
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { createHash, randomBytes } from "node:crypto";
-import { sql } from "../db";
-import handler from "../../public/v1/[...route]";
+import { sql } from "../db.js";
+import handler from "../../public/v1/[...route].js";
 
 const KEY = `gm_${randomBytes(20).toString("hex")}`;
 const HASH = createHash("sha256").update(KEY).digest("hex");

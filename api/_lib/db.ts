@@ -1,5 +1,5 @@
 import { sql } from "@vercel/postgres";
-import { ApiError } from "./errors";
+import { ApiError } from "./errors.js";
 
 // Vercel injeta POSTGRES_URL sozinho assim que o banco (Storage → Postgres)
 // é conectado ao projeto — não precisa copiar/colar nada em Environment

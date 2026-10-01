@@ -34,9 +34,9 @@ vi.mock("../resources/tools", () => ({
   deleteTool: vi.fn(async (id: string) => ({ deleted: id })),
 }));
 
-import handler from "../../admin/v1/[...route]";
-import { sql } from "../db";
-import { listTools } from "../resources/tools";
+import handler from "../../admin/v1/[...route].js";
+import { sql } from "../db.js";
+import { listTools } from "../resources/tools.js";
 
 type Call = { method?: string; route?: string[]; url?: string; auth?: string | null; body?: unknown };
 

@@ -1,4 +1,4 @@
-import { ApiError } from "./errors";
+import { ApiError } from "./errors.js";
 
 const ALLOWED_EXT = ["jpg", "jpeg", "png", "webp", "gif", "avif"];
 const MAX_BYTES = 15 * 1024 * 1024;

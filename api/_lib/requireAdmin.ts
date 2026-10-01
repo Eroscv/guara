@@ -1,6 +1,6 @@
 import type { VercelRequest } from "@vercel/node";
 import { createClient } from "@supabase/supabase-js";
-import { ApiError } from "./errors";
+import { ApiError } from "./errors.js";
 
 const SUPABASE_URL = process.env.SUPABASE_URL || "https://cmbxrmtncrfhdcpbjxtx.supabase.co";
 // Mesma chave pública usada no navegador (src/integrations/supabase/client.ts) — não é

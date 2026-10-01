@@ -1,5 +1,5 @@
 import type { VercelRequest } from "@vercel/node";
-import { ApiError } from "./errors";
+import { ApiError } from "./errors.js";
 
 export function parseQuery(req: VercelRequest): URLSearchParams {
   const url = new URL(req.url || "", "http://localhost");

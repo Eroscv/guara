@@ -1,7 +1,7 @@
 import type { VercelRequest } from "@vercel/node";
 import { createHash } from "node:crypto";
-import { sql, assertPostgresConfigured } from "./db";
-import { ApiError } from "./errors";
+import { sql, assertPostgresConfigured } from "./db.js";
+import { ApiError } from "./errors.js";
 
 function hashKey(key: string) {
   return createHash("sha256").update(key).digest("hex");
