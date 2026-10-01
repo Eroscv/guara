@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Talentos | Guará Media</title>
+<meta name="description" content="Vagas abertas na Guará Media, startup-agência nascida na Unicamp. Marketing, performance, design, dados e tecnologia.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#fcf3e4">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="sub.css">
+</head>
+<body>
+<script>document.documentElement.classList.add('js')</script>
+
+<header class="nav" id="nav">
+  <a class="brand" href="index.html" aria-label="Guará Media, início"><img src="assets/logo-guara.png" alt="Guará Media" width="145" height="34"></a>
+  <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Abrir menu"><span></span><span></span><span></span></button>
+  <nav class="nav-links" id="navLinks" aria-label="Principal">
+    <a class="link" href="index.html">Home</a>
+    <a class="link" href="blog.html">Blog</a>
+    <a class="link" href="ferramentas.html">Ferramentas</a>
+    <a class="link" href="talentos.html" aria-current="page">Talentos</a>
+    <a class="link" href="artigos.html">Artigos</a>
+    <a class="cta-pill" href="index.html#formulario">Fale com a Guará</a>
+    <img class="nav-guara" src="assets/guara-tilt-head.webp" alt="" width="937" height="1000" loading="lazy" aria-hidden="true">
+  </nav>
+</header>
+
+<main>
+  <section class="pg-hero talent-hero" data-theme="hero">
+    <div class="wrap">
+      <div>
+        <h1>Corre com a gente, <em>sem bater</em> na parede.</h1>
+        <p class="lead">A Guará nasceu na Unicamp, feita por engenheiros que acham que marketing tem que dar resultado mensurável. Se você quer trabalhar onde velocidade e qualidade não brigam, olha as vagas.</p>
+      </div>
+    </div>
+    <div class="run" aria-hidden="true">
+      <img class="runner" src="assets/guara-pulando.webp" alt="" width="1000" height="503">
+      <svg class="ground" viewBox="0 0 1440 28" preserveAspectRatio="none"><path d="M-10,14 Q60,11 130,15 Q220,19 300,13 Q390,9 470,15 Q560,20 640,14 Q730,10 810,15 Q900,19 980,13 Q1070,9 1150,15 Q1240,20 1320,14 Q1400,11 1460,15" fill="none" stroke="#ff6319" stroke-width="5" stroke-linecap="round"/></svg>
+    </div>
+  </section>
+
+  <section class="sec" data-theme="light" style="padding-top:clamp(24px,4vh,40px)">
+    <div class="wrap">
+      <div class="panel dark jobs-panel rv" id="vagas" data-theme="dark">
+        <div class="head">
+          <div>
+            <h2 class="caps">Vagas abertas <span class="count" id="jobCount" hidden></span></h2>
+            <p>Presencial no Parque Científico da Unicamp, em Campinas, ou remoto, conforme a vaga.</p>
+          </div>
+          <div class="guara" aria-hidden="true"><img src="assets/guara-arco.webp" alt="" width="1000" height="568" loading="lazy"></div>
+        </div>
+        <div class="filters" style="padding-top:0">
+          <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input type="search" id="q" placeholder="Buscar por cargo, área ou cidade" aria-label="Buscar vagas"></label>
+        </div>
+        <div class="sk rows" id="sk" aria-busy="true" aria-label="Carregando vagas"><div></div><div></div><div></div></div>
+        <div class="empty dark" id="state" hidden><img src="assets/guara-olhando-tras.webp" alt="" width="1000" height="715"><p id="stateMsg"></p></div>
+        <div class="jobs" id="jobs"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" data-theme="light" style="padding-top:0">
+    <div class="wrap">
+      <h2 class="caps sec-title">Como funciona o processo</h2>
+      <ol class="steps">
+        <li><span class="n">1</span><h3>Candidatura</h3><p>Formulário com currículo, direto na vaga. Respondemos em até 24h úteis.</p></li>
+        <li><span class="n">2</span><h3>Conversa</h3><p>Trinta minutos com quem vai trabalhar com você no dia a dia. Sem roteiro de RH.</p></li>
+        <li><span class="n">3</span><h3>Case</h3><p>Um problema real da Guará pra resolver em 7 dias e apresentar ao vivo em 15 minutos.</p></li>
+        <li><span class="n">4</span><h3>Proposta</h3><p>Se fizer sentido pros dois lados, chega a proposta com data de início.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec" data-theme="light" style="padding-top:0">
+    <div class="wrap">
+      <h2 class="caps sec-title">Como a gente trabalha</h2>
+      <div class="values">
+        <div class="value rv"><img class="mini" src="assets/guara-arco.webp" alt="" loading="lazy"><div><h3>Resultado é o critério</h3><p>Toda entrega tem um número atrás. Se não dá pra medir, a gente pergunta por que está fazendo.</p></div></div>
+        <div class="value rv"><img class="mini" src="assets/guara-tilt-head.webp" alt="" loading="lazy"><div><h3>Humano e máquina</h3><p>IA faz o volume, gente faz a direção. Você vai pilotar ferramenta, não competir com ela.</p></div></div>
+        <div class="value rv"><img class="mini" src="assets/guara-em-pe.webp" alt="" loading="lazy"><div><h3>Teste antes de opinar</h3><p>Discussão boa é a que termina com um experimento. Método próprio, hipótese clara, resultado na semana seguinte.</p></div></div>
+        <div class="value rv"><img class="mini" src="assets/guara-sentado.webp" alt="" loading="lazy"><div><h3>Dentro da universidade</h3><p>Escritório no Parque Científico da Unicamp. Pesquisa e mercado na mesma mesa, literalmente.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" data-theme="light" style="padding-top:0">
+    <div class="wrap">
+      <div class="panel dark manifesto rv" data-theme="dark">
+        <div>
+          <h2 class="caps" style="margin-bottom:.6em">Não achou a sua vaga?</h2>
+          <p style="color:rgba(255,246,228,.85)">Manda o que você faz de melhor e onde quer chegar. A gente guarda e chama quando abrir algo que faça sentido.</p>
+          <button type="button" class="cta-pill" id="bankBtn" style="margin-top:1.4em">Entrar no banco de talentos</button>
+        </div>
+        <div class="guara" aria-hidden="true"><img src="assets/guara-olhando-tras.webp" alt="" width="1000" height="715" loading="lazy"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<dialog class="modal" id="bankModal" aria-labelledby="bankTitle">
+  <div class="dcard modal-card">
+    <button type="button" class="modal-x" id="bankClose" aria-label="Fechar">×</button>
+    <div class="modal-head">
+      <div>
+        <span class="modal-kicker">Sem vaga aberta na sua área?</span>
+        <h2 class="caps" id="bankTitle">Entra no banco de talentos</h2>
+        <p>Deixa seu contato e o currículo. Quando abrir algo que combine, a gente chama primeiro quem já está aqui.</p>
+      </div>
+      <img class="modal-guara" src="assets/guara-olhando-tras.webp" alt="" width="1000" height="715" aria-hidden="true">
+    </div>
+    <div id="bankBox"></div>
+  </div>
+</dialog>
+
+<footer class="contato" id="contato" data-theme="dark">
+  <div class="contato-inner">
+    <h2>Pronto pra acelerar sem bater na parede?</h2>
+    <a class="cta-pill" href="index.html#formulario">Fale com a Guará</a>
+  </div>
+  <div class="foot">
+    <img src="assets/logo-guara.png" alt="Guará Media" width="128" height="30">
+    <nav aria-label="Rodapé"><a href="index.html">Home</a><a href="blog.html">Blog</a><a href="ferramentas.html">Ferramentas</a><a href="talentos.html">Talentos</a><a href="artigos.html">Artigos</a></nav>
+    <p>Parque Científico e Tecnológico da Unicamp<br>Campinas, SP<small>© 2026 Guará Media</small></p>
+  </div>
+</footer>
+
+<script src="sub.js"></script>
+<script>
+(function(){
+  const {sb,esc,I}=G;
+  let jobs=[],q='';
+  const st=document.getElementById('state'),box=document.getElementById('jobs');
+  const cls=wm=>(wm||'').normalize('NFD').replace(/[^a-z]/gi,'').toLowerCase();
+  const wmLabel=wm=>{const w=(wm||'').trim();return w?w[0].toUpperCase()+w.slice(1).toLowerCase():''};
+  const sk=document.getElementById('sk');
+  function render(){
+    const s=q.toLowerCase();
+    const f=jobs.filter(j=>!s||j.title.toLowerCase().includes(s)||(j.department||'').toLowerCase().includes(s)||(j.location||'').toLowerCase().includes(s));
+    const c=document.getElementById('jobCount');c.hidden=!jobs.length;c.textContent=jobs.length;
+    st.hidden=f.length>0; document.getElementById('stateMsg').textContent=jobs.length?'Nenhuma vaga com essa busca.':'Nenhuma vaga aberta agora. Deixa seu contato no banco de talentos aí embaixo.';
+    box.innerHTML=f.map(j=>{const wm=j.work_model||'';return `<a class="job" href="vaga.html?id=${esc(j.id)}"><div><h3>${esc(j.title)}</h3><div class="meta"><span>${I.brief} ${esc(j.department)}</span><span>${I.pin} ${esc(j.location)}</span></div></div><div class="job-side"><span class="badge ${cls(wm)}">${esc(wmLabel(wm))}</span><span class="arrow">${I.arrow}</span></div></a>`;}).join('');
+  }
+  let bank=null;
+  sb('jobs?select=id,title,department,location,work_model&is_open=eq.true&order=created_at.desc').then(d=>{sk.remove();bank=d.find(G.isTalentBank)||null;jobs=d.filter(j=>!G.isTalentBank(j));render();}).catch(()=>{sk.remove();st.hidden=false;document.getElementById('stateMsg').textContent='Não deu pra carregar as vagas agora. Recarregue a página pra tentar de novo.';});
+  document.getElementById('q').addEventListener('input',e=>{q=e.target.value;render();});
+  // Banco de talentos: modal com o mesmo formulário da vaga, apontando pra vaga fixa "Banco de talentos"
+  const modal=document.getElementById('bankModal');
+  G.mountApply(document.getElementById('bankBox'),{job:()=>bank,area:true,placeholder:'O que você faz de melhor e onde quer chegar.',cta:'Entrar no banco',okTitle:'Você está no banco',okMsg:'Guardamos seu currículo. Quando abrir uma vaga que combine, a gente te chama pelo e-mail.',noJobMsg:'O banco de talentos está fechado no momento. Manda seu currículo pra contato@guaramedia.com.br.'});
+  document.getElementById('bankBtn').addEventListener('click',()=>{modal.showModal();modal.querySelector('input[name=name]').focus();});
+  document.getElementById('bankClose').addEventListener('click',()=>modal.close());
+  modal.addEventListener('click',e=>{if(e.target===modal)modal.close();});
+})();
+</script>
+</body>
+</html>
