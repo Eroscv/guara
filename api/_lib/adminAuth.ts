@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { createHash } from "node:crypto";
 import { ApiError } from "./errors.js";
+import type { UpstreamConfig } from "./upstream.js";
 
 // ===================================================================
 // Acesso ao painel (/admin) pelo login da API da Guará (FastAPI).
@@ -37,11 +38,24 @@ export interface AdminUser {
 
 // ---------------------------------------------------------------- upstream
 
+// Endereço da API da Guará. Não é segredo (a API pede login/chave pra tudo, menos /health), então
+// vai no código e o painel funciona sem variável nenhuma. GUARA_API_UPSTREAM, se existir, vence —
+// é como se troca o endereço quando o túnel mudar, sem mexer no código.
+export const DEFAULT_UPSTREAM = "https://airport-sing-drilling-recorders.trycloudflare.com";
+
 export function authBase(): string {
-  const base = (process.env.GUARA_API_UPSTREAM || "").trim().replace(/\/+$/, "");
-  if (!base) throw new ApiError(500, "A API da Guará não está configurada no servidor (variável GUARA_API_UPSTREAM).");
+  const base = ((process.env.GUARA_API_UPSTREAM || "").trim() || DEFAULT_UPSTREAM).replace(/\/+$/, "");
   if (!/^https?:\/\/[^\s]+$/.test(base)) throw new ApiError(500, "GUARA_API_UPSTREAM precisa ser um endereço http(s) válido.");
   return base;
+}
+
+/**
+ * Configuração pra chamar os dados da API pelo painel. A credencial é o token do admin logado
+ * (Authorization: Bearer). GUARA_API_UPSTREAM_KEY, se existir, vai junto como X-API-Key — serve
+ * enquanto o servidor da API ainda só entende a chave.
+ */
+export function panelUpstream(bearer: string): UpstreamConfig {
+  return { base: authBase(), key: (process.env.GUARA_API_UPSTREAM_KEY || "").trim(), bearer };
 }
 
 export async function authCall(method: string, path: string, opts: { token?: string; body?: unknown } = {}) {

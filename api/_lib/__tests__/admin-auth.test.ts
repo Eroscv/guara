@@ -8,7 +8,7 @@ vi.mock("../db.js", () => ({ sql: vi.fn(), assertPostgresConfigured: () => {} })
 
 import authHandler from "../../admin/auth/[...route].js";
 import dataHandler from "../../admin/v1/[...route].js";
-import { whoami } from "../adminAuth.js";
+import { DEFAULT_UPSTREAM, authBase, whoami } from "../adminAuth.js";
 
 const b64 = (o: unknown) => Buffer.from(JSON.stringify(o)).toString("base64url");
 const jwt = (sub: string, expInS = 3600) => `${b64({ alg: "HS256", typ: "JWT" })}.${b64({ sub, exp: Math.floor(Date.now() / 1000) + expInS })}.sig`;
@@ -23,6 +23,9 @@ const USERS: Record<string, any> = {
 const PASSWORDS: Record<string, string> = { "admin@guara.test": T.admin, "user@guara.test": T.user, "off@guara.test": T.off };
 
 let origin: Server;
+// Como o servidor de origem trata as credenciais nos endpoints de dados
+type Mode = "bearer-or-key" | "key-only" | "recusa-401" | "recusa-403";
+let mode: Mode = "bearer-or-key";
 let calls: { method: string; url: string; headers: IncomingMessage["headers"]; body: any }[] = [];
 
 function readJson(req: IncomingMessage): Promise<any> {
@@ -56,7 +59,15 @@ beforeAll(async () => {
       if (url.pathname.startsWith("/auth/users/")) return req.method === "DELETE" ? send(200, { ok: true }) : send(200, { id: url.pathname.split("/").pop(), email: "x@y.z", ...body });
     }
     if (url.pathname === "/leads") {
-      if (req.headers["x-api-key"] !== "chave-do-servidor") return send(401, { detail: "chave inválida" });
+      const keyOk = req.headers["x-api-key"] === "chave-do-servidor";
+      const bearerOk = mode === "bearer-or-key" && USERS[bearer]?.role === "admin";
+      if (mode === "recusa-401") return send(401, { detail: "não autorizado" });
+      if (mode === "recusa-403") return send(403, { detail: "sem permissão" });
+      if (!keyOk && !bearerOk) {
+        // servidor antigo: X-API-Key é cabeçalho obrigatório
+        if (!req.headers["x-api-key"]) return send(422, { detail: [{ type: "missing", loc: ["header", "X-API-Key"], msg: "Field required", input: null }] });
+        return send(401, { detail: "chave inválida" });
+      }
       return send(200, [{ id: "l1", nome: "Maria", whatsapp: "(19) 99999-0000", created_at: "2026-09-01T10:00:00Z" }]);
     }
     if (url.pathname === "/jobs" && req.method === "POST") return send(201, { id: "j1", ...body });
@@ -67,7 +78,7 @@ beforeAll(async () => {
   process.env.GUARA_API_UPSTREAM_KEY = "chave-do-servidor";
 });
 afterAll(() => new Promise<void>((r) => origin.close(() => r())));
-beforeEach(() => { calls = []; });
+beforeEach(() => { calls = []; mode = "bearer-or-key"; });
 
 type Call = { method?: string; route?: string[]; url?: string; token?: string | null; cookie?: string; csrf?: boolean; body?: unknown };
 async function call(handler: any, { method = "GET", route = [], url, token = null, cookie, csrf = true, body }: Call, base = "/api/admin/auth") {
@@ -122,14 +133,6 @@ describe("login", () => {
     expect((await auth({ method: "POST", route: ["login"], body: { email: "a@b.c" } })).status).toBe(400);
     expect((await auth({ method: "GET", route: ["login"] })).status).toBe(405);
     expect(calls.length).toBe(0); // nada disso chega na API
-  });
-  it("sem GUARA_API_UPSTREAM o erro diz o que configurar", async () => {
-    const keep = process.env.GUARA_API_UPSTREAM;
-    delete process.env.GUARA_API_UPSTREAM;
-    const r = await auth({ method: "POST", route: ["login"], body: { email: "a@b.c", senha: "x" } });
-    process.env.GUARA_API_UPSTREAM = keep;
-    expect(r.status).toBe(500);
-    expect(r.json.error).toMatch(/GUARA_API_UPSTREAM/);
   });
   it("API fora do ar vira 503 com mensagem clara", async () => {
     const keep = process.env.GUARA_API_UPSTREAM;
@@ -203,38 +206,77 @@ describe("usuários (/users)", () => {
   });
 });
 
-describe("dados do painel (/api/admin/v1) — repassa à API com a chave do servidor", () => {
-  it("lista no formato do manual; a API recebe X-API-Key e NÃO recebe o cookie nem o JWT", async () => {
+describe("dados do painel (/api/admin/v1) — usa o token do login", () => {
+  it("lista no formato do manual; a API recebe Authorization: Bearer (e X-API-Key, se houver) e NUNCA o cookie", async () => {
     const r = await data({ route: ["leads"], url: "/api/admin/v1/leads?limit=200", token: T.admin });
     expect(r.status).toBe(200);
     expect(r.json).toMatchObject({ count: 1, limit: 200, offset: 0, data: [{ id: "l1", nome: "Maria" }] });
     const lead = calls.find((c) => c.url!.startsWith("/leads"))!;
-    expect(lead.headers["x-api-key"]).toBe("chave-do-servidor");
+    expect(lead.headers.authorization).toBe(`Bearer ${T.admin}`);
+    expect(lead.headers["x-api-key"]).toBe("chave-do-servidor"); // a variável existe neste teste: vai junto
     expect(lead.headers.cookie).toBeUndefined();
-    expect(lead.headers.authorization).toBeUndefined();
+  });
+  it("sem GUARA_API_UPSTREAM_KEY (sem nenhuma variável) funciona só com o token — e não manda X-API-Key", async () => {
+    const keep = process.env.GUARA_API_UPSTREAM_KEY;
+    delete process.env.GUARA_API_UPSTREAM_KEY;
+    const r = await data({ route: ["leads"], token: T.admin });
+    process.env.GUARA_API_UPSTREAM_KEY = keep;
+    expect(r.status).toBe(200);
+    const lead = calls.find((c) => c.url!.startsWith("/leads"))!;
+    expect(lead.headers["x-api-key"]).toBeUndefined();
+    expect(lead.headers.authorization).toBe(`Bearer ${T.admin}`);
+  });
+  it("servidor antigo (só entende X-API-Key) e sem chave configurada: mensagem clara, 503 — e não 401", async () => {
+    const keep = process.env.GUARA_API_UPSTREAM_KEY;
+    delete process.env.GUARA_API_UPSTREAM_KEY;
+    mode = "key-only";
+    const r = await data({ route: ["leads"], token: T.admin });
+    process.env.GUARA_API_UPSTREAM_KEY = keep;
+    expect(r.status).toBe(503);
+    expect(r.json.error).toMatch(/ainda não aceita o login nos dados/);
+  });
+  it("servidor antigo mas com a chave configurada continua funcionando (o token vai junto e é ignorado)", async () => {
+    mode = "key-only";
+    expect((await data({ route: ["leads"], token: T.admin })).status).toBe(200);
+  });
+  it("401 da API de dados não vira 401 do painel (senão a pessoa seria deslogada sem saber por quê); 403 vira aviso", async () => {
+    mode = "recusa-401";
+    const a = await data({ route: ["leads"], token: T.admin });
+    expect(a.status).toBe(503);
+    expect(a.json.error).toMatch(/Authorization: Bearer/);
+    mode = "recusa-403";
+    const b = await data({ route: ["leads"], token: T.admin });
+    expect(b.status).toBe(403);
+    expect(b.json.error).toMatch(/negou o acesso/);
   });
   it("sem sessão 401, conta comum 403 — e a API de dados nem é chamada", async () => {
     expect((await data({ route: ["leads"] })).status).toBe(401);
     expect((await data({ route: ["leads"], token: T.user })).status).toBe(403);
     expect(calls.some((c) => c.url!.startsWith("/leads"))).toBe(false);
   });
-  it("escrita exige o cabeçalho anti-CSRF; com ele, cria vaga", async () => {
+  it("escrita exige o cabeçalho anti-CSRF; com ele, cria vaga repassando o token", async () => {
     expect((await data({ method: "POST", route: ["jobs"], token: T.admin, csrf: false, body: { title: "X" } })).status).toBe(403);
     const ok = await data({ method: "POST", route: ["jobs"], token: T.admin, body: { title: "Social Media", is_open: false } });
     expect(ok.status).toBe(201);
     expect(ok.json).toMatchObject({ id: "j1", title: "Social Media" });
+    expect(calls.find((c) => c.method === "POST" && c.url === "/jobs")!.headers.authorization).toBe(`Bearer ${T.admin}`);
   });
   it("rotas fora do manual dão 404 (o painel não alcança /auth nem /health por aqui)", async () => {
     expect((await data({ route: ["auth", "users"], token: T.admin })).status).toBe(404);
     expect((await data({ route: ["health"], token: T.admin })).status).toBe(404);
   });
-  it("sem GUARA_API_UPSTREAM_KEY a falha é explícita (500), não 'login inválido'", async () => {
-    const keep = process.env.GUARA_API_UPSTREAM_KEY;
-    delete process.env.GUARA_API_UPSTREAM_KEY;
-    const r = await data({ route: ["leads"], token: T.admin });
-    process.env.GUARA_API_UPSTREAM_KEY = keep;
-    expect(r.status).toBe(500);
-    expect(r.json.error).toMatch(/GUARA_API_UPSTREAM_KEY/);
+});
+
+describe("endereço da API (nenhuma variável é obrigatória)", () => {
+  it("sem GUARA_API_UPSTREAM usa o endereço padrão; com ela, a variável vence (sem barra no fim)", () => {
+    const keep = process.env.GUARA_API_UPSTREAM;
+    delete process.env.GUARA_API_UPSTREAM;
+    expect(authBase()).toBe(DEFAULT_UPSTREAM);
+    process.env.GUARA_API_UPSTREAM = "https://api.guaramedia.com.br///";
+    expect(authBase()).toBe("https://api.guaramedia.com.br");
+    process.env.GUARA_API_UPSTREAM = "isto-nao-e-url";
+    expect(() => authBase()).toThrow(/http\(s\)/);
+    process.env.GUARA_API_UPSTREAM = keep;
   });
 });
 

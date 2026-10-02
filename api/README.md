@@ -49,7 +49,7 @@ domínio); o endereço da API e a chave `X-API-Key` ficam só em variáveis do s
 | `POST /api/admin/auth/login` | repassa a `/auth/login` `{email, senha}`; só quem é **admin e ativo** ganha sessão |
 | `POST /api/admin/auth/logout` · `GET /api/admin/auth/me` | sair · quem está logado |
 | `GET/POST/PATCH/DELETE /api/admin/auth/users…` · `PATCH …/me` | contas (`/auth/users`, `/auth/register`) e troca da própria senha/nome |
-| `/api/admin/v1/*` | dados do painel (leads, applications, posts, jobs, tools, newsletter, tool_downloads, summary): confere a sessão e repassa com `X-API-Key`, no contrato do manual (mesma tradução da API pública, `_lib/upstream.ts`) |
+| `/api/admin/v1/*` | dados do painel (leads, applications, posts, jobs, tools, newsletter, tool_downloads, summary): confere a sessão e repassa à API com o **token do próprio admin** (`Authorization: Bearer`), no contrato do manual (mesma tradução da API pública, `_lib/upstream.ts`) |
 | `POST /api/admin/upload` | emite o token pro navegador enviar imagens e arquivos direto ao Vercel Blob (só admin) |
 | `/api/admin/api-keys` | chaves `gm_…` da API pública (Postgres), só admin |
 
@@ -57,10 +57,16 @@ domínio); o endereço da API e a chave `X-API-Key` ficam só em variáveis do s
 que o JavaScript não lê. A cada chamada o token é conferido no `/auth/me` da API (cache de 30 s em memória) e o
 papel precisa ser admin. Toda escrita exige o cabeçalho `X-Requested-With: guara-admin` (anti-CSRF).
 
-| Variável | Pra quê |
+**Nenhuma variável é obrigatória pro painel.** O endereço da API vai no código (`DEFAULT_UPSTREAM` em
+`_lib/adminAuth.ts`; não é segredo) e os dados usam o token do login. Para os endpoints de dados da API
+aceitarem esse token, o servidor precisa aceitar `Authorization: Bearer <JWT do /auth/login>` (admin ativo)
+como alternativa ao `X-API-Key`; enquanto não aceitar, o painel mostra "A API da Guará ainda não aceita o login
+nos dados".
+
+| Variável (todas opcionais) | Pra quê |
 |---|---|
-| `GUARA_API_UPSTREAM` | endereço da API da Guará (**obrigatória**: sem ela o login não funciona) |
-| `GUARA_API_UPSTREAM_KEY` | `X-API-Key` dos dados (leads, posts…) |
+| `GUARA_API_UPSTREAM` | troca o endereço da API (vence o padrão) — útil quando o túnel mudar |
+| `GUARA_API_UPSTREAM_KEY` | `X-API-Key`; se existir, vai junto com o token (serve a servidor antigo). Também é o que a **API pública** (`/api/public/v1`, chaves `gm_…`) usa pra falar com a API |
 | `BLOB_READ_WRITE_TOKEN` | envio de imagens/arquivos (injetada ao conectar o Blob Store) |
 | `POSTGRES_URL` | só pra chaves `gm_…` (injetada ao conectar o Neon) |
 

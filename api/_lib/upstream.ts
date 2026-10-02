@@ -19,7 +19,13 @@ export type RouteKind = "summary" | "list" | "item" | "create";
 
 export interface UpstreamConfig {
   base: string;
+  /** X-API-Key do servidor. Vazia no painel quando a API aceita só o login (Bearer). */
   key: string;
+  /**
+   * JWT do admin logado, repassado como "Authorization: Bearer". Só o painel usa:
+   * a chamada do cliente da API pública nunca passa o token (nem a chave gm_).
+   */
+  bearer?: string;
 }
 
 export function upstreamConfig(): UpstreamConfig | null {
@@ -205,8 +211,21 @@ export function normalizeSummary(s: any) {
 // Erros no formato do manual: { error, details: { formErrors, fieldErrors } }.
 // A origem (FastAPI) devolve { detail }, e usa 422 pra qualquer validação —
 // o manual usa 400 pra dados inválidos e deixa 422 só pra imagem com problema.
-export function normalizeError(status: number, json: any): ApiError {
+export function normalizeError(status: number, json: any, panel = false): ApiError {
   const detail = json?.detail ?? json?.error ?? json?.message;
+
+  // No painel a sessão do admin já foi conferida (/auth/me) antes de chegar aqui; se a API de dados
+  // recusa a credencial, o problema é a API não aceitar o login nos dados — e não 'sessão expirada'
+  // (um 401 aqui jogaria a pessoa pra fora do painel sem explicar nada).
+  if (panel) {
+    const missingKey = status === 422 && Array.isArray(detail) && detail.some((d: any) => Array.isArray(d?.loc) && d.loc.includes("header"));
+    if (missingKey || status === 401) {
+      // eslint-disable-next-line no-console
+      console.error(`[upstream] a API de dados não aceitou o login do painel (${status}).`);
+      return new ApiError(503, "A API da Guará ainda não aceita o login nos dados: os endpoints precisam aceitar “Authorization: Bearer” com o token do login.");
+    }
+    if (status === 403) return new ApiError(403, "A API da Guará negou o acesso desta conta aos dados.");
+  }
 
   if (status === 401 || status === 403) {
     // chave da origem recusada = configuração errada nossa; não vaza pro cliente
@@ -257,7 +276,8 @@ async function callUpstream(cfg: UpstreamConfig, method: string, path: string, q
     const res = await fetch(url, {
       method,
       headers: {
-        "X-API-Key": cfg.key,
+        ...(cfg.key ? { "X-API-Key": cfg.key } : {}),
+        ...(cfg.bearer ? { Authorization: `Bearer ${cfg.bearer}` } : {}),
         Accept: "application/json",
         ...(body !== undefined ? { "Content-Type": "application/json" } : {}),
       },
@@ -310,7 +330,7 @@ export async function proxyRequest(
 
   if (route.kind === "summary") {
     const r = await callUpstream(cfg, "GET", route.path);
-    if (r.status >= 400) throw normalizeError(r.status, r.json);
+    if (r.status >= 400) throw normalizeError(r.status, r.json, !!cfg.bearer);
     res.status(200).json(normalizeSummary(r.json));
     return;
   }
@@ -318,7 +338,7 @@ export async function proxyRequest(
   if (route.kind === "list") {
     const { limit, offset, forward } = validateListQuery(route.resource as Resource, input.qs);
     const r = await callUpstream(cfg, "GET", route.path, forward.toString());
-    if (r.status >= 400) throw normalizeError(r.status, r.json);
+    if (r.status >= 400) throw normalizeError(r.status, r.json, !!cfg.bearer);
     const data = listOf(r.json).map((i) => normalizeItem(route.resource, i));
     const { count, exact } = await totalCount(cfg, route.path, forward, limit, offset, data.length);
     res.status(200).json({ data, count, limit, offset, ...(exact ? {} : { has_more: true }) });
@@ -331,7 +351,7 @@ export async function proxyRequest(
       throw new ApiError(400, "Dados inválidos", { formErrors: ["O corpo precisa ser um objeto JSON."], fieldErrors: {} });
     }
     const r = await callUpstream(cfg, "POST", route.path, undefined, body);
-    if (r.status >= 400) throw normalizeError(r.status, r.json);
+    if (r.status >= 400) throw normalizeError(r.status, r.json, !!cfg.bearer);
     res.status(201).json(normalizeItem(route.resource, r.json));
     return;
   }
@@ -339,7 +359,7 @@ export async function proxyRequest(
   // item
   if (route.method === "GET") {
     const r = await callUpstream(cfg, "GET", route.path);
-    if (r.status >= 400) throw normalizeError(r.status, r.json);
+    if (r.status >= 400) throw normalizeError(r.status, r.json, !!cfg.bearer);
     res.status(200).json(normalizeItem(route.resource, r.json));
     return;
   }
@@ -349,12 +369,12 @@ export async function proxyRequest(
       throw new ApiError(400, "Dados inválidos", { formErrors: ["O corpo precisa ser um objeto JSON."], fieldErrors: {} });
     }
     const r = await callUpstream(cfg, "PATCH", route.path, undefined, body);
-    if (r.status >= 400) throw normalizeError(r.status, r.json);
+    if (r.status >= 400) throw normalizeError(r.status, r.json, !!cfg.bearer);
     res.status(200).json(normalizeItem(route.resource, r.json));
     return;
   }
   // DELETE
   const r = await callUpstream(cfg, "DELETE", route.path);
-  if (r.status >= 400) throw normalizeError(r.status, r.json);
+  if (r.status >= 400) throw normalizeError(r.status, r.json, !!cfg.bearer);
   res.status(200).json({ deleted: decodeURIComponent(route.id as string) });
 }
