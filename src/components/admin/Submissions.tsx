@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Download, Search, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -21,41 +20,31 @@ type Config = {
   remove: (id: string) => Promise<void>;
 };
 
-const joinText = (...parts: unknown[]) => parts.filter(Boolean).join(" · ");
-
 const CONFIG: Record<SubmissionSource, Config> = {
-  // Contatos do formulário do site — Supabase (RLS: só admin lê).
+  // Contatos do formulário do site (campos do manual da API).
   leads: {
     title: "Contatos",
     csv: "contatos",
     cols: [
       ["nome", "Nome"],
-      ["email", "E-mail"],
-      ["telefone", "Telefone"],
-      ["empresa", "Empresa"],
+      ["whatsapp", "WhatsApp"],
       ["site", "Site / @"],
       ["faturamento", "Faturamento"],
-      ["source", "Origem"],
-      ["mensagem", "Mensagem", (r) => joinText(r.desafio, r.mensagem)],
+      ["solucao", "Solução"],
+      ["extra", "Observação"],
     ],
-    load: async () => {
-      const { data, error } = await supabase.from("leads").select("*").order("created_at", { ascending: false });
-      if (error) throw error;
-      return (data ?? []) as Row[];
-    },
+    load: () => fetchAllPages("/leads"),
     remove: async (id) => {
-      const { error } = await supabase.from("leads").delete().eq("id", id);
-      if (error) throw error;
+      await adminApi(`/leads/${encodeURIComponent(id)}`, { method: "DELETE" });
     },
   },
-  // Newsletter e downloads — Vercel Postgres, via /api/admin/v1.
   newsletter: {
     title: "Newsletter",
     csv: "newsletter",
     cols: [["email", "E-mail"], ["pagina", "Página"]],
     load: () => fetchAllPages("/newsletter"),
     remove: async (id) => {
-      await adminApi(`/newsletter/${id}`, { method: "DELETE" });
+      await adminApi(`/newsletter/${encodeURIComponent(id)}`, { method: "DELETE" });
     },
   },
   tool_downloads: {
@@ -64,7 +53,7 @@ const CONFIG: Record<SubmissionSource, Config> = {
     cols: [["tool_title", "Ferramenta"], ["nome", "Nome"], ["email", "E-mail"], ["empresa", "Empresa"], ["cargo", "Cargo"]],
     load: () => fetchAllPages("/tool_downloads"),
     remove: async (id) => {
-      await adminApi(`/tool_downloads/${id}`, { method: "DELETE" });
+      await adminApi(`/tool_downloads/${encodeURIComponent(id)}`, { method: "DELETE" });
     },
   },
 };

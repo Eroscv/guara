@@ -1,11 +1,13 @@
-import { supabase } from "@/integrations/supabase/client";
 import { slugify } from "@/lib/slug";
-import { calcReadingTime } from "@/lib/reading-time";
-import { adminApi, AdminApiError, fmtDate, lines, toLocalInput } from "./helpers";
+import { AdminApiError, adminApi, fmtDate, lines, toLocalInput } from "./helpers";
+
+// Blog, vagas e ferramentas do painel, no contrato da API da Guará (Guara-API-manual.pdf):
+// posts { published, published_at, archived… } · vagas { is_open, publish_at, archived… }
+// · ferramentas { published, file_url, archived… }. "Agendado" = data futura.
 
 export type Kind = "posts" | "jobs" | "tools";
 export type Row = Record<string, any>;
-export type FieldType = "text" | "textarea" | "html" | "list" | "tags" | "image" | "file" | "select" | "datetime" | "switch" | "slug";
+export type FieldType = "text" | "textarea" | "html" | "list" | "image" | "file" | "select" | "datetime" | "switch" | "slug";
 export type RowState = "on" | "scheduled" | "draft" | "closed" | "archived";
 
 export type Field = {
@@ -17,6 +19,8 @@ export type Field = {
   half?: boolean;
   placeholder?: string;
   options?: [string, string][];
+  /** Só aparece ao criar (a API não altera o slug depois). */
+  onlyNew?: boolean;
 };
 
 export interface Store {
@@ -36,7 +40,7 @@ export interface KindConfig {
   switchOn: string;
   switchOff: string;
   fields: Field[];
-  /** Filtros específicos (além de "Ativos" e "Todos"). */
+  /** Filtros específicos (além de "Ativos", "Arquivados" e "Todos"). */
   filters: [RowState, string][];
   sub(r: Row): string;
   state(r: Row, now: Date): RowState;
@@ -47,7 +51,9 @@ export interface KindConfig {
   toggle(r: Row): Row;
   /** Valores iniciais do formulário a partir da linha (ou de uma nova). */
   toForm(r: Row): Row;
-  /** Formulário → o que vai pro banco. */
+  /** Devolve um texto se faltar algo obrigatório. */
+  validate?(v: Row): string | null;
+  /** Formulário → o que vai pra API. */
   toPayload(v: Row, isNew: boolean): Row;
 }
 
@@ -63,9 +69,9 @@ export function toHtml(s: string) {
 const splitTags = (s: string) => String(s).split(",").map((t) => t.trim()).filter(Boolean);
 const nowLocal = () => toLocalInput(new Date().toISOString());
 const isFuture = (iso: string | null | undefined, now: Date) => !!iso && new Date(iso) > now;
+const hasText = (html: string) => /<img\b/i.test(html) || html.replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ").trim().length > 0;
 
 export const CONFIG: Record<Kind, KindConfig> = {
-  // ---- Blog (Supabase). Visível no site: status = published e scheduled_at vazio ou já passado.
   posts: {
     title: "Blog",
     noun: "postagem",
@@ -75,11 +81,11 @@ export const CONFIG: Record<Kind, KindConfig> = {
     switchOff: "Rascunho — escondido do site",
     filters: [["on", "Publicados"], ["draft", "Rascunhos"], ["scheduled", "Agendados"]],
     sub: (r) =>
-      `${r.category || "Sem categoria"} · ${isFuture(r.scheduled_at, new Date()) ? "Agendado para " + fmtDate(r.scheduled_at) : fmtDate(r.published_at)} · ${r.reading_time ?? 1} min de leitura`,
-    state: (r, now) => (r.archived ? "archived" : r.status !== "published" ? "draft" : isFuture(r.scheduled_at, now) ? "scheduled" : "on"),
-    isOn: (r) => r.status === "published",
-    switchText: (r) => (r.status === "published" ? "Publicado" : "Rascunho"),
-    toggle: (r) => ({ status: r.status === "published" ? "draft" : "published" }),
+      `${r.category || "Sem categoria"} · ${r.published && isFuture(r.published_at, new Date()) ? "Agendado para " : ""}${fmtDate(r.published_at)} · ${r.reading_time ?? 1} min de leitura`,
+    state: (r, now) => (r.archived ? "archived" : !r.published ? "draft" : isFuture(r.published_at, now) ? "scheduled" : "on"),
+    isOn: (r) => !!r.published,
+    switchText: (r) => (r.published ? "Publicado" : "Rascunho"),
+    toggle: (r) => ({ published: !r.published }),
     fields: [
       { key: "title", label: "Título", type: "text", section: "Básico", placeholder: "Ex.: 5 tendências de marketing para 2027" },
       { key: "excerpt", label: "Resumo", type: "textarea", section: "Básico", placeholder: "Uma ou duas frases que aparecem na lista do blog" },
@@ -88,9 +94,9 @@ export const CONFIG: Record<Kind, KindConfig> = {
       { key: "tags", label: "Tags", type: "text", hint: "Separe por vírgula", section: "Organização", placeholder: "ia, seo, conteúdo" },
       { key: "cover_image", label: "Imagem de capa", type: "image", section: "Capa" },
       { key: "content", label: "Texto do post", type: "html", hint: "Use a barra para títulos, listas, links e imagens.", section: "Conteúdo" },
-      { key: "slug", label: "Endereço (slug)", type: "slug", hint: "Parte final do link do post. Nasce do título; mude só se precisar.", section: "Publicação" },
+      { key: "slug", label: "Endereço (slug)", type: "slug", onlyNew: true, hint: "Parte final do link do post. Deixe vazio para gerar pelo título.", section: "Publicação" },
       { key: "published_at", label: "Data de publicação", type: "datetime", hint: "Escolha uma data futura para agendar. O post só aparece no site a partir dela.", section: "Publicação" },
-      { key: "_on", label: "Publicado no site", type: "switch", section: "Publicação" },
+      { key: "published", label: "Publicado no site", type: "switch", section: "Publicação" },
     ],
     toForm: (r) => ({
       title: r.title ?? "",
@@ -100,67 +106,64 @@ export const CONFIG: Record<Kind, KindConfig> = {
       tags: (r.tags ?? []).join(", "),
       cover_image: r.cover_image ?? "",
       content: r.content ?? "",
-      slug: r.slug ?? "",
-      published_at: r.id ? toLocalInput(r.scheduled_at ?? r.published_at) : nowLocal(),
-      _on: r.id ? r.status === "published" : false,
+      slug: "",
+      published_at: r.id ? toLocalInput(r.published_at) : nowLocal(),
+      published: r.id ? !!r.published : false,
     }),
+    validate: (v) => (hasText(v.content ?? "") ? null : "Escreva o texto do post."),
     toPayload: (v, isNew) => {
-      const at = v.published_at ? new Date(v.published_at) : new Date();
-      const future = at.getTime() > Date.now();
-      const typedSlug = slugify(String(v.slug ?? ""));
+      const slug = slugify(String(v.slug ?? ""));
       return {
         title: v.title.trim(),
         excerpt: v.excerpt.trim(),
         category: v.category.trim(),
         author: v.author.trim(),
         tags: splitTags(v.tags),
-        cover_image: v.cover_image.trim() || null,
         content: toHtml(v.content),
-        reading_time: calcReadingTime(v.content),
-        published_at: at.toISOString(),
-        scheduled_at: future ? at.toISOString() : null,
-        status: v._on ? "published" : "draft",
-        ...(typedSlug ? { slug: typedSlug } : isNew ? { slug: slugify(v.title) || "post", _autoSlug: true } : {}),
+        published: !!v.published,
+        published_at: (v.published_at ? new Date(v.published_at) : new Date()).toISOString(),
+        // A API só aceita link https; vazio = não manda (não dá pra limpar uma capa já gravada)
+        ...(v.cover_image.trim() ? { cover_image: v.cover_image.trim() } : {}),
+        ...(isNew && slug ? { slug } : {}),
       };
     },
   },
 
-  // ---- Vagas (Supabase). Visível: status = open e scheduled_at vazio ou já passado. is_open é sincronizado por trigger.
   jobs: {
     title: "Vagas",
     noun: "vaga",
     newLabel: "Nova vaga",
     switchLabel: "Aberta",
     switchOn: "Recebendo candidaturas",
-    switchOff: "Fechada ou em rascunho",
-    filters: [["on", "Abertas"], ["closed", "Fechadas"], ["draft", "Rascunhos"], ["scheduled", "Agendadas"]],
+    switchOff: "Vaga fechada",
+    filters: [["on", "Abertas"], ["closed", "Fechadas"], ["scheduled", "Agendadas"]],
     sub: (r) =>
-      [r.department, r.location, r.work_model, isFuture(r.scheduled_at, new Date()) ? "Abre em " + fmtDate(r.scheduled_at) : ""].filter(Boolean).join(" · "),
-    state: (r, now) => (r.archived ? "archived" : r.status === "draft" ? "draft" : r.status === "closed" ? "closed" : isFuture(r.scheduled_at, now) ? "scheduled" : "on"),
-    isOn: (r) => r.status === "open",
-    switchText: (r) => (r.status === "open" ? "Aberta" : r.status === "closed" ? "Fechada" : "Rascunho"),
-    toggle: (r) => ({ status: r.status === "open" ? "closed" : "open" }),
+      [r.department, r.location, r.work_model, r.is_open && isFuture(r.publish_at, new Date()) ? "Abre em " + fmtDate(r.publish_at) : ""].filter(Boolean).join(" · "),
+    state: (r, now) => (r.archived ? "archived" : !r.is_open ? "closed" : isFuture(r.publish_at, now) ? "scheduled" : "on"),
+    isOn: (r) => !!r.is_open,
+    switchText: (r) => (r.is_open ? "Aberta" : "Fechada"),
+    toggle: (r) => ({ is_open: !r.is_open }),
     fields: [
       { key: "title", label: "Cargo", type: "text", section: "Básico", placeholder: "Ex.: Designer Gráfico Pleno" },
       { key: "department", label: "Área", type: "text", section: "Básico", half: true, placeholder: "Ex.: Criação" },
       { key: "location", label: "Local", type: "text", section: "Básico", half: true, placeholder: "Ex.: São Paulo, SP" },
-      { key: "work_model", label: "Modelo de trabalho", type: "select", section: "Básico", options: [["remoto", "Remoto"], ["híbrido", "Híbrido"], ["presencial", "Presencial"]] },
+      { key: "work_model", label: "Modelo de trabalho", type: "select", section: "Básico", options: [["Remoto", "Remoto"], ["Híbrido", "Híbrido"], ["Presencial", "Presencial"]] },
       { key: "description", label: "Descrição", type: "textarea", section: "Detalhes", placeholder: "Conte sobre a vaga e o time" },
       { key: "responsibilities", label: "Responsabilidades", type: "list", hint: "Um item por linha", section: "Detalhes", placeholder: "Uma responsabilidade por linha" },
       { key: "requirements", label: "Requisitos", type: "list", hint: "Um item por linha", section: "Detalhes", placeholder: "Um requisito por linha" },
-      { key: "status", label: "Situação", type: "select", section: "Publicação", half: true, options: [["draft", "Rascunho"], ["open", "Aberta"], ["closed", "Fechada"]] },
-      { key: "scheduled_at", label: "Abrir em (opcional)", type: "datetime", half: true, hint: "Deixe vazio para abrir já. Com data futura, a vaga só aparece a partir dela.", section: "Publicação" },
+      { key: "publish_at", label: "Abrir em (opcional)", type: "datetime", hint: "Deixe vazio para aparecer na hora. Com data futura, a vaga só aparece a partir dela.", section: "Publicação" },
+      { key: "is_open", label: "Vaga aberta", type: "switch", section: "Publicação" },
     ],
     toForm: (r) => ({
       title: r.title ?? "",
       department: r.department ?? "",
       location: r.location ?? "",
-      work_model: r.work_model ?? "remoto",
+      work_model: r.work_model || "Remoto",
       description: r.description ?? "",
       responsibilities: (r.responsibilities ?? []).join("\n"),
       requirements: (r.requirements ?? []).join("\n"),
-      status: r.status ?? "draft",
-      scheduled_at: toLocalInput(r.scheduled_at),
+      publish_at: toLocalInput(r.publish_at),
+      is_open: r.id ? !!r.is_open : false,
     }),
     toPayload: (v) => ({
       title: v.title.trim(),
@@ -170,12 +173,11 @@ export const CONFIG: Record<Kind, KindConfig> = {
       description: v.description.trim(),
       responsibilities: lines(v.responsibilities),
       requirements: lines(v.requirements),
-      status: v.status,
-      scheduled_at: v.scheduled_at ? new Date(v.scheduled_at).toISOString() : null,
+      is_open: !!v.is_open,
+      publish_at: v.publish_at ? new Date(v.publish_at).toISOString() : null,
     }),
   },
 
-  // ---- Ferramentas (Vercel Postgres, via /api/admin/v1). A API é estrita: image/file_url não aceitam null.
   tools: {
     title: "Ferramentas",
     noun: "ferramenta",
@@ -196,7 +198,7 @@ export const CONFIG: Record<Kind, KindConfig> = {
       { key: "image", label: "Imagem", type: "image", section: "Imagem" },
       { key: "benefits", label: "O que a pessoa recebe", type: "list", hint: "Um item por linha", section: "Download", placeholder: "Modelo pronto\nFórmulas automáticas" },
       { key: "file_url", label: "Arquivo para download", type: "file", section: "Download" },
-      { key: "_on", label: "Publicada no site", type: "switch", section: "Publicação" },
+      { key: "published", label: "Publicada no site", type: "switch", section: "Publicação" },
     ],
     toForm: (r) => ({
       title: r.title ?? "",
@@ -206,14 +208,14 @@ export const CONFIG: Record<Kind, KindConfig> = {
       benefits: (r.benefits ?? []).join("\n"),
       file_url: r.file_url ?? "",
       file_name: r.file_name ?? "",
-      _on: r.id ? !!r.published : false,
+      published: r.id ? !!r.published : false,
     }),
     toPayload: (v) => ({
       title: v.title.trim(),
       description: v.description.trim(),
       category: v.category.trim(),
       benefits: lines(v.benefits),
-      published: !!v._on,
+      published: !!v.published,
       ...(v.image.trim() ? { image: v.image.trim() } : {}),
       ...(v.file_url.trim() ? { file_url: v.file_url.trim(), ...(v.file_name ? { file_name: v.file_name } : {}) } : {}),
     }),
@@ -221,43 +223,8 @@ export const CONFIG: Record<Kind, KindConfig> = {
 };
 
 // ---------------------------------------------------------------------------
-// Acesso aos dados
+// Acesso aos dados (via /api/admin/v1 → API da Guará)
 // ---------------------------------------------------------------------------
-
-function supabaseStore(table: "posts" | "jobs", orderBy: string): Store {
-  return {
-    async list() {
-      const { data, error } = await supabase.from(table).select("*").order(orderBy, { ascending: false });
-      if (error) throw error;
-      return (data ?? []) as Row[];
-    },
-    async create(payload) {
-      const { _autoSlug, ...row } = payload;
-      const base: string | undefined = row.slug;
-      // Slug nascido do título: se já existe, tenta de novo com um sufixo curto.
-      // Slug digitado à mão que já existe é erro de verdade — não mexemos nele.
-      for (let attempt = 0; attempt < 4; attempt++) {
-        const slug = base && attempt > 0 ? `${base}-${Math.random().toString(36).slice(2, 6)}` : base;
-        const { error } = await supabase.from(table).insert((slug ? { ...row, slug } : row) as never);
-        if (!error) return;
-        if (error.code !== "23505" || !_autoSlug) throw error;
-      }
-      throw Object.assign(new Error("slug duplicado"), { code: "23505" });
-    },
-    async update(id, payload) {
-      const { error } = await supabase.from(table).update(payload as never).eq("id", id);
-      if (error) throw error;
-    },
-    async remove(id) {
-      const { error } = await supabase.from(table).delete().eq("id", id);
-      if (error) throw error;
-    },
-    async archive(id, next) {
-      const { error } = await supabase.from(table).update({ archived: next, archived_at: next ? new Date().toISOString() : null } as never).eq("id", id);
-      if (error) throw error;
-    },
-  };
-}
 
 // A API devolve no máximo 200 por página.
 export async function fetchAllPages<T = Row>(path: string, cap = 25): Promise<T[]> {
@@ -271,39 +238,55 @@ export async function fetchAllPages<T = Row>(path: string, cap = 25): Promise<T[
   return out;
 }
 
-const toolsStore: Store = {
-  async list() {
-    const [tools, byTool] = await Promise.all([
-      fetchAllPages("/tools"),
-      adminApi<Record<string, number>>("/downloads-by-tool").catch(() => ({}) as Record<string, number>),
-    ]);
-    return tools.map((t) => ({ ...t, _downloads: byTool[t.slug] ?? 0 }));
-  },
-  async create(payload) {
-    await adminApi("/tools", { method: "POST", body: payload });
-  },
-  async update(id, payload) {
-    await adminApi(`/tools/${id}`, { method: "PATCH", body: payload });
-  },
-  async remove(id) {
-    await adminApi(`/tools/${id}`, { method: "DELETE" });
-  },
-  async archive(id, next) {
-    await adminApi(`/tools/${id}`, { method: "PATCH", body: { archived: next } });
-  },
-};
+function apiStore(path: "/posts" | "/jobs" | "/tools", enrich?: (rows: Row[]) => Promise<Row[]>): Store {
+  return {
+    // status=all inclui os arquivados; o painel filtra na tela.
+    async list() {
+      const rows = await fetchAllPages(`${path}?status=all`);
+      return enrich ? enrich(rows) : rows;
+    },
+    async create(payload) {
+      await adminApi(path, { method: "POST", body: payload });
+    },
+    async update(id, payload) {
+      await adminApi(`${path}/${encodeURIComponent(id)}`, { method: "PATCH", body: payload });
+    },
+    async remove(id) {
+      await adminApi(`${path}/${encodeURIComponent(id)}`, { method: "DELETE" });
+    },
+    async archive(id, next) {
+      await adminApi(`${path}/${encodeURIComponent(id)}`, { method: "PATCH", body: { archived: next } });
+    },
+  };
+}
+
+// Quantos downloads cada ferramenta teve (a API não devolve isso na lista).
+async function withDownloads(tools: Row[]): Promise<Row[]> {
+  try {
+    const downloads = await fetchAllPages("/tool_downloads");
+    const by: Record<string, number> = {};
+    for (const d of downloads) if (d.tool_slug) by[d.tool_slug] = (by[d.tool_slug] ?? 0) + 1;
+    return tools.map((t) => ({ ...t, _downloads: by[t.slug] ?? 0 }));
+  } catch {
+    return tools;
+  }
+}
 
 export const STORES: Record<Kind, Store> = {
-  posts: supabaseStore("posts", "published_at"),
-  jobs: supabaseStore("jobs", "created_at"),
-  tools: toolsStore,
+  posts: apiStore("/posts"),
+  jobs: apiStore("/jobs"),
+  tools: apiStore("/tools", withDownloads),
 };
 
-/** Mensagem pra mostrar na tela quando uma gravação falha. */
+/** Mensagem pra mostrar na tela quando uma chamada falha. */
 export function errorMessage(e: unknown, fallback = "Não foi possível salvar."): string {
-  if (e instanceof AdminApiError) return e.message;
-  const err = e as { code?: string; message?: string };
-  if (err?.code === "23505") return "Já existe um item com esse endereço (slug). Troque o título ou o slug.";
-  if (err?.code === "42501") return "Sua conta não tem permissão para isso.";
-  return fallback;
+  if (!(e instanceof AdminApiError)) return fallback;
+  const d = e.details as any;
+  // Dados inválidos (400): mostra o primeiro campo com problema
+  const field = d?.fieldErrors && Object.entries(d.fieldErrors as Record<string, string[]>)[0];
+  if (field) return `${e.message} — ${field[0]}: ${field[1]?.[0] ?? "valor inválido"}`;
+  // Imagem com problema (422): mostra o motivo
+  const img = Array.isArray(d) ? d[0] : Array.isArray(d?.images) ? d.images[0] : null;
+  if (img?.problem) return `${e.message} ${img.problem}`;
+  return e.message || fallback;
 }

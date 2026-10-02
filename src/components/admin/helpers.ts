@@ -1,7 +1,9 @@
 import { useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { upload } from "@vercel/blob/client";
 import { slugify } from "@/lib/slug";
 import "./admin-theme.css";
+
+export { AdminApiError, adminApi, adminFetch, authApi } from "@/lib/admin-api";
 
 /** Liga o tema do painel no <html> enquanto o componente estiver montado. */
 export function useAdminTheme() {
@@ -29,16 +31,19 @@ export const toLocalInput = (iso: string | null | undefined) => {
 };
 
 /**
- * Envia um arquivo pro bucket público "blog-images" (só admin escreve — RLS) e
- * devolve o link público. Serve pra imagens e pros arquivos das ferramentas.
+ * Envia imagem ou arquivo pro Vercel Blob e devolve o link público. O arquivo vai
+ * direto do navegador pro Blob (sem o limite de 4,5 MB das funções); o servidor só
+ * emite o token, e só pra admin logado (/api/admin/upload).
  */
-export async function uploadAdminFile(file: File, folder: string) {
+export async function uploadAdminFile(file: File, folder: "posts" | "jobs" | "tools" | "editor") {
   const ext = file.name.match(/\.[^.]+$/)?.[0]?.toLowerCase() ?? "";
   const base = slugify(file.name.replace(/\.[^.]+$/, "")) || "arquivo";
-  const path = `${folder}/${Date.now()}-${base}${ext}`;
-  const { error } = await supabase.storage.from("blog-images").upload(path, file, { cacheControl: "3600", upsert: false });
-  if (error) throw error;
-  return supabase.storage.from("blog-images").getPublicUrl(path).data.publicUrl;
+  const blob = await upload(`${folder}/${base}${ext}`, file, {
+    access: "public",
+    handleUploadUrl: "/api/admin/upload",
+    headers: { "X-Requested-With": "guara-admin" },
+  });
+  return blob.url;
 }
 
 /** Planilha com ; e BOM, que o Excel em português abre sem bagunçar acento. */
@@ -54,34 +59,3 @@ export function toCsv(rows: Record<string, unknown>[], name: string) {
   a.click();
   URL.revokeObjectURL(url);
 }
-
-/**
- * Newsletter, downloads e ferramentas moram no Vercel Postgres, não no Supabase,
- * então o painel fala com /api/admin/v1 — que confere a sessão de admin pelo
- * token do próprio Supabase.
- */
-export class AdminApiError extends Error {
-  status: number;
-  constructor(status: number, message: string) {
-    super(message);
-    this.status = status;
-  }
-}
-
-/** Chamada autenticada com a sessão do admin (o servidor confere o token no Supabase). */
-export async function adminFetch<T = unknown>(url: string, init: { method?: string; body?: unknown } = {}): Promise<T> {
-  const { data } = await supabase.auth.getSession();
-  const token = data.session?.access_token;
-  if (!token) throw new AdminApiError(401, "Sessão expirada. Entre de novo.");
-  const res = await fetch(url, {
-    method: init.method ?? "GET",
-    headers: { Authorization: `Bearer ${token}`, ...(init.body !== undefined ? { "Content-Type": "application/json" } : {}) },
-    body: init.body !== undefined ? JSON.stringify(init.body) : undefined,
-  });
-  const json = await res.json().catch(() => ({}));
-  if (!res.ok) throw new AdminApiError(res.status, (json as { error?: string }).error || "Não foi possível completar a ação.");
-  return json as T;
-}
-
-export const adminApi = <T = unknown>(path: string, init: { method?: string; body?: unknown } = {}) =>
-  adminFetch<T>(`/api/admin/v1${path}`, init);

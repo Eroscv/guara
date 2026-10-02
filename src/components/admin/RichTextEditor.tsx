@@ -7,7 +7,7 @@ import {
   Bold, Italic, List, ListOrdered, Heading2, Heading3, Link as LinkIcon, Image as ImageIcon, Quote, Undo, Redo, Linkedin,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
+import { uploadAdminFile } from "./helpers";
 import { toast } from "sonner";
 import { LinkedInEmbed } from "./extensions/LinkedInEmbed";
 import { parseLinkedInEmbed } from "@/lib/linkedin-embed";
@@ -18,16 +18,16 @@ interface Props {
 }
 
 async function uploadImage(file: File): Promise<string | null> {
-  if (!file.type.startsWith("image/")) return null;
-  const ext = file.name.split(".").pop() || "png";
-  const path = `${crypto.randomUUID()}.${ext}`;
-  const { error } = await supabase.storage.from("blog-images").upload(path, file, { cacheControl: "3600" });
-  if (error) {
-    toast.error(error.message);
+  if (!file.type.startsWith("image/") || file.type === "image/svg+xml") {
+    toast.error("Use uma imagem JPG, PNG, WEBP, GIF ou AVIF.");
     return null;
   }
-  const { data } = supabase.storage.from("blog-images").getPublicUrl(path);
-  return data.publicUrl;
+  try {
+    return await uploadAdminFile(file, "editor");
+  } catch (e) {
+    toast.error(e instanceof Error ? e.message : "Falha ao enviar a imagem.");
+    return null;
+  }
 }
 
 const RichTextEditor = ({ value, onChange }: Props) => {

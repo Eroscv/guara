@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,29 +9,33 @@ import { toast } from "sonner";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [senha, setSenha] = useState("");
   const [loading, setLoading] = useState(false);
-  const { user } = useAuth();
+  const [problem, setProblem] = useState<string | null>(null);
+  const { user, login, error: authError } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = (location.state as { from?: { pathname?: string } } | null)?.from?.pathname;
 
   useEffect(() => {
-    if (user) navigate("/admin", { replace: true });
-  }, [user, navigate]);
+    if (user) navigate(from && from.startsWith("/admin") && from !== "/admin/login" ? from : "/admin", { replace: true });
+  }, [user, from, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setProblem(null);
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw error;
+      await login(email.trim(), senha);
       toast.success("Bem-vindo!");
-      navigate("/admin");
-    } catch (e: any) {
-      toast.error(e.message || "Erro ao entrar");
+    } catch (err) {
+      setProblem(err instanceof Error ? err.message : "Não foi possível entrar.");
     } finally {
       setLoading(false);
     }
   };
+
+  const shown = problem ?? authError;
 
   return (
     <AuthFrame>
@@ -48,14 +51,15 @@ const AdminLogin = () => {
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="password">Senha</Label>
-          <Input id="password" type="password" autoComplete="current-password" className="h-11" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
+          <Input id="password" type="password" autoComplete="current-password" className="h-11" required value={senha} onChange={(e) => setSenha(e.target.value)} />
         </div>
+        {shown && <p role="alert" className="rounded-md border-2 border-foreground bg-muted p-3 text-sm font-semibold">{shown}</p>}
         <Button type="submit" className="h-11 w-full text-base font-bold shadow-brut-orange" disabled={loading}>
           {loading ? "Aguarde…" : "Entrar"}
         </Button>
       </form>
       <div className="flex items-center justify-between text-sm">
-        <Link to="/admin/forgot-password" className="underline">Esqueci minha senha</Link>
+        <span className="text-muted-foreground">Esqueceu a senha? Peça a um administrador.</span>
         <Link to="/" className="text-muted-foreground underline">Voltar ao site</Link>
       </div>
     </AuthFrame>

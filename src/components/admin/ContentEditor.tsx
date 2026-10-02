@@ -24,14 +24,7 @@ export function ContentEditor({ kind, row, onClose, onSaved }: { kind: Kind; row
   const isNew = !row.id;
   const [v, setV] = useState<Row>(() => cfg.toForm(row));
   const [busy, setBusy] = useState(false);
-  const [slugTouched, setSlugTouched] = useState(!isNew);
   const set = (k: string, val: unknown) => setV((p) => ({ ...p, [k]: val }));
-
-  const onText = (f: Field, val: string) => {
-    set(f.key, val);
-    // O link do post nasce do título até a pessoa mexer nele.
-    if (f.key === "title" && !slugTouched && cfg.fields.some((x) => x.type === "slug")) set("slug", slugify(val));
-  };
 
   const upload = async (f: Field, file?: File) => {
     if (!file) return;
@@ -61,6 +54,11 @@ export function ContentEditor({ kind, row, onClose, onSaved }: { kind: Kind; row
       toast.error("Preencha o título.");
       return;
     }
+    const problem = cfg.validate?.(v);
+    if (problem) {
+      toast.error(problem);
+      return;
+    }
     setBusy(true);
     try {
       const payload = cfg.toPayload(v, isNew);
@@ -76,7 +74,8 @@ export function ContentEditor({ kind, row, onClose, onSaved }: { kind: Kind; row
     }
   };
 
-  const sections = [...new Set(cfg.fields.map((f) => f.section))];
+  const fields = cfg.fields.filter((f) => isNew || !f.onlyNew);
+  const sections = [...new Set(fields.map((f) => f.section))];
   const KindIcon = ICON[kind];
   const noun = cfg.noun;
 
@@ -100,10 +99,10 @@ export function ContentEditor({ kind, row, onClose, onSaved }: { kind: Kind; row
           {f.key === "title" && <span className="text-brand-orange"> *</span>}
         </Label>
         {f.type === "text" && (
-          <Input id={id} className={`${inputCls} ${f.key === "title" ? "h-12 text-lg font-semibold" : ""}`} placeholder={f.placeholder} value={v[f.key]} onChange={(e) => onText(f, e.target.value)} />
+          <Input id={id} className={`${inputCls} ${f.key === "title" ? "h-12 text-lg font-semibold" : ""}`} placeholder={f.placeholder} value={v[f.key]} onChange={(e) => set(f.key, e.target.value)} />
         )}
         {f.type === "slug" && (
-          <Input id={id} className={`${inputCls} font-mono text-sm`} value={v[f.key]} onChange={(e) => { setSlugTouched(true); set(f.key, slugify(e.target.value)); }} />
+          <Input id={id} className={`${inputCls} font-mono text-sm`} value={v[f.key]} placeholder="gerado pelo título" onChange={(e) => set(f.key, slugify(e.target.value))} />
         )}
         {(f.type === "textarea" || f.type === "list") && (
           <Textarea id={id} rows={f.type === "list" ? 5 : 3} className="bg-background" placeholder={f.placeholder} value={v[f.key]} onChange={(e) => set(f.key, e.target.value)} />
@@ -117,7 +116,9 @@ export function ContentEditor({ kind, row, onClose, onSaved }: { kind: Kind; row
         )}
         {f.type === "select" && (
           <select id={id} className={SELECT_CLS} value={v[f.key]} onChange={(e) => set(f.key, e.target.value)}>
-            {f.options!.map(([val, label]) => <option key={val} value={val}>{label}</option>)}
+            {[...(f.options!.some(([val]) => val === v[f.key]) || !v[f.key] ? [] : [[v[f.key], v[f.key]] as [string, string]]), ...f.options!].map(([val, label]) => (
+              <option key={val} value={val}>{label}</option>
+            ))}
           </select>
         )}
         {f.type === "html" && <RichTextEditor value={v[f.key]} onChange={(h) => set(f.key, h)} />}
@@ -185,7 +186,7 @@ export function ContentEditor({ kind, row, onClose, onSaved }: { kind: Kind; row
                 <span className="grid size-6 place-items-center rounded-full bg-foreground text-xs text-background">{i + 1}</span>
                 {s}
               </legend>
-              <div className="grid gap-4 sm:grid-cols-2">{cfg.fields.filter((f) => f.section === s).map(field)}</div>
+              <div className="grid gap-4 sm:grid-cols-2">{fields.filter((f) => f.section === s).map(field)}</div>
             </fieldset>
           ))}
         </div>

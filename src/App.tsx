@@ -1,6 +1,6 @@
 import { Suspense, lazy } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -23,17 +23,12 @@ const Artigos = lazy(() => import("./pages/Artigos"));
 const ArtigoDetalhe = lazy(() => import("./pages/ArtigoDetalhe"));
 const Contato = lazy(() => import("./pages/Contato"));
 const NotFound = lazy(() => import("./pages/NotFound"));
-const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 // O painel (shell + tema + fontes) só baixa quando alguém abre /admin.
 const AdminShell = lazy(() => import("./components/admin/AdminShell"));
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
-const ForgotPassword = lazy(() => import("./pages/admin/ForgotPassword"));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
 const PostsList = lazy(() => import("./pages/admin/PostsList"));
 const JobsList = lazy(() => import("./pages/admin/JobsList"));
-const ArticlesList = lazy(() => import("./pages/admin/ArticlesList"));
-const ArticleEditor = lazy(() => import("./pages/admin/ArticleEditor"));
-const AuditPage = lazy(() => import("./pages/admin/AuditPage"));
 const LeadsList = lazy(() => import("./pages/admin/LeadsList"));
 const NewsletterList = lazy(() => import("./pages/admin/NewsletterList"));
 const DownloadsList = lazy(() => import("./pages/admin/DownloadsList"));
@@ -54,6 +49,12 @@ const queryClient = new QueryClient({
   },
 });
 
+const AuthLayout = () => (
+  <AuthProvider>
+    <Outlet />
+  </AuthProvider>
+);
+
 const RouteFallback = () => (
   <div className="min-h-screen flex items-center justify-center bg-background">
     <div className="w-8 h-8 rounded-full border-2 border-primary/30 border-t-primary animate-spin" />
@@ -63,7 +64,6 @@ const RouteFallback = () => (
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider>
-      <AuthProvider>
         <TooltipProvider>
           <Toaster />
           <Sonner />
@@ -80,10 +80,11 @@ const App = () => (
                 <Route path="/artigos" element={<Artigos />} />
                 <Route path="/artigos/:slug" element={<ArtigoDetalhe />} />
                 <Route path="/contato" element={<Contato />} />
-                <Route path="/reset-password" element={<ResetPassword />} />
 
+                {/* A sessão do painel (login pela API da Guará) só existe sob /admin; o site público não a carrega. */}
+                <Route element={<AuthLayout />}>
                 <Route path="/admin/login" element={<AdminLogin />} />
-                <Route path="/admin/forgot-password" element={<ForgotPassword />} />
+                <Route path="/admin/forgot-password" element={<Navigate to="/admin/login" replace />} />
                 <Route path="/admin" element={<RequireAdmin><AdminShell /></RequireAdmin>}>
                   <Route index element={<AdminDashboard />} />
                   <Route path="leads" element={<LeadsList />} />
@@ -96,12 +97,12 @@ const App = () => (
                   <Route path="jobs" element={<JobsList />} />
                   <Route path="jobs/*" element={<Navigate to="/admin/jobs" replace />} />
                   <Route path="tools" element={<ToolsList />} />
-                  <Route path="articles" element={<ArticlesList />} />
-                  <Route path="articles/new" element={<ArticleEditor />} />
-                  <Route path="articles/:id/edit" element={<ArticleEditor />} />
                   <Route path="api-keys" element={<ApiKeys />} />
-                  <Route path="audit" element={<AuditPage />} />
                   <Route path="accounts" element={<AccountsList />} />
+                  {/* Artigos e Auditoria ficavam no Supabase; a API da Guará não tem esses recursos */}
+                  <Route path="articles/*" element={<Navigate to="/admin" replace />} />
+                  <Route path="audit" element={<Navigate to="/admin" replace />} />
+                </Route>
                 </Route>
 
                 <Route path="*" element={<NotFound />} />
@@ -109,7 +110,6 @@ const App = () => (
             </Suspense>
           </BrowserRouter>
         </TooltipProvider>
-      </AuthProvider>
     </ThemeProvider>
   </QueryClientProvider>
 );

@@ -17,15 +17,13 @@ export function ContentManager({ kind }: { kind: Kind }) {
   const { data = [], isLoading, error, refetch } = useQuery({ queryKey: ["admin", kind], queryFn: () => store.list() });
   const refresh = () => qc.invalidateQueries({ queryKey: ["admin", kind] });
 
-  // Arquivar só aparece onde a coluna existe (ferramentas sempre; posts/vagas depois da migration da API).
-  const canArchive = kind === "tools" || data.some((r) => "archived" in r);
   const now = new Date();
   const stateOf = (r: Row) => cfg.state(r, now);
 
   const filters: [string, string][] = [
     ["active", "Ativos"],
     ...cfg.filters,
-    ...(canArchive ? ([["archived", "Arquivados"]] as [string, string][]) : []),
+    ["archived", "Arquivados"],
     ["all", "Todos"],
   ];
   const matches = (r: Row, k: string) => (k === "all" ? true : k === "active" ? stateOf(r) !== "archived" : stateOf(r) === k);
@@ -92,11 +90,9 @@ export function ContentManager({ kind }: { kind: Kind }) {
             <label className="flex items-center gap-2 text-sm font-semibold">
               <Switch checked={cfg.isOn(r)} onCheckedChange={() => toggle(r)} aria-label={`${cfg.switchLabel}: ${r.title}`} /> {cfg.switchText(r)}
             </label>
-            {canArchive && (
-              <Button variant="outline" size="icon" onClick={() => archive(r)} aria-label={r.archived ? "Desarquivar" : "Arquivar"} title={r.archived ? "Desarquivar" : "Arquivar"}>
-                {r.archived ? <ArchiveRestore className="size-4" /> : <Archive className="size-4" />}
-              </Button>
-            )}
+            <Button variant="outline" size="icon" onClick={() => archive(r)} aria-label={r.archived ? "Desarquivar" : "Arquivar"} title={r.archived ? "Desarquivar" : "Arquivar"}>
+              {r.archived ? <ArchiveRestore className="size-4" /> : <Archive className="size-4" />}
+            </Button>
             <Button variant="outline" size="icon" onClick={() => setEdit(r)} aria-label={`Editar ${r.title}`}><Pencil className="size-4" /></Button>
             <Button variant="ghost" size="icon" onClick={() => remove(r)} aria-label={`Apagar ${r.title}`}><Trash2 className="size-4" /></Button>
           </div>

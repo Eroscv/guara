@@ -39,14 +39,32 @@ Responde sozinha: `leads`, `applications`, `posts`, `jobs` no **Supabase** (prec
 `tools`, `newsletter`, `tool_downloads`, `api_keys` no **Vercel Postgres** (`db/vercel-postgres-schema.sql`);
 arquivos de ferramenta no **Vercel Blob** (`BLOB_READ_WRITE_TOKEN`).
 
-## Painel (`/api/admin/v1`)
+## Painel (`/admin`) — usa a API da Guará (FastAPI)
 
-Back-end do `/admin` para o que mora no Vercel Postgres: `newsletter` e `tool_downloads` (listar e apagar),
-`tools` (CRUD completo, incluindo arquivar), `counts` (totais e última semana) e `downloads-by-tool`.
-Não usa chave `gm_…`: exige a sessão de admin do Supabase (`Authorization: Bearer <access_token>`,
-conferido em `_lib/requireAdmin.ts`) e só responde no mesmo domínio. Funciona igual nos dois modos da API
-pública — ignora `GUARA_API_UPSTREAM`, porque o painel gerencia os dados do próprio site.
-Leads, candidaturas, posts e vagas o painel lê direto do Supabase, com a sessão do admin (RLS).
+O painel é cliente da API da Guará, inclusive no login. O navegador só fala com `/api/admin/*` (mesmo
+domínio); o endereço da API e a chave `X-API-Key` ficam só em variáveis do servidor.
+
+| Rota | O que faz |
+|---|---|
+| `POST /api/admin/auth/login` | repassa a `/auth/login` `{email, senha}`; só quem é **admin e ativo** ganha sessão |
+| `POST /api/admin/auth/logout` · `GET /api/admin/auth/me` | sair · quem está logado |
+| `GET/POST/PATCH/DELETE /api/admin/auth/users…` · `PATCH …/me` | contas (`/auth/users`, `/auth/register`) e troca da própria senha/nome |
+| `/api/admin/v1/*` | dados do painel (leads, applications, posts, jobs, tools, newsletter, tool_downloads, summary): confere a sessão e repassa com `X-API-Key`, no contrato do manual (mesma tradução da API pública, `_lib/upstream.ts`) |
+| `POST /api/admin/upload` | emite o token pro navegador enviar imagens e arquivos direto ao Vercel Blob (só admin) |
+| `/api/admin/api-keys` | chaves `gm_…` da API pública (Postgres), só admin |
+
+**Sessão:** o JWT do `/auth/login` vai para um cookie `gm_admin` (`HttpOnly; Secure; SameSite=Strict; Path=/api/admin`),
+que o JavaScript não lê. A cada chamada o token é conferido no `/auth/me` da API (cache de 30 s em memória) e o
+papel precisa ser admin. Toda escrita exige o cabeçalho `X-Requested-With: guara-admin` (anti-CSRF).
+
+| Variável | Pra quê |
+|---|---|
+| `GUARA_API_UPSTREAM` | endereço da API da Guará (**obrigatória**: sem ela o login não funciona) |
+| `GUARA_API_UPSTREAM_KEY` | `X-API-Key` dos dados (leads, posts…) |
+| `BLOB_READ_WRITE_TOKEN` | envio de imagens/arquivos (injetada ao conectar o Blob Store) |
+| `POSTGRES_URL` | só pra chaves `gm_…` (injetada ao conectar o Neon) |
+
+O painel não usa mais o Supabase. Artigos e Auditoria não existem na API da Guará e saíram.
 
 ## Testes
 

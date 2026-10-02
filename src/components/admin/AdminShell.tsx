@@ -1,8 +1,8 @@
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import {
-  LayoutDashboard, MessageSquare, Mail, Download, Users, Newspaper, Wrench, Briefcase, BookOpen,
-  Bot, ShieldAlert, UserCog, ExternalLink, LogOut, type LucideIcon,
+  LayoutDashboard, MessageSquare, Mail, Download, Users, Newspaper, Wrench, Briefcase,
+  Bot, UserCog, ExternalLink, LogOut, type LucideIcon,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
@@ -15,8 +15,7 @@ type Item = {
   group: string;
   desc: string;
   end?: boolean;
-  sysadminOnly?: boolean;
-  /** Telas que já têm o próprio título (Artigos, Auditoria, Contas). */
+  /** Telas que já têm o próprio título (Contas). */
   ownHeader?: boolean;
 };
 
@@ -27,12 +26,10 @@ const NAV: Item[] = [
   { to: "/admin/downloads", label: "Downloads", icon: Download, group: "Cadastros", desc: "Quem baixou as ferramentas." },
   { to: "/admin/applications", label: "Candidaturas", icon: Users, group: "Cadastros", desc: "Candidatos às vagas e seus currículos." },
   { to: "/admin/posts", label: "Blog", icon: Newspaper, group: "Conteúdo", desc: "Escreva, agende e arquive posts." },
-  { to: "/admin/articles", label: "Artigos", icon: BookOpen, group: "Conteúdo", desc: "", ownHeader: true },
   { to: "/admin/tools", label: "Ferramentas", icon: Wrench, group: "Conteúdo", desc: "Materiais para download no site." },
   { to: "/admin/jobs", label: "Vagas", icon: Briefcase, group: "Conteúdo", desc: "Publique e feche vagas de talentos." },
-  { to: "/admin/api-keys", label: "API", icon: Bot, group: "Integração", desc: "Chaves e manual para agentes de IA.", sysadminOnly: true },
-  { to: "/admin/audit", label: "Auditoria", icon: ShieldAlert, group: "Sistema", desc: "", ownHeader: true },
-  { to: "/admin/accounts", label: "Contas", icon: UserCog, group: "Sistema", desc: "", ownHeader: true, sysadminOnly: true },
+  { to: "/admin/api-keys", label: "API", icon: Bot, group: "Integração", desc: "Chaves e manual para agentes de IA." },
+  { to: "/admin/accounts", label: "Contas", icon: UserCog, group: "Sistema", desc: "", ownHeader: true },
 ];
 
 const SITE_URL = "/versoes/v16-mascote/";
@@ -50,12 +47,12 @@ function Brand() {
 
 const AdminShell = () => {
   useAdminTheme();
-  const { user, signOut, isSysadmin } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const qc = useQueryClient();
   const { pathname } = useLocation();
 
-  const items = NAV.filter((i) => !i.sysadminOnly || isSysadmin);
+  const items = NAV;
   const groups = Array.from(new Set(items.map((i) => i.group)));
   // Seção atual = a rota mais específica que bate com o endereço
   const current =
@@ -65,7 +62,7 @@ const AdminShell = () => {
   const handleSignOut = async () => {
     await qc.cancelQueries();
     qc.clear();
-    await signOut();
+    await logout();
     navigate("/admin/login");
   };
 
@@ -103,7 +100,7 @@ const AdminShell = () => {
             ))}
           </nav>
           <div className="space-y-2 rounded-2xl border-2 border-foreground bg-card p-3 shadow-brut">
-            <p className="truncate text-xs text-muted-foreground" title={user?.email ?? ""}>{user?.email}</p>
+            <p className="truncate text-xs text-muted-foreground" title={user?.email ?? ""}>{user?.nome || user?.email}</p>
             <div className="flex gap-2">
               <Button asChild variant="outline" size="sm" className="flex-1">
                 <a href={SITE_URL} target="_blank" rel="noreferrer"><ExternalLink /> Site</a>

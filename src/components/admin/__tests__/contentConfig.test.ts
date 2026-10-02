@@ -1,112 +1,100 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-const insert = vi.fn();
-vi.mock("@/integrations/supabase/client", () => ({
-  supabase: { from: () => ({ insert }), auth: { getSession: async () => ({ data: { session: null } }) } },
-}));
+// Chamadas à API são simuladas; o que importa aqui é o que o painel manda e como interpreta.
+vi.mock("../helpers", async (orig) => ({ ...(await orig<typeof import("../helpers")>()), adminApi: vi.fn() }));
 
-import { CONFIG, STORES, errorMessage, toHtml, type Row } from "../contentConfig";
+import { adminApi, AdminApiError } from "../helpers";
+import { CONFIG, STORES, errorMessage, fetchAllPages, toHtml, type Row } from "../contentConfig";
 
+const api = vi.mocked(adminApi);
 const NOW = new Date("2026-10-01T15:00:00Z");
 const past = "2026-09-01T12:00:00Z";
 const future = "2026-11-01T12:00:00Z";
 
-beforeEach(() => insert.mockReset());
+// chaves: mockReset() devolve o próprio mock, e o vitest chamaria esse retorno como função de limpeza
+beforeEach(() => {
+  api.mockReset();
+});
 
-describe("posts — estado e agendamento (regra do site: published e scheduled_at vazio/passado)", () => {
+describe("posts — publicado, agendado e arquivado (published, published_at, archived)", () => {
   const st = (r: Row) => CONFIG.posts.state(r, NOW);
-  it("classifica rascunho, publicado, agendado e arquivado", () => {
-    expect(st({ status: "draft" })).toBe("draft");
-    expect(st({ status: "published", scheduled_at: null })).toBe("on");
-    expect(st({ status: "published", scheduled_at: past })).toBe("on");
-    expect(st({ status: "published", scheduled_at: future })).toBe("scheduled");
-    expect(st({ status: "published", archived: true })).toBe("archived");
+  it("classifica cada estado", () => {
+    expect(st({ published: false })).toBe("draft");
+    expect(st({ published: true, published_at: past })).toBe("on");
+    expect(st({ published: true, published_at: future })).toBe("scheduled");
+    expect(st({ published: true, published_at: past, archived: true })).toBe("archived");
+    expect(st({ published: false, published_at: future })).toBe("draft"); // rascunho com data futura continua rascunho
   });
-  it("o interruptor alterna published/draft", () => {
-    expect(CONFIG.posts.toggle({ status: "published" })).toEqual({ status: "draft" });
-    expect(CONFIG.posts.toggle({ status: "draft" })).toEqual({ status: "published" });
+  it("interruptor liga/desliga só o published; rótulo acompanha", () => {
+    expect(CONFIG.posts.toggle({ published: true })).toEqual({ published: false });
+    expect(CONFIG.posts.toggle({ published: false })).toEqual({ published: true });
+    expect(CONFIG.posts.switchText({ published: true })).toBe("Publicado");
+    expect(CONFIG.posts.switchText({ published: false })).toBe("Rascunho");
   });
-  it("data futura vira scheduled_at; data passada não agenda nada", () => {
-    const base = CONFIG.posts.toForm({});
-    const fut = CONFIG.posts.toPayload({ ...base, title: "A", published_at: "2999-01-01T10:00", _on: true }, true);
-    expect(fut.scheduled_at).toBe(new Date("2999-01-01T10:00").toISOString());
-    expect(fut.status).toBe("published");
-    const old = CONFIG.posts.toPayload({ ...base, title: "A", published_at: "2020-01-01T10:00", _on: true }, true);
-    expect(old.scheduled_at).toBeNull();
+  it("payload no contrato do manual: data em ISO, tags limpas, sem capa vazia, slug só ao criar", () => {
+    const f = CONFIG.posts.toForm({});
+    const novo = CONFIG.posts.toPayload({ ...f, title: " 5 Tendências ", tags: " ia , seo,, ", content: "<p>oi</p>", published: true, published_at: "2999-01-01T10:00", slug: "Meu Link" }, true);
+    expect(novo).toMatchObject({ title: "5 Tendências", tags: ["ia", "seo"], published: true, slug: "meu-link", published_at: new Date("2999-01-01T10:00").toISOString() });
+    expect("cover_image" in novo).toBe(false);
+    expect("scheduled_at" in novo).toBe(false);
+    const edit = CONFIG.posts.toPayload({ ...f, title: "T", content: "<p>x</p>", slug: "outro", cover_image: " https://x.co/c.jpg " }, false);
+    expect("slug" in edit).toBe(false); // a API não altera o slug depois
+    expect(edit.cover_image).toBe("https://x.co/c.jpg");
   });
-  it("novo post: slug nasce do título e é marcado como automático; slug digitado vence", () => {
-    const base = CONFIG.posts.toForm({});
-    const auto = CONFIG.posts.toPayload({ ...base, title: "5 Tendências de Marketing!" }, true);
-    expect(auto.slug).toBe("5-tendencias-de-marketing");
-    expect(auto._autoSlug).toBe(true);
-    const typed = CONFIG.posts.toPayload({ ...base, title: "Qualquer", slug: "Meu Link" }, true);
-    expect(typed.slug).toBe("meu-link");
-    expect(typed._autoSlug).toBeUndefined();
-  });
-  it("editar não mexe no slug se ele ficou em branco; calcula tempo de leitura e limpa tags", () => {
-    const base = CONFIG.posts.toForm({ id: "1", title: "T", slug: "" });
-    const p = CONFIG.posts.toPayload({ ...base, title: "T", tags: " ia , seo,, ", content: "<p>" + "palavra ".repeat(400) + "</p>" }, false);
+  it("slug em branco ao criar não é enviado (a API gera pelo título)", () => {
+    const p = CONFIG.posts.toPayload({ ...CONFIG.posts.toForm({}), title: "T", content: "<p>x</p>" }, true);
     expect("slug" in p).toBe(false);
-    expect(p.tags).toEqual(["ia", "seo"]);
-    expect(p.reading_time).toBe(2);
+  });
+  it("exige texto no post (content é obrigatório na API), mas aceita só imagem", () => {
+    const v = (content: string) => CONFIG.posts.validate!({ ...CONFIG.posts.toForm({}), content });
+    expect(v("")).toMatch(/Escreva o texto/);
+    expect(v("<p><br></p>")).toMatch(/Escreva o texto/);
+    expect(v("<p>&nbsp;</p>")).toMatch(/Escreva o texto/);
+    expect(v("<p>oi</p>")).toBeNull();
+    expect(v('<img src="https://x.co/a.jpg">')).toBeNull();
   });
   it("novo post nasce como rascunho (não publica sem querer)", () => {
-    expect(CONFIG.posts.toForm({})._on).toBe(false);
+    expect(CONFIG.posts.toForm({}).published).toBe(false);
   });
 });
 
-describe("vagas — status draft/open/closed", () => {
+describe("vagas — is_open e publish_at", () => {
   const st = (r: Row) => CONFIG.jobs.state(r, NOW);
   it("estados e interruptor", () => {
-    expect(st({ status: "draft" })).toBe("draft");
-    expect(st({ status: "closed" })).toBe("closed");
-    expect(st({ status: "open", scheduled_at: null })).toBe("on");
-    expect(st({ status: "open", scheduled_at: future })).toBe("scheduled");
-    expect(CONFIG.jobs.toggle({ status: "open" })).toEqual({ status: "closed" });
-    expect(CONFIG.jobs.toggle({ status: "closed" })).toEqual({ status: "open" });
-    expect(CONFIG.jobs.toggle({ status: "draft" })).toEqual({ status: "open" });
+    expect(st({ is_open: false })).toBe("closed");
+    expect(st({ is_open: true, publish_at: null })).toBe("on");
+    expect(st({ is_open: true, publish_at: future })).toBe("scheduled");
+    expect(st({ is_open: true, archived: true })).toBe("archived");
+    expect(CONFIG.jobs.toggle({ is_open: true })).toEqual({ is_open: false });
+    expect(CONFIG.jobs.switchText({ is_open: false })).toBe("Fechada");
   });
-  it("payload usa os valores do enum e não escreve is_open (um trigger sincroniza)", () => {
+  it("publish_at vazio vai como null ('aparece na hora', como no manual)", () => {
     const f = CONFIG.jobs.toForm({});
-    const p = CONFIG.jobs.toPayload({ ...f, title: " Designer ", work_model: "híbrido", status: "open", requirements: "a\n\n b \n", scheduled_at: "" }, true);
-    expect(p).toMatchObject({ title: "Designer", work_model: "híbrido", status: "open", requirements: ["a", "b"], scheduled_at: null });
-    expect("is_open" in p).toBe(false);
+    const p = CONFIG.jobs.toPayload({ ...f, title: " Designer ", work_model: "Híbrido", is_open: true, requirements: "a\n\n b \n", publish_at: "" }, true);
+    expect(p).toMatchObject({ title: "Designer", work_model: "Híbrido", is_open: true, requirements: ["a", "b"], publish_at: null });
+    const agendada = CONFIG.jobs.toPayload({ ...f, title: "X", publish_at: "2999-01-01T08:00" }, true);
+    expect(agendada.publish_at).toBe(new Date("2999-01-01T08:00").toISOString());
   });
-  it("o select de modelo só oferece valores do enum do banco", () => {
-    const opts = CONFIG.jobs.fields.find((x) => x.key === "work_model")!.options!.map(([v]) => v);
-    expect(opts).toEqual(["remoto", "híbrido", "presencial"]);
+  it("nova vaga nasce fechada", () => {
+    expect(CONFIG.jobs.toForm({}).is_open).toBe(false);
   });
 });
 
-describe("ferramentas — a API é estrita (image/file_url não aceitam null)", () => {
-  it("omite imagem e arquivo vazios em vez de mandar null", () => {
+describe("ferramentas — a API não aceita null em image/file_url", () => {
+  it("omite imagem e arquivo vazios", () => {
     const p = CONFIG.tools.toPayload({ ...CONFIG.tools.toForm({}), title: "Checklist" }, true);
     expect(p).toEqual({ title: "Checklist", description: "", category: "", benefits: [], published: false });
   });
   it("manda file_name junto com file_url, e só com ele", () => {
     const f = CONFIG.tools.toForm({});
-    const withFile = CONFIG.tools.toPayload({ ...f, title: "X", file_url: "https://x.co/a.pdf", file_name: "a.pdf", image: "https://x.co/i.jpg" }, true);
-    expect(withFile).toMatchObject({ file_url: "https://x.co/a.pdf", file_name: "a.pdf", image: "https://x.co/i.jpg" });
-    const orphanName = CONFIG.tools.toPayload({ ...f, title: "X", file_name: "a.pdf" }, true);
-    expect("file_name" in orphanName).toBe(false);
+    expect(CONFIG.tools.toPayload({ ...f, title: "X", file_url: "https://x.co/a.pdf", file_name: "a.pdf", image: "https://x.co/i.jpg" }, true)).toMatchObject({ file_url: "https://x.co/a.pdf", file_name: "a.pdf", image: "https://x.co/i.jpg" });
+    expect("file_name" in CONFIG.tools.toPayload({ ...f, title: "X", file_name: "a.pdf" }, true)).toBe(false);
   });
-  it("subtítulo mostra downloads e estado reflete published/archived", () => {
+  it("subtítulo mostra downloads; estado reflete published/archived", () => {
     expect(CONFIG.tools.sub({ category: "Planilhas", file_name: "a.xlsx", _downloads: 3 })).toBe("Planilhas · a.xlsx · 3 download(s)");
     expect(CONFIG.tools.state({ published: true }, NOW)).toBe("on");
     expect(CONFIG.tools.state({ published: false }, NOW)).toBe("draft");
     expect(CONFIG.tools.state({ published: true, archived: true }, NOW)).toBe("archived");
-  });
-});
-
-describe("rótulo do interruptor acompanha o estado da linha", () => {
-  it("posts, vagas e ferramentas", () => {
-    expect(CONFIG.posts.switchText({ status: "published" })).toBe("Publicado");
-    expect(CONFIG.posts.switchText({ status: "draft" })).toBe("Rascunho");
-    expect(CONFIG.jobs.switchText({ status: "open" })).toBe("Aberta");
-    expect(CONFIG.jobs.switchText({ status: "closed" })).toBe("Fechada");
-    expect(CONFIG.jobs.switchText({ status: "draft" })).toBe("Rascunho");
-    expect(CONFIG.tools.switchText({ published: true })).toBe("Publicada");
-    expect(CONFIG.tools.switchText({ published: false })).toBe("Rascunho");
   });
 });
 
@@ -117,32 +105,57 @@ describe("toHtml", () => {
   });
 });
 
-describe("gravação de posts no Supabase", () => {
-  const payload = { title: "T", slug: "meu-post", _autoSlug: true };
-  it("slug automático duplicado tenta de novo com sufixo e não vaza o campo interno", async () => {
-    insert.mockResolvedValueOnce({ error: { code: "23505" } }).mockResolvedValueOnce({ error: null });
-    await STORES.posts.create({ ...payload });
-    expect(insert).toHaveBeenCalledTimes(2);
-    expect(insert.mock.calls[0]![0]).toEqual({ title: "T", slug: "meu-post" });
-    expect(insert.mock.calls[1]![0].slug).toMatch(/^meu-post-[a-z0-9]+$/);
-    expect("_autoSlug" in insert.mock.calls[1]![0]).toBe(false);
+describe("acesso aos dados (/api/admin/v1)", () => {
+  it("fetchAllPages pagina de 200 em 200 até juntar o count", async () => {
+    const page = (n: number, from: number) => ({ data: Array.from({ length: n }, (_, i) => ({ id: from + i })), count: 250 });
+    api.mockResolvedValueOnce(page(200, 0)).mockResolvedValueOnce(page(50, 200));
+    const rows = await fetchAllPages("/leads");
+    expect(rows).toHaveLength(250);
+    expect(api.mock.calls.map((c) => c[0])).toEqual(["/leads?limit=200&offset=0", "/leads?limit=200&offset=200"]);
   });
-  it("slug digitado à mão que já existe falha sem alterar o que a pessoa escreveu", async () => {
-    insert.mockResolvedValue({ error: { code: "23505" } });
-    await expect(STORES.posts.create({ title: "T", slug: "meu-post" })).rejects.toMatchObject({ code: "23505" });
-    expect(insert).toHaveBeenCalledTimes(1);
+  it("para quando a página vem vazia (nunca fica em loop)", async () => {
+    api.mockResolvedValue({ data: [], count: 999 });
+    expect(await fetchAllPages("/leads")).toEqual([]);
+    expect(api).toHaveBeenCalledTimes(1);
   });
-  it("outros erros do banco não são engolidos", async () => {
-    insert.mockResolvedValue({ error: { code: "42501", message: "rls" } });
-    await expect(STORES.posts.create({ ...payload })).rejects.toMatchObject({ code: "42501" });
-    expect(insert).toHaveBeenCalledTimes(1);
+  it("lista de posts pede status=all (inclui arquivados); escreve nos endereços e métodos certos", async () => {
+    api.mockResolvedValue({ data: [{ id: "p1" }], count: 1 });
+    await STORES.posts.list();
+    expect(api).toHaveBeenLastCalledWith("/posts?status=all&limit=200&offset=0");
+
+    api.mockResolvedValue({});
+    await STORES.posts.create({ title: "T" });
+    expect(api).toHaveBeenLastCalledWith("/posts", { method: "POST", body: { title: "T" } });
+    await STORES.jobs.update("j 1", { is_open: false });
+    expect(api).toHaveBeenLastCalledWith("/jobs/j%201", { method: "PATCH", body: { is_open: false } });
+    await STORES.tools.archive("t1", true);
+    expect(api).toHaveBeenLastCalledWith("/tools/t1", { method: "PATCH", body: { archived: true } });
+    await STORES.posts.remove("p1");
+    expect(api).toHaveBeenLastCalledWith("/posts/p1", { method: "DELETE" });
+  });
+  it("ferramentas ganham a contagem de downloads por slug", async () => {
+    api.mockImplementation(async (...args: unknown[]) => {
+      return String(args[0]).startsWith("/tools")
+        ? { data: [{ id: "t1", slug: "checklist" }, { id: "t2", slug: "planilha" }], count: 2 }
+        : { data: [{ tool_slug: "checklist" }, { tool_slug: "checklist" }, { tool_slug: "outra" }, {}], count: 4 };
+    });
+    const tools = await STORES.tools.list();
+    expect(tools.map((t) => t._downloads)).toEqual([2, 0]);
+  });
+  it("se os downloads falham, a lista de ferramentas ainda aparece", async () => {
+    api.mockImplementation(async (...args: unknown[]) => {
+      if (String(args[0]).startsWith("/tools")) return { data: [{ id: "t1", slug: "a" }], count: 1 };
+      throw new AdminApiError(500, "falhou");
+    });
+    expect((await STORES.tools.list())[0]).toMatchObject({ id: "t1" });
   });
 });
 
 describe("errorMessage", () => {
-  it("traduz os erros que a pessoa consegue resolver", () => {
-    expect(errorMessage({ code: "23505" })).toMatch(/endereço \(slug\)/);
-    expect(errorMessage({ code: "42501" })).toMatch(/permissão/);
+  it("mostra o primeiro campo inválido, o motivo da imagem ou a mensagem da API", () => {
+    expect(errorMessage(new AdminApiError(400, "Dados inválidos", { formErrors: [], fieldErrors: { title: ["Required"] } }))).toBe("Dados inválidos — title: Required");
+    expect(errorMessage(new AdminApiError(422, "Imagem com problema.", { images: [{ field: "cover_image", problem: "Arquivo maior que 15MB." }] }))).toBe("Imagem com problema. Arquivo maior que 15MB.");
+    expect(errorMessage(new AdminApiError(409, "Slug já existe."))).toBe("Slug já existe.");
     expect(errorMessage(new Error("boom"), "Falhou.")).toBe("Falhou.");
   });
 });
