@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { ApiError, handleCaught } from "../../_lib/errors.js";
-import { getBody } from "../../_lib/http.js";
+import { getBody, routeSegments } from "../../_lib/http.js";
 import {
   assertSameSiteIntent, authCall, authError, clearSessionCookie, forgetToken, readToken, requireAdmin, setSessionCookie, toUser, whoami,
 } from "../../_lib/adminAuth.js";
@@ -28,7 +28,7 @@ function userId(raw: string | undefined) {
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader("Cache-Control", "no-store");
   try {
-    const segments = ([] as string[]).concat((req.query.route as string | string[]) || []);
+    const segments = routeSegments(req, "/api/admin/auth");
     const [first, second] = segments;
     const method = req.method || "GET";
 

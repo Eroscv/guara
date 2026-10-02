@@ -3,7 +3,7 @@ import { getSupabaseAdmin } from "../../_lib/supabaseAdmin.js";
 import { requireApiKey } from "../../_lib/auth.js";
 import { ApiError, handleCaught, sendError } from "../../_lib/errors.js";
 import { parsePagination, parseQuery } from "../../_lib/pagination.js";
-import { getBody, siteHostFrom } from "../../_lib/http.js";
+import { getBody, routeSegments, siteHostFrom } from "../../_lib/http.js";
 import {
   SUPABASE_CADASTRO_RESOURCES,
   deleteCadastro,
@@ -56,7 +56,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Supabase só é tocado pelas rotas que realmente o usam (leads, applications,
     // posts, jobs, summary); /tools, /newsletter e /tool_downloads rodam só no Postgres.
     const supa = () => getSupabaseAdmin();
-    const segments = ([] as string[]).concat((req.query.route as string | string[]) || []);
+    const segments = routeSegments(req, "/api/public/v1");
     const [first, second] = segments;
     const method = req.method || "GET";
     const qs = parseQuery(req);

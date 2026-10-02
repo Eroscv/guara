@@ -70,11 +70,12 @@ afterAll(() => new Promise<void>((r) => origin.close(() => r())));
 beforeEach(() => { calls = []; });
 
 type Call = { method?: string; route?: string[]; url?: string; token?: string | null; cookie?: string; csrf?: boolean; body?: unknown };
-async function call(handler: any, { method = "GET", route = [], url, token = null, cookie, csrf = true, body }: Call) {
+async function call(handler: any, { method = "GET", route = [], url, token = null, cookie, csrf = true, body }: Call, base = "/api/admin/auth") {
   const req: any = {
     method,
-    query: { route },
-    url: url ?? `/api/admin/x/${route.join("/")}`,
+    // Em produção a Vercel não preenche req.query.route nestas funções: só a URL conta.
+    query: {},
+    url: url ?? `${base}/${route.join("/")}`,
     headers: { host: "guara.test", ...(csrf ? { "x-requested-with": "guara-admin" } : {}), ...(token ? { cookie: `gm_admin=${token}` } : {}), ...(cookie ? { cookie } : {}) },
     body,
   };
@@ -85,7 +86,7 @@ async function call(handler: any, { method = "GET", route = [], url, token = nul
   return { status, json, headers };
 }
 const auth = (o: Call) => call(authHandler, o);
-const data = (o: Call) => call(dataHandler, o);
+const data = (o: Call) => call(dataHandler, { ...o, url: o.url ?? `/api/admin/v1/${(o.route ?? []).join("/")}` }, "/api/admin/v1");
 
 describe("login", () => {
   it("admin entra: cookie HttpOnly/Secure/Strict restrito a /api/admin, duração do token, sem token no corpo", async () => {
@@ -240,5 +241,38 @@ describe("dados do painel (/api/admin/v1) — repassa à API com a chave do serv
 describe("whoami", () => {
   it("token desconhecido dá 401 (422 da API por falta de cabeçalho também)", async () => {
     await expect(whoami(jwt("fantasma"))).rejects.toMatchObject({ status: 401 });
+  });
+});
+
+describe("roteamento pela URL (a Vercel não entrega req.query.route nestas funções)", () => {
+  const raw = async (handler: any, url: string, query: Record<string, unknown>, method = "POST") => {
+    let status = 0, json: any;
+    const res: any = { status(n: number) { status = n; return res; }, json(j: unknown) { json = j; return res; }, setHeader() {}, end() {} };
+    await handler({ method, query, url, headers: { "x-requested-with": "guara-admin" }, body: {} }, res);
+    return { status, json };
+  };
+  it("só a URL: /api/admin/auth/logout é reconhecido; sem rota é 404", async () => {
+    expect((await raw(authHandler, "/api/admin/auth/logout", {})).status).toBe(200);
+    expect((await raw(authHandler, "/api/admin/auth/logout/", {})).status).toBe(200);
+    expect((await raw(authHandler, "/api/admin/auth", {}, "GET")).status).toBe(401); // sem sessão, antes de saber que não há rota
+  });
+  it("query string não troca a rota (?route=logout numa URL de login continua sendo login)", async () => {
+    const r = await raw(authHandler, "/api/admin/auth/login?route=logout", { route: "logout" });
+    expect(r.status).toBe(400); // login sem e-mail/senha — não virou logout (200)
+    expect(r.json.error).toMatch(/e-mail e senha/);
+  });
+  it("sem URL utilizável, cai pro parâmetro da query (ex.: atrás de um rewrite)", async () => {
+    expect((await raw(authHandler, "/rewritten", { route: ["logout"] })).status).toBe(200);
+  });
+  it("segmentos com %2F ou .. não escapam: viram id inválido (404)", async () => {
+    const tok = { cookie: `gm_admin=${T.admin}` };
+    const send = async (url: string) => {
+      let status = 0;
+      const res: any = { status(n: number) { status = n; return res; }, json() { return res; }, setHeader() {}, end() {} };
+      await authHandler({ method: "DELETE", query: {}, url, headers: { "x-requested-with": "guara-admin", ...tok }, body: {} }, res);
+      return status;
+    };
+    expect(await send("/api/admin/auth/users/..")).toBe(404);
+    expect(await send("/api/admin/auth/users/a%2Fb")).toBe(404);
   });
 });

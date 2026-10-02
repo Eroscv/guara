@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { ApiError, handleCaught } from "../../_lib/errors.js";
 import { parseQuery } from "../../_lib/pagination.js";
-import { getBody } from "../../_lib/http.js";
+import { getBody, routeSegments } from "../../_lib/http.js";
 import { requireAdmin } from "../../_lib/adminAuth.js";
 import { proxyRequest, upstreamConfig } from "../../_lib/upstream.js";
 
@@ -20,7 +20,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const upstream = upstreamConfig();
     if (!upstream) throw new ApiError(500, "A API da Guará não está configurada no servidor (variável GUARA_API_UPSTREAM).");
 
-    const segments = ([] as string[]).concat((req.query.route as string | string[]) || []);
+    const segments = routeSegments(req, "/api/admin/v1");
     if (!segments.length) throw new ApiError(404, "Endereço ou item não encontrado.");
 
     await proxyRequest(res, upstream, {

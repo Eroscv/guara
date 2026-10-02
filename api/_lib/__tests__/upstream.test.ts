@@ -167,7 +167,7 @@ describe("proxy de ponta a ponta contra uma origem simulada", () => {
       method,
       url: `/api/public/v1/${pathname}${query ? "?" + query : ""}`,
       headers: { host: "guara-wheat.vercel.app", authorization: "Bearer gm_chave-do-cliente-que-nao-pode-vazar" },
-      query: { route: pathname.split("/") },
+      query: {}, // a Vercel não preenche route aqui; o roteador lê da URL
       body,
     };
     let status = 0;

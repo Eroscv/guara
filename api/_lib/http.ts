@@ -21,3 +21,31 @@ export function siteHostFrom(req: VercelRequest): string | null {
   const v = Array.isArray(h) ? h[0] : h;
   return v ? v.split(":")[0] : null;
 }
+
+/**
+ * Segmentos do caminho depois de `base` (ex.: base "/api/admin/auth" e URL
+ * "/api/admin/auth/users/9" → ["users", "9"]).
+ *
+ * Lê da própria URL em vez de req.query.route: em produção, na Vercel, o parâmetro
+ * do catch-all [...route] não chegava nestas funções (só funcionava com ?route=
+ * na URL), e uma query string também não deve poder trocar a rota. A query só é
+ * usada se a URL não bater com `base` (ex.: rodando atrás de um rewrite).
+ */
+export function routeSegments(req: VercelRequest, base: string): string[] {
+  const path = new URL(req.url || "/", "http://localhost").pathname;
+  if (path === base || path.startsWith(`${base}/`)) {
+    return path
+      .slice(base.length)
+      .split("/")
+      .filter(Boolean)
+      .map((s) => {
+        try {
+          return decodeURIComponent(s);
+        } catch {
+          return s;
+        }
+      });
+  }
+  const q = req.query?.route;
+  return ([] as string[]).concat((q as string | string[] | undefined) ?? []).filter(Boolean);
+}
